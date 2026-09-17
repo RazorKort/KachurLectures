@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сиспики</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a14;--card:#16132a;--card-hover:#1e1a36;
+  --pink:#ff3c78;--purple:#a855f7;--white:#f0eaf8;--muted:#8b7faa;
+  --radius:14px;
+}
+body{background:var(--bg);color:var(--white);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:clamp(20px,4vw,60px)}
+h1{font-size:clamp(28px,5vw,52px);font-weight:800;text-align:center;margin-bottom:8px}
+h1 span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{text-align:center;color:var(--muted);font-size:clamp(14px,2vw,18px);margin-bottom:clamp(24px,4vw,48px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:clamp(14px,2vw,24px);max-width:900px;margin:0 auto}
+.card{
+  background:var(--card);border:1px solid rgba(168,85,247,.15);
+  border-radius:var(--radius);padding:clamp(18px,2.5vw,28px);
+  text-decoration:none;color:var(--white);
+  transition:transform .2s,background .2s,border-color .2s;
+  display:flex;flex-direction:column;gap:8px;
+}
+.card:hover{transform:translateY(-4px);background:var(--card-hover);border-color:var(--pink)}
+.card .chapter{font-size:clamp(11px,1.2vw,13px);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--pink)}
+.card .title{font-size:clamp(16px,2vw,20px);font-weight:600;line-height:1.3}
+.card .meta{font-size:13px;color:var(--muted);margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center}
+.card .badge{background:rgba(168,85,247,.2);color:var(--purple);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:clamp(32px,5vw,64px);padding-bottom:20px}
+</style>
+</head>
+<body>
+<h1><span>Отказ от отвественности</span></h1>
+<p class="sub"></p>
+<div class="grid">
+
+Данное говно было навайбкожено под солями Ананко и Качур. Я просто спиздил и захостил. Если что-то не работает, выглядит странно или повторяется по 10 раз - я тут не причем. Все претензи выставлять в вк качурки (эта дура не оставила на него ссылку)
+</div>
+<p class="footer">Честно спизжено by Razor_kort</p>
+</body>
+</html>
