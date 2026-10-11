@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Характеристики компьютерных сетей — глава 12</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--canvas:#e9f6f2; --deep:#0d332f; --deep-2:#12423c;
+--panel-l:rgba(255,255,255,.80); --line-l:#cfe3dc; --line-d:rgba(94,224,200,.22);
+--teal:#19b89f; --aqua:#5ee0c8; --green:#49d67f; --blue:#4aa3f0; --red:#ef5a5a;
+--amber:#e8a33d; --violet:#9b7fe0;
+--ink:#0f2e2b; --dim:#5c7d77; --on-dark:#eafaf6; --on-dark-dim:#9dc4bc;
+--r:16px; --ease:cubic-bezier(.22,.7,.3,1);
+--f:"Segoe UI Variable Display","Segoe UI",Inter,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+--m:"Cascadia Mono","JetBrains Mono",Consolas,"SF Mono",ui-monospace,monospace;
+}
+html,body{height:100%}
+body{font-family:var(--f);color:var(--ink);background:var(--canvas);overflow:hidden;
+-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ---------- фон ---------- */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* ---------- каркас ---------- */
+#stage{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;padding:30px 42px 76px;display:none;overflow:hidden;flex-direction:column}
+.slide.on{display:flex}
+.slide>.sc{flex:1;min-height:0;overflow:auto;padding-right:6px;scrollbar-width:thin;
+ scrollbar-color:#b4d3cb transparent}
+.slide>.sc::-webkit-scrollbar{width:8px}
+.slide>.sc::-webkit-scrollbar-thumb{background:#b4d3cb;border-radius:8px}
+
+h1.t{font-size:clamp(26px,3.1vw,46px);font-weight:800;letter-spacing:-.02em;line-height:1.05;color:#06201d}
+h1.t em{font-style:normal;color:#0e8d78}
+p.sub{margin-top:8px;font-size:clamp(13px,1.15vw,18px);color:#3f6660;max-width:1080px;line-height:1.42}
+.head{margin-bottom:16px;flex:none}
+
+/* ---------- карточки ---------- */
+.c{border-radius:var(--r);padding:16px 18px 17px;position:relative}
+.c.l{background:var(--panel-l);border:1px solid var(--line-l);box-shadow:0 6px 20px rgba(23,78,70,.07)}
+.c.d{background:rgba(13,51,47,.93);border:1px solid var(--line-d);box-shadow:0 12px 34px rgba(5,32,29,.26);color:var(--on-dark-dim)}
+.c.d h3,.c.d h4,.c.d b,.c.d strong{color:var(--on-dark)}
+.c.tint{background:rgba(226,245,240,.9)}
+.ch{display:flex;align-items:flex-start;gap:11px}
+.ch h3{font-size:clamp(14px,1.18vw,19px);font-weight:750;line-height:1.2;flex:1;color:#0a2c28}
+.c.d .ch h3{color:var(--on-dark)}
+.num{flex:none;min-width:34px;height:28px;border-radius:8px;display:grid;place-items:center;
+ font:800 14px/1 var(--m);letter-spacing:.02em;
+ background:rgba(25,184,159,.13);border:1px solid rgba(25,184,159,.45);color:#0e8d78}
+.c.d .num{background:rgba(94,224,200,.12);border-color:rgba(94,224,200,.42);color:var(--aqua)}
+.ci{flex:none;width:26px;height:26px;stroke:var(--teal);fill:none;stroke-width:1.5;
+ stroke-linecap:round;stroke-linejoin:round}
+.c.d .ci{stroke:var(--aqua)}
+.hr{height:1px;background:var(--line-l);margin:11px 0 10px}
+.c.d .hr{background:var(--line-d)}
+.c p{font-size:clamp(11.5px,.92vw,14.5px);line-height:1.46;color:#3f6660}
+.c.d p{color:var(--on-dark-dim)}
+.c p+p{margin-top:7px}
+.c h4{font-size:13px;font-weight:720;color:#0a2c28;margin-bottom:7px}
+.c.d h4{color:var(--on-dark)}
+
+.c svg:not(.ci):not(.wide){width:100%;max-width:440px;display:block;margin:10px auto}
+.c svg.wide{width:100%;max-width:none}
+
+/* ---------- списки с галочками ---------- */
+ul.ck{list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.ck li{display:flex;gap:10px;align-items:flex-start;font-size:clamp(11.5px,.9vw,14px);
+ line-height:1.4;color:#3b625c;position:relative}
+.c.d ul.ck li{color:var(--on-dark-dim)}
+ul.ck li::before{content:"";flex:none;width:17px;height:17px;border-radius:50%;margin-top:1px;
+ background:rgba(25,184,159,.14);border:1px solid rgba(25,184,159,.5)}
+.c.d ul.ck li::before{background:rgba(94,224,200,.12);border-color:rgba(94,224,200,.45)}
+ul.ck li::after{content:"";position:absolute;left:5px;top:5px;width:6px;height:3px;
+ border-left:1.6px solid var(--teal);border-bottom:1.6px solid var(--teal);
+ transform:rotate(-45deg)}
+.c.d ul.ck li::after{border-color:var(--aqua)}
+ul.ck.minus li::before{background:rgba(239,90,90,.12);border-color:rgba(239,90,90,.45)}
+ul.ck.minus li::after{width:7px;height:0;border-left:none;border-bottom:1.8px solid var(--red);
+ transform:none;left:5px;top:8px}
+ul.ck.ask li::before{background:rgba(74,163,240,.12);border-color:rgba(74,163,240,.45)}
+ul.ck.ask li::after{content:"?";border:none;transform:none;left:5.5px;top:1px;width:auto;height:auto;
+ font:800 11px/17px var(--f);color:#2a7cc4}
+.c.d ul.ck.ask li::after{color:#8cc6fb}
+
+/* ---------- формульная плашка ---------- */
+.fz{background:var(--deep);border:1px solid var(--line-d);border-radius:var(--r);
+ padding:20px 24px;text-align:center;box-shadow:0 14px 36px rgba(5,32,29,.28)}
+.fz{overflow-x:auto}
+.fz .f{font:900 clamp(24px,4.2vw,58px)/1.05 var(--m);color:#fff;letter-spacing:.04em;
+ display:flex;align-items:center;justify-content:center;gap:.28em;flex-wrap:nowrap;white-space:nowrap}
+.fz .f .g{color:var(--green)}
+.fz .f .o{color:var(--blue)}
+.fz .f .t{color:#fff}
+.fz .f .op{color:var(--on-dark-dim);font-weight:700}
+.fz .cap{margin-top:10px;font-size:12.5px;color:var(--on-dark-dim)}
+.fml{font:600 clamp(14px,1.5vw,21px)/1.5 var(--m);color:#0a2c28;display:flex;align-items:center;
+ justify-content:center;gap:4px;flex-wrap:wrap}
+.frac{display:inline-flex;flex-direction:column;text-align:center;margin:0 4px}
+.frac .n{border-bottom:2px solid currentColor;padding:0 9px 3px}
+.frac .d{padding:3px 9px 0}
+
+/* ---------- врезка-результат ---------- */
+.res{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding-top:11px;
+ border-top:1px dashed var(--line-l);font-size:clamp(11px,.88vw,13.5px);line-height:1.4;color:#3f6660}
+.c.d .res{border-top-color:var(--line-d);color:var(--on-dark-dim)}
+.res i{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+ font:800 13px/1 var(--f);font-style:normal;
+ background:rgba(25,184,159,.15);border:1px solid rgba(25,184,159,.5);color:#0e8d78}
+.res.bad i{background:rgba(239,90,90,.15);border-color:rgba(239,90,90,.55);color:#d13c3c}
+.c.d .res.bad i{color:#ff8484}
+.c.d .res i{background:rgba(94,224,200,.12);border-color:rgba(94,224,200,.45);color:var(--aqua)}
+
+/* ---------- цепочка процесса ---------- */
+.chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chain .lk{display:flex;align-items:center;gap:9px;flex:1 1 150px;min-width:132px}
+.chain .bl{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+ background:var(--deep-2);border:1px solid var(--line-d)}
+.chain .bl svg{width:20px;height:20px;stroke:var(--aqua);fill:none;stroke-width:1.6;
+ stroke-linecap:round;stroke-linejoin:round}
+.chain .lk.fin .bl{background:var(--teal);border-color:var(--teal)}
+.chain .lk.fin .bl svg{stroke:#04231f;stroke-width:2.6}
+.chain .lb{font-size:11.5px;line-height:1.3;color:#3f6660}
+.chain .cv{flex:none;font:700 22px/1 var(--f);color:var(--teal);opacity:.7}
+
+/* ---------- выноска ---------- */
+.bub{position:relative;background:#fff;border:1px solid var(--line-l);border-radius:14px;
+ padding:11px 14px;font-size:12.5px;line-height:1.4;color:#3b625c;
+ box-shadow:0 8px 22px rgba(23,78,70,.1)}
+.bub::after{content:"";position:absolute;left:-7px;top:18px;width:13px;height:13px;background:#fff;
+ border-left:1px solid var(--line-l);border-bottom:1px solid var(--line-l);transform:rotate(45deg)}
+.bub.r::after{left:auto;right:-7px;border:none;border-right:1px solid var(--line-l);
+ border-top:1px solid var(--line-l)}
+.bub.dn::after{left:26px;top:auto;bottom:-7px;border:none;
+ border-right:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+
+/* ---------- сетки ---------- */
+.g{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.g6{grid-template-columns:repeat(6,1fr)}
+@media (max-width:1499px){.g6{grid-template-columns:repeat(3,1fr)}}
+.g21{grid-template-columns:2fr 1fr}
+.g12{grid-template-columns:1fr 2fr}
+.g32{grid-template-columns:3fr 2fr}
+.col{display:flex;flex-direction:column;gap:14px}
+
+/* ---------- таблица ---------- */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--line-l);background:var(--panel-l)}
+table{border-collapse:collapse;width:100%;font-size:clamp(11.5px,.92vw,14.5px)}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line-l);color:#3b625c}
+th{background:rgba(13,51,47,.92);color:var(--on-dark);font-weight:700;position:sticky;top:0;
+ border-bottom:none;font-size:clamp(11px,.85vw,13.5px)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(25,184,159,.07)}
+td b{color:#0a2c28}
+td .mono{font-family:var(--m);color:#0e8d78;font-weight:700}
+
+/* ---------- шаги ---------- */
+.step{opacity:0;transform:translateY(10px);transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.step.vis{opacity:1;transform:none}
+.dash{stroke-dasharray:var(--L);stroke-dashoffset:var(--L);transition:stroke-dashoffset .75s var(--ease)}
+.vis .dash{stroke-dashoffset:0}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;left:0;right:0;bottom:0;height:54px;z-index:5;display:flex;align-items:center;
+ gap:10px;padding:0 18px;background:rgba(255,255,255,.72);backdrop-filter:blur(12px);
+ border-top:1px solid var(--line-l)}
+#prog{position:fixed;left:0;bottom:54px;height:3px;background:linear-gradient(90deg,var(--teal),var(--aqua));
+ z-index:6;transition:width .3s var(--ease)}
+#hud button{font:600 12.5px var(--f);color:#255c54;background:#fff;border:1px solid var(--line-l);
+ border-radius:9px;padding:7px 12px;cursor:pointer;transition:.18s var(--ease)}
+#hud button:hover{background:var(--teal);color:#fff;border-color:var(--teal);transform:translateY(-1px)}
+#count{font:700 12.5px var(--m);color:#0e8d78;min-width:118px}
+#sname{font-size:12.5px;color:var(--dim);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:focus-visible{outline:2.5px solid var(--teal);outline-offset:2px;border-radius:6px}
+
+/* ---------- содержание ---------- */
+#toc{position:fixed;inset:0;z-index:20;background:rgba(10,40,36,.93);backdrop-filter:blur(8px);
+ display:none;padding:40px 48px;overflow:auto}
+#toc.on{display:block}
+#toc h2{color:var(--on-dark);font-size:22px;margin-bottom:18px;font-weight:750}
+#tocg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.tocit{display:flex;gap:10px;align-items:center;text-align:left;padding:11px 13px;border-radius:12px;
+ background:rgba(255,255,255,.06);border:1px solid var(--line-d);color:var(--on-dark-dim);
+ font:500 13px var(--f);cursor:pointer;transition:.18s var(--ease)}
+.tocit:hover{background:rgba(94,224,200,.16);color:#fff;transform:translateY(-2px)}
+.tocit i{font:800 12px var(--m);font-style:normal;color:var(--aqua);min-width:26px}
+
+/* ---------- интерактив ---------- */
+.ui{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ui label{font-size:12px;color:var(--dim)}
+.ui input[type=number],.ui select{font:600 14px var(--m);padding:7px 10px;border-radius:9px;
+ border:1px solid var(--line-l);background:#fff;color:#0a2c28;width:112px}
+.ui input[type=range]{flex:1;min-width:150px;accent-color:var(--teal)}
+.big{font:900 clamp(22px,3vw,38px)/1 var(--m);color:#0e8d78}
+.pill{display:inline-block;padding:4px 11px;border-radius:999px;font:700 11.5px var(--f);
+ background:rgba(25,184,159,.14);color:#0e8d78;border:1px solid rgba(25,184,159,.4)}
+.pill.b{background:rgba(74,163,240,.14);color:#2a7cc4;border-color:rgba(74,163,240,.4)}
+.pill.r{background:rgba(239,90,90,.14);color:#d13c3c;border-color:rgba(239,90,90,.4)}
+.pill.g{background:rgba(73,214,127,.16);color:#1f9b4f;border-color:rgba(73,214,127,.45)}
+.pill.d{background:rgba(94,224,200,.12);color:var(--aqua);border-color:rgba(94,224,200,.4)}
+
+/* ---------- квиз ---------- */
+.q{border-radius:var(--r);background:var(--panel-l);border:1px solid var(--line-l);padding:15px 17px}
+.q .qt{font-weight:700;font-size:14px;color:#0a2c28;margin-bottom:10px;display:flex;gap:9px}
+.q .qt i{font:800 12px/1.5 var(--m);font-style:normal;color:#0e8d78}
+.q .opts{display:grid;gap:7px}
+.q button{text-align:left;font:500 13px var(--f);padding:9px 12px;border-radius:10px;
+ border:1px solid var(--line-l);background:#fff;color:#3b625c;cursor:pointer;transition:.16s var(--ease)}
+.q button:hover{border-color:var(--teal);background:rgba(25,184,159,.06)}
+.q button.good{background:rgba(73,214,127,.16);border-color:var(--green);color:#1a7a40;font-weight:650}
+.q button.bad{background:rgba(239,90,90,.14);border-color:var(--red);color:#c23434}
+.q .ex{margin-top:10px;font-size:12.5px;line-height:1.45;color:#3f6660;display:none;
+ padding-top:9px;border-top:1px dashed var(--line-l)}
+.q .ex.on{display:block}
+#score{font:800 15px var(--m);color:#0e8d78}
+
+/* ---------- шкалы ---------- */
+.bar{height:10px;border-radius:999px;background:rgba(13,51,47,.1);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:999px;width:0;
+ background:linear-gradient(90deg,var(--aqua),var(--teal));transition:width .9s var(--ease)}
+.bar.red>i{background:linear-gradient(90deg,#ff8a8a,var(--red))}
+.bar.green>i{background:linear-gradient(90deg,#8ae8ad,var(--green))}
+.c.d .bar{background:rgba(255,255,255,.1)}
+
+/* ---------- лесенка единиц ---------- */
+.ladder{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.ladder .stp{flex:1 1 150px;border-radius:var(--r);padding:13px 15px;color:#fff;
+ box-shadow:0 10px 26px rgba(5,32,29,.2)}
+.ladder .stp .u{font:800 clamp(16px,1.9vw,26px)/1 var(--m);letter-spacing:.02em}
+.ladder .stp .e{font-size:11.5px;opacity:.82;margin-top:4px}
+.ladder .stp .v{margin-top:9px;font-size:12px;background:rgba(255,255,255,.16);
+ border-radius:9px;padding:6px 9px;line-height:1.3}
+.ladder .mul{flex:none;font:800 12px var(--m);color:#0e8d78;padding-bottom:22px}
+
+/* ---------- титул ---------- */
+.cover{display:flex;flex-direction:column;justify-content:center;height:100%;gap:18px}
+.cover h1{font-size:clamp(34px,6vw,84px);font-weight:850;letter-spacing:-.035em;line-height:.98;color:#06201d}
+.cover h1 em{font-style:normal;color:#0e8d78}
+.cover .ln{width:92px;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--aqua))}
+.cover .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* ---------- адаптив ---------- */
+#hud .hint{display:inline}
+@media (max-width:1320px){#hud .hint{display:none}}
+@media (max-width:1279px){
+ .g4,.g5{grid-template-columns:repeat(2,1fr)}
+ .g6{grid-template-columns:repeat(2,1fr)}
+ .g3{grid-template-columns:repeat(2,1fr)}
+ .slide{padding:22px 26px 70px}
+}
+@media (max-width:1099px){.g2,.g21,.g12,.g32{grid-template-columns:1fr}}
+@media (max-width:640px){
+ .g,.g2,.g3,.g4,.g5,.g6,.g21,.g12,.g32{grid-template-columns:1fr}
+ h1.t{font-size:26px}
+ .cover h1{font-size:34px}
+ .slide{padding:18px 16px 66px}
+ #sname{display:none}
+ .cl3,.cl4,.city2{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+ .step{opacity:1!important;transform:none!important;transition:none}
+ .dash{stroke-dashoffset:0!important;transition:none}
+ .bar>i{transition:none}
+}
+</style>
+</head>
+<body>
+<svg id="bg" viewBox="0 0 1280 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#f2fbf8"/><stop offset=".55" stop-color="#e5f4ef"/>
+  <stop offset="1" stop-color="#d4ebe3"/>
+ </linearGradient>
+ <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#e2f4ed"/>
+  <stop offset="1" stop-color="#a6d2c4"/>
+ </linearGradient>
+ <linearGradient id="ct" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#2a6b61" stop-opacity=".30"/>
+  <stop offset="1" stop-color="#2a6b61" stop-opacity=".05"/>
+ </linearGradient>
+ <linearGradient id="ct2" x1="0" y1="1" x2="0" y2="0">
+  <stop offset="0" stop-color="#2a6b61" stop-opacity=".22"/>
+  <stop offset="1" stop-color="#2a6b61" stop-opacity=".04"/>
+ </linearGradient>
+</defs>
+<rect width="1280" height="900" fill="url(#sky)"/>
+<g class="cl3" fill="url(#cg)" opacity="0.26"><ellipse cx="1020" cy="311" rx="90" ry="53"/><ellipse cx="1132" cy="259" rx="112" ry="110"/><ellipse cx="1244" cy="254" rx="97" ry="115"/><ellipse cx="1356" cy="230" rx="103" ry="141"/><ellipse cx="1468" cy="257" rx="98" ry="111"/><ellipse cx="1580" cy="311" rx="127" ry="53"/><rect x="1020" y="294" width="560" height="72" rx="31"/></g><g class="cl3" fill="url(#cg)" opacity="0.24"><ellipse cx="-310" cy="204" rx="84" ry="50"/><ellipse cx="-210" cy="153" rx="95" ry="106"/><ellipse cx="-110" cy="133" rx="105" ry="127"/><ellipse cx="-10" cy="140" rx="85" ry="119"/><ellipse cx="90" cy="163" rx="122" ry="95"/><ellipse cx="190" cy="194" rx="127" ry="61"/><rect x="-310" y="190" width="500" height="66" rx="28"/></g><g class="cl4" fill="url(#cg)" opacity="0.18"><ellipse cx="280" cy="-27" rx="174" ry="40"/><ellipse cx="440" cy="-47" rx="193" ry="61"/><ellipse cx="600" cy="-76" rx="180" ry="93"/><ellipse cx="760" cy="-59" rx="201" ry="75"/><ellipse cx="920" cy="-53" rx="180" ry="68"/><ellipse cx="1080" cy="-30" rx="168" ry="44"/><rect x="280" y="-32" width="800" height="48" rx="20"/></g>
+<rect class="" x="0" y="798" width="29" height="102" fill="url(#ct)"/><rect class="" x="5" y="834" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="5" y="852" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="38" y="769" width="18" height="131" fill="url(#ct)"/><rect class="" x="43" y="805" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="43" y="823" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="43" y="841" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="60" y="743" width="25" height="157" fill="url(#ct)"/><rect class="" x="65" y="779" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="65" y="797" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="65" y="815" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="65" y="833" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="65" y="851" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="93" y="749" width="34" height="151" fill="url(#ct)"/><rect class="" x="98" y="785" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="98" y="803" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="98" y="821" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="98" y="839" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="134" y="866" width="31" height="34" fill="url(#ct)"/><rect class="" x="171" y="772" width="28" height="128" fill="url(#ct)"/><rect class="" x="176" y="808" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="176" y="826" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="176" y="844" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="205" y="813" width="24" height="87" fill="url(#ct)"/><rect class="" x="210" y="849" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="233" y="815" width="32" height="85" fill="url(#ct)"/><rect class="" x="238" y="851" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="270" y="780" width="30" height="120" fill="url(#ct)"/><rect class="" x="275" y="816" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="275" y="834" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="" x="275" y="852" width="4" height="5" fill="#9fe8d8" opacity=".30"/>
+<rect class="city2" x="1264" y="862" width="16" height="38" fill="url(#ct)"/><rect class="city2" x="1230" y="809" width="30" height="91" fill="url(#ct)"/><rect class="city2" x="1235" y="845" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1235" y="863" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1198" y="753" width="27" height="147" fill="url(#ct)"/><rect class="city2" x="1203" y="789" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1203" y="807" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1203" y="825" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1203" y="843" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1166" y="832" width="27" height="68" fill="url(#ct)"/><rect class="city2" x="1171" y="868" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1124" y="724" width="33" height="176" fill="url(#ct)"/><rect class="city2" x="1129" y="760" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1129" y="778" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1129" y="796" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1129" y="814" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1129" y="832" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1129" y="850" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1103" y="724" width="15" height="176" fill="url(#ct)"/><rect class="city2" x="1108" y="760" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1108" y="778" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1108" y="796" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1108" y="814" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1108" y="832" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1108" y="850" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1067" y="845" width="30" height="55" fill="url(#ct)"/><rect class="city2" x="1024" y="759" width="33" height="141" fill="url(#ct)"/><rect class="city2" x="1029" y="795" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1029" y="813" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1029" y="831" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="1029" y="849" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="984" y="711" width="29" height="189" fill="url(#ct)"/><rect class="city2" x="989" y="747" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="989" y="765" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="989" y="783" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="989" y="801" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="989" y="819" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="989" y="837" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="943" y="859" width="31" height="41" fill="url(#ct)"/><rect class="city2" x="918" y="800" width="20" height="100" fill="url(#ct)"/><rect class="city2" x="923" y="836" width="4" height="5" fill="#9fe8d8" opacity=".30"/><rect class="city2" x="923" y="854" width="4" height="5" fill="#9fe8d8" opacity=".30"/>
+<g class="cl1" fill="url(#cg)" opacity="0.92"><ellipse cx="-120" cy="854" rx="132" ry="83"/><ellipse cx="24" cy="796" rx="142" ry="146"/><ellipse cx="168" cy="788" rx="160" ry="155"/><ellipse cx="312" cy="749" rx="116" ry="197"/><ellipse cx="456" cy="811" rx="134" ry="130"/><ellipse cx="600" cy="855" rx="187" ry="81"/><rect x="-120" y="840" width="720" height="96" rx="42"/></g><g class="cl1" fill="url(#cg)" opacity="0.80"><ellipse cx="380" cy="882" rx="162" ry="79"/><ellipse cx="556" cy="827" rx="176" ry="139"/><ellipse cx="732" cy="780" rx="147" ry="191"/><ellipse cx="908" cy="757" rx="222" ry="215"/><ellipse cx="1084" cy="824" rx="208" ry="142"/><ellipse cx="1260" cy="878" rx="188" ry="84"/><rect x="380" y="856" width="880" height="105" rx="46"/></g><g class="cl2" fill="url(#cg)" opacity="0.66"><ellipse cx="950" cy="813" rx="124" ry="73"/><ellipse cx="1062" cy="757" rx="134" ry="134"/><ellipse cx="1174" cy="725" rx="131" ry="168"/><ellipse cx="1286" cy="744" rx="91" ry="147"/><ellipse cx="1398" cy="767" rx="142" ry="123"/><ellipse cx="1510" cy="825" rx="140" ry="60"/><rect x="950" y="805" width="560" height="81" rx="35"/></g><g class="cl2" fill="url(#cg)" opacity="0.46"><ellipse cx="-180" cy="718" rx="115" ry="57"/><ellipse cx="-84" cy="694" rx="100" ry="83"/><ellipse cx="12" cy="661" rx="77" ry="119"/><ellipse cx="108" cy="658" rx="99" ry="122"/><ellipse cx="204" cy="681" rx="95" ry="97"/><ellipse cx="300" cy="718" rx="90" ry="57"/><rect x="-180" y="713" width="480" height="63" rx="27"/></g>
+</svg>
+<div id="stage">
+<section class="slide" data-label="Титул"><div class="sc">
+<div class="cover">
+  <span class="pill">Глава 12 · Компьютерные сети</span>
+  <h1>Характеристики<br><em>компьютерных сетей</em></h1>
+  <div class="ln"></div>
+  <p class="sub" style="font-size:clamp(14px,1.4vw,21px)">
+    Пропускная способность и производительность, накладные расходы, доступность,
+    надёжность, масштабируемость, безопасность и стоимость сети.</p>
+  <div class="meta">
+    <span class="pill">30 слайдов</span>
+    <span class="pill">2 тренажёра</span>
+    <span class="pill">8 вопросов</span>
+    <span class="pill">← → шаги · R прогон · Esc содержание</span>
+  </div>
+</div></div></section>
+<section class="slide" data-label="Цель лекции"><div class="head"><h1 class="t">Цель лекции</h1><p class="sub">Что вы должны унести с этой главы.</p></div><div class="sc"><div class="g g3 "><div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Набор характеристик</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.6" r="2.2"/><circle cx="4.6" cy="18" r="2.2"/><circle cx="19.4" cy="18" r="2.2"/><path d="M10.6 6.6L6 16M13.4 6.6L18 16M6.8 18h10.4"/></svg></div><div class="hr"></div><p>Знать основные характеристики компьютерной сети и понимать, какую сторону её работы описывает каждая из них.</p><ul class="ck"><li>Пропускная способность и производительность</li><li>Доступность и надёжность</li><li>Масштабируемость</li><li>Безопасность и стоимость</li></ul></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Понятийный аппарат</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.6h6a3 3 0 0 1 3 3v12a2.4 2.4 0 0 0-2.4-2.4H4z"/><path d="M20 4.6h-6a3 3 0 0 0-3 3v12a2.4 2.4 0 0 1 2.4-2.4H20z"/></svg></div><div class="hr"></div><p>Различать понятия, которые в быту путают между собой.</p><ul class="ck"><li>Теоретический максимум против фактического объёма</li><li>Полезные данные против служебных</li><li>Отказоустойчивость против резервирования</li></ul></div></div><div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Оценка готовой сети</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4v17M6 7.4h12M8.6 20.4h6.8"/><path d="M3 15l3-7.6L9 15a3 3 0 0 1-6 0zM15 15l3-7.6L21 15a3 3 0 0 1-6 0z"/></svg></div><div class="hr"></div><p>Уметь оценить правильность построения сети: соответствует ли она заявленным параметрам и требованиям организации.</p><div class="res"><i>✓</i><div>Характеристики — это язык, на котором заказчик и инженер договариваются о том, какая сеть нужна.</div></div></div></div></div></div></section>
+<section class="slide" data-label="Зачем оценивать сеть"><div class="head"><h1 class="t">Зачем оценивать сеть</h1><p class="sub">В прошлых главах разбирали, как сеть устроена и работает. Теперь — как понять, что она построена правильно.</p></div><div class="sc"><div class="g g3 "><div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Что уже известно</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p>Технологии локальных сетей, построение и функционирование, отправка информации устройствами, уровни взаимодействия.</p><p>Этого достаточно, чтобы сеть <b>заработала</b>. Но не достаточно, чтобы сказать, что она <b>хорошая</b>.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Какие вопросы остаются</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.4 12S5.8 6 12 6s9.6 6 9.6 6-3.4 6-9.6 6-9.6-6-9.6-6z"/><circle cx="12" cy="12" r="2.8"/></svg></div><div class="hr"></div><ul class="ck ask"><li>Правильно ли построена сеть?</li><li>Соответствует ли она выбранным параметрам?</li><li>Отвечает ли основным требованиям организации?</li><li>Не станет ли она причиной опасности для сотрудников и организации в целом?</li></ul></div></div><div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Что делает инженер</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/></svg></div><div class="hr"></div><p>При разработке и построении сети нужно учитывать множество факторов и параметров.</p><ul class="ck"><li>На этапе проектирования — заложить показатели</li><li>В процессе эксплуатации — сверять соответствие</li><li>По результатам — планировать изменения</li></ul><div class="res"><i>✓</i><div>Характеристики сети измеряются не один раз при сдаче, а всё время, пока сеть живёт.</div></div></div></div></div></div></section>
+<section class="slide" data-label="Элементы и характеристики сети"><div class="head"><h1 class="t">Элементы и характеристики сети</h1><p class="sub">Слева — из чего сеть состоит. Справа — что она должна обеспечивать.</p></div><div class="sc"><div class="g g3" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><h3>Элементы сети — что входит в сеть</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l8 4v9.6l-8 4-8-4V7.2z"/><path d="M4 7.2l8 4 8-4M12 11.2v9.6"/></svg></div><div class="hr"></div><ul class="ck"><li><b>Устройства</b> — компьютеры, серверы, маршрутизаторы, коммутаторы</li><li><b>Стандарты</b> — правила, обеспечивающие совместимость устройств</li><li><b>Организации</b> — разрабатывают стандарты (IEEE, IETF)</li><li><b>Среды передачи</b> — кабели, оптоволокно, радиоканалы</li><li><b>Протоколы</b> — наборы правил обмена данными</li><li><b>Программное обеспечение</b> — ОС, сетевые службы, приложения</li></ul></div></div>
+<div class="step "><div class="col" style="align-items:center;justify-content:center;height:100%"><svg viewBox="0 0 300 300" style="width:100%;max-width:300px" aria-hidden="true">
+<defs><radialGradient id="cn" cx=".5" cy=".4" r=".7">
+<stop offset="0" stop-color="#e8fbf6"/><stop offset="1" stop-color="#9fd8ca"/></radialGradient></defs>
+<path d="M78 148c-19 0-34-15-34-34 0-18 14-33 32-34 6-24 28-42 54-42 24 0 45 15 52 36 3-1 6-1 9-1 19 0 34 15 34 34s-15 34-34 34z"
+ fill="url(#cn)" stroke="#5fc3ad" stroke-width="1.6"/>
+<text x="150" y="98" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="21" font-weight="750" fill="#0a2c28">Компьютерные</text>
+<text x="150" y="122" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="21" font-weight="750" fill="#0a2c28">сети</text>
+<text x="150" y="141" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#3f6660">объединяют устройства, людей и данные</text>
+<g stroke="#19b89f" stroke-width="1.6" fill="none" opacity=".8">
+<path d="M150 150v26M150 176l-54 30M150 176l54 30M96 206h108"/></g>
+<g fill="#12423c">
+<rect x="62" y="206" width="56" height="34" rx="4"/><rect x="122" y="212" width="56" height="28" rx="4"/>
+<rect x="182" y="206" width="56" height="34" rx="4"/></g>
+<g fill="#5ee0c8">
+<rect x="70" y="214" width="40" height="3" rx="1.5"/><rect x="70" y="221" width="28" height="3" rx="1.5"/>
+<rect x="130" y="220" width="40" height="3" rx="1.5"/>
+<rect x="190" y="214" width="40" height="3" rx="1.5"/><rect x="190" y="221" width="28" height="3" rx="1.5"/></g>
+<g fill="#3f6660" font-family="Segoe UI,sans-serif" font-size="10" text-anchor="middle">
+<text x="90" y="256">устройства</text><text x="150" y="256">каналы</text><text x="210" y="256">сервисы</text></g>
+</svg></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>Характеристики сети — что сеть обеспечивает</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7.4" y="12" width="2.8" height="5"/><rect x="12" y="8.4" width="2.8" height="8.6"/><rect x="16.6" y="5" width="2.8" height="12"/></svg></div><div class="hr"></div><ul class="ck"><li><b>Топология</b> — структура и способ соединения устройств</li><li><b>Надёжность</b> — стабильная и бесперебойная работа</li><li><b>Масштабируемость</b> — возможность расширения</li><li><b>Доступность</b> — доступ к ресурсам для авторизованных пользователей</li><li><b>Безопасность</b> — защита данных от несанкционированного доступа</li><li><b>Стоимость</b> — затраты на оборудование, внедрение и поддержку</li><li><b>Скорость</b> — производительность и скорость передачи данных</li></ul></div></div>
+</div></div></section>
+<section class="slide" data-label="Пропускная способность" data-scen="ladder"><div class="head"><h1 class="t">Пропускная способность <em>(bandwidth)</em></h1><p class="sub">Количество бит, переданных за одну секунду, и производные от этой единицы.</p></div><div class="sc">
+<div class="step "><div class="c d"><div class="ch"><h3>Определение</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h3l2.2-6 3 13 3-9.5 2.2 4.5H22"/></svg></div><div class="hr"></div><p style='font-size:clamp(13px,1.1vw,17px)'><b>Пропускная способность (bandwidth)</b> — это количество бит, переданных за одну секунду <b>(бит/с)</b>, а также производные от этой единицы измерения.</p></div></div>
+<div style="height:14px"></div>
+<div class="ladder">
+<div class="stp" style="background:linear-gradient(160deg,#2f6f63,#2f6f63d9)"><div class="u">бит/с</div><div class="e">(b/s)</div><div class="v">Базовая единица измерения</div></div>
+<span class="mul">×1000 ›</span>
+<div class="stp" style="background:linear-gradient(160deg,#2a7f6f,#2a7f6fd9)"><div class="u">кбит/с</div><div class="e">(kb/s)</div><div class="v">1 кбит/с = 1000 бит/с</div></div>
+<span class="mul">×1000 ›</span>
+<div class="stp" style="background:linear-gradient(160deg,#2d7fa8,#2d7fa8d9)"><div class="u">Мбит/с</div><div class="e">(Mb/s)</div><div class="v">1 Мбит/с = 1000 кбит/с</div></div>
+<span class="mul">×1000 ›</span>
+<div class="stp" style="background:linear-gradient(160deg,#3a5fb8,#3a5fb8d9)"><div class="u">Гбит/с</div><div class="e">(Gb/s)</div><div class="v">1 Гбит/с = 1000 Мбит/с</div></div>
+</div>
+<div style="height:14px"></div>
+<div class="g g32">
+<div class="step "><div class="c l"><div class="ch"><h3>Что это значит на практике</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.6h13l-3.2-3.2M20 15.4H7l3.2 3.2"/></svg></div><div class="hr"></div><p>Пропускная способность определяет, <b>сколько данных можно передать за секунду</b> по каналу связи между отправителем и получателем.</p><p>Это <b>теоретическое, максимально возможное</b> значение. Фактически переданный объём данных почти всегда меньше — его описывает другая характеристика, производительность сети.</p></div></div>
+<div class="step "><div class="bub dn">Чем больше пропускная способность, тем быстрее передаются данные. Но «быстрее» здесь — про потолок канала, а не про то, что вы реально получите.</div></div>
+</div></div></section>
+<section class="slide" data-label="Стандарты Ethernet"><div class="head"><h1 class="t">Стандарты Ethernet</h1><p class="sub">Рост пропускной способности проводных локальных сетей.</p></div><div class="sc">
+<div class="step "><div class="tw "><table><thead><tr><th>Год</th><th>Стандарт IEEE</th><th>Название</th><th>Пропускная способность</th></tr></thead><tbody><tr><td>1983</td><td>802.3</td><td>Ethernet</td><td><span class='mono'>10 Мбит/с</span></td></tr><tr><td>1995</td><td>802.3u</td><td>Fast Ethernet</td><td><span class='mono'>100 Мбит/с</span></td></tr><tr><td>1998–1999</td><td>802.3z / 802.3ab</td><td>Gigabit Ethernet</td><td><span class='mono'>1 Гбит/с</span></td></tr><tr><td>2002</td><td>802.3ae</td><td>10 Gigabit Ethernet</td><td><span class='mono'>10 Гбит/с</span></td></tr><tr><td>2010</td><td>802.3ba</td><td>40G / 100G Ethernet</td><td><span class='mono'>40 и 100 Гбит/с</span></td></tr><tr><td>2016–2017</td><td>802.3bs</td><td>200G / 400G Ethernet</td><td><span class='mono'>200 и 400 Гбит/с</span></td></tr></tbody></table></div></div>
+<div style="height:14px"></div>
+<div class="g g3">
+<div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Шаг в десять раз</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18L9.6 11.6l3.6 3.2L20 6"/><path d="M15 6h5v5"/></svg></div><div class="hr"></div><p>Каждое следующее поколение Ethernet поднимает потолок примерно на порядок. Переход с 1 Гбит/с на 10 Гбит/с — один из способов увеличить эффективную производительность сети.</p></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Стандарт ≠ ваша скорость</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6L21 19.4H3z"/><path d="M12 9.4v4.4M12 16.6h.01"/></svg></div><div class="hr"></div><p>Стандарт задаёт пропускную способность канала. Реально полученная скорость зависит от нагрузки, качества линии и доли служебного трафика.</p><div class="res bad"><i>!</i><div>Гигабитный порт не гарантирует гигабит полезных данных.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Кабель тоже имеет категорию</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13.6a4 4 0 0 0 5.7.3l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M14 10.4a4 4 0 0 0-5.7-.3l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg></div><div class="hr"></div><p>Витая пара категории 5e рассчитана на 1 Гбит/с, 6 и 6a — на 10 Гбит/с на ограниченной длине. Оптика снимает ограничение по расстоянию.</p><div class="res"><i>✓</i><div>Сеть работает по самому слабому звену тракта.</div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Производительность сети"><div class="head"><h1 class="t">Производительность сети <em>(network performance)</em></h1><p class="sub">Пропускная способность не рассматривается без параметра производительности.</p></div><div class="sc"><div class="g g2">
+<div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Пропускная способность</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h3l2.2-6 3 13 3-9.5 2.2 4.5H22"/></svg></div><div class="hr"></div><p>Описывает <b>теоретическое</b> — максимально возможное — значение количества переданной информации.</p><p>Это свойство канала и оборудования: сколько бит они в принципе способны пропустить за секунду.</p><div class="res"><i>✓</i><div>Потолок. Он не зависит от того, что именно вы передаёте.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Производительность сети</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 13l4.2-3.4M12 4v1.6M4.6 7.2l1.1 1.1M19.4 7.2l-1.1 1.1"/></svg></div><div class="hr"></div><p><b>Производительность сети (network performance)</b> — это фактический объём данных, передаваемых между узлами за единицу времени, обычно за 1 секунду.</p><p>Она зависит не только от канала, но и от того, <b>какие данные</b> мы передаём и <b>как именно</b> они передаются.</p><div class="res"><i>✓</i><div>Факт. Измеряется на работающей сети под реальной нагрузкой.</div></div></div></div>
+</div>
+<div style="height:14px"></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Почему это две разные характеристики</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.4h6M10 20.6h4"/><path d="M12 3.4a5.6 5.6 0 0 1 3.4 10.1c-.6.5-.9 1.1-.9 1.8H9.5c0-.7-.3-1.3-.9-1.8A5.6 5.6 0 0 1 12 3.4z"/></svg></div><div class="hr"></div><p>Производительность сети — <b>не фиксированное значение</b>. Показания меняются в зависимости от объёма и количества пакетов, проходящих через сеть, от условий передачи и от множества факторов.</p><p>Поэтому корректно говорить не «скорость сети равна X», а «при такой-то нагрузке измеренная производительность составила X».</p></div></div></div></section>
+<section class="slide" data-label="Формула T = G + O" data-scen="pipe"><div class="head"><h1 class="t">Из чего складывается производительность сети</h1><p class="sub">Общая производительность состоит из двух составляющих: полезной и служебной.</p></div><div class="sc">
+<div class="step "><div class="fz"><div class="f">
+<span class="t">T</span> <span class="op">=</span> <span class="g">G</span>
+<span class="op">+</span> <span class="o">O</span></div>
+<div class="cap">T — производительность сети · G — эффективная производительность (goodput)
+· O — накладные расходы (overhead)</div></div></div>
+<div style="height:14px"></div>
+<div class="g g3">
+<div class="step "><div class="c l"><div class="ch"><h3>T — производительность сети</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 13l4.2-3.4M12 4v1.6M4.6 7.2l1.1 1.1M19.4 7.2l-1.1 1.1"/></svg></div><div class="hr"></div><p>Фактическая скорость передачи данных (бит/с). Всё, что реально проходит через канал, вместе со служебной частью.</p></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>G — эффективная производительность</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6l4.6 4.6L19 7.4"/></svg></div><div class="hr"></div><p><b>Goodput.</b> Полезные данные, которые действительно доходят до получателя и имеют смысл для приложения.</p></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>O — накладные расходы</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p><b>Overhead.</b> Служебные данные, необходимые для передачи: заголовки, служебные поля, повторные передачи и т. д.</p></div></div>
+</div>
+<div style="height:14px"></div>
+<div class="step "><div class="c l" style="padding:10px 14px 6px">
+<svg class="wide" viewBox="0 0 900 300" style="width:100%" aria-hidden="true">
+<defs>
+<linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+ <stop offset="0" stop-color="#7ae8a6"/><stop offset=".5" stop-color="#49d67f"/>
+ <stop offset="1" stop-color="#2aa85d"/></linearGradient>
+<linearGradient id="po" x1="0" y1="0" x2="0" y2="1">
+ <stop offset="0" stop-color="#86c6fa"/><stop offset=".5" stop-color="#4aa3f0"/>
+ <stop offset="1" stop-color="#2a7cc4"/></linearGradient>
+</defs>
+<text x="440" y="34" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15"
+ font-weight="700" fill="#0a2c28">Общая производительность T</text>
+<path d="M120 48 v10 h640 v-10" fill="none" stroke="#5c7d77" stroke-width="1.4"/>
+<rect x="18" y="150" width="90" height="80" rx="10" fill="#12423c"/>
+<text x="63" y="183" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#eafaf6">Данные</text>
+<text x="63" y="199" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#eafaf6">для передачи</text>
+<rect x="120" y="150" width="640" height="80" rx="6" fill="#dceee9" stroke="#b7d8cf"/>
+<rect id="pipeG" x="120" y="150" width="0" height="80" fill="url(#pg)"/>
+<rect id="pipeO" x="120" y="150" width="0" height="80" fill="url(#po)"/>
+<rect x="120" y="150" width="640" height="80" rx="6" fill="none" stroke="#0d332f" stroke-width="2" opacity=".35"/>
+<ellipse cx="120" cy="190" rx="13" ry="40" fill="#0d332f" opacity=".25"/>
+<ellipse cx="760" cy="190" rx="13" ry="40" fill="#0d332f" opacity=".18"/>
+<rect x="772" y="150" width="110" height="80" rx="10" fill="#12423c"/>
+<text x="827" y="183" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#eafaf6">Полученные</text>
+<text x="827" y="199" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#eafaf6">полезные данные</text>
+<g class="brk"><path id="brG" d="M120 250 v8 h500 v-8" fill="none" stroke="#2aa85d" stroke-width="1.6"/>
+<text id="labG" x="370" y="276" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="13" font-weight="700" fill="#1f9b4f">G — полезные данные</text>
+<text id="labG2" x="370" y="292" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="10.5" fill="#5c7d77">то, что доходит до получателя</text></g>
+<g class="brk"><path id="brO" d="M620 250 v8 h140 v-8" fill="none" stroke="#2a7cc4" stroke-width="1.6"/>
+<text id="labO" x="690" y="276" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="13" font-weight="700" fill="#2a7cc4">O — накладные расходы</text>
+<text id="labO2" x="690" y="292" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="10.5" fill="#5c7d77">служебные данные</text></g>
+</svg></div></div></div></section>
+<section class="slide" data-label="Как увеличить G"><div class="head"><h1 class="t">Как увеличить эффективную производительность</h1><p class="sub">Из формулы T = G + O следует, что полезную часть можно поднять двумя путями.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><h3>Из формулы следует</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.4h6M10 20.6h4"/><path d="M12 3.4a5.6 5.6 0 0 1 3.4 10.1c-.6.5-.9 1.1-.9 1.8H9.5c0-.7-.3-1.3-.9-1.8A5.6 5.6 0 0 1 12 3.4z"/></svg></div><div class="hr"></div><div class="fz" style="padding:14px 18px;box-shadow:none"><div class="f" style="font-size:clamp(20px,2.6vw,34px)"><span class="g">G</span> <span class="op">=</span> <span class="t">T</span> <span class="op">−</span> <span class="o">O</span></div></div><p style='margin-top:10px'>Увеличить эффективную производительность можно не только за счёт повышения пропускной способности канала, но и за счёт <b>уменьшения накладных расходов</b>.</p><ul class="ck"><li><b>Увеличить пропускную способность канала</b> — например, перейти с 1 Гбит/с на 10 Гбит/с. Дорого, требует замены оборудования.</li><li><b>Уменьшить накладные расходы</b> — оптимизировать настройки, использовать более эффективные протоколы, сократить количество повторных передач. Дёшево, но требует инженерной работы.</li></ul><div class="res"><i>✓</i><div>Производительность сети — это баланс между полезными данными и служебным трафиком.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>Тренажёр: доля накладных расходов</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.6" width="16" height="18.8" rx="2.2"/><path d="M7.6 7h8.8M8 12h.01M12 12h.01M16 12h.01M8 16.4h.01M12 16.4h.01M16 16.4h.01"/></svg></div><div class="hr"></div><p>Канал <b>T = 1000 Мбит/с</b>. Подвиньте ползунок — значения G и O пересчитаются.</p><div class="ui"><label for="ovr">Overhead</label><input id="ovr" type="range" min="0" max="40" step="1" value="22"><span class="pill b" id="vP">22 %</span></div><div class="g g2" style="margin-top:12px"><div><div style="font-size:11.5px;color:#5c7d77">G — полезные данные</div><div class="big" id="vG" style="color:#1f9b4f">780 Мбит/с</div></div><div><div style="font-size:11.5px;color:#5c7d77">O — служебные данные</div><div class="big" id="vO" style="color:#2a7cc4">220 Мбит/с</div></div></div><div style="margin-top:14px"><svg class="wide" viewBox="0 0 600 110" style="width:100%" aria-hidden="true">
+<defs>
+<linearGradient id="pg2" x1="0" y1="0" x2="0" y2="1">
+ <stop offset="0" stop-color="#7ae8a6"/><stop offset=".5" stop-color="#49d67f"/>
+ <stop offset="1" stop-color="#2aa85d"/></linearGradient>
+<linearGradient id="po2" x1="0" y1="0" x2="0" y2="1">
+ <stop offset="0" stop-color="#86c6fa"/><stop offset=".5" stop-color="#4aa3f0"/>
+ <stop offset="1" stop-color="#2a7cc4"/></linearGradient>
+</defs>
+<rect x="20" y="26" width="560" height="54" rx="6" fill="#dceee9" stroke="#b7d8cf"/>
+<rect id="mpG" x="20" y="26" width="437" height="54" fill="url(#pg2)"/>
+<rect id="mpO" x="457" y="26" width="123" height="54" fill="url(#po2)"/>
+<rect x="20" y="26" width="560" height="54" rx="6" fill="none" stroke="#0d332f" stroke-width="1.8" opacity=".3"/>
+<text id="mlG" x="238" y="100" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="13" font-weight="700" fill="#1f9b4f">G</text>
+<text id="mlO" x="518" y="100" text-anchor="middle" font-family="Segoe UI,sans-serif"
+ font-size="13" font-weight="700" fill="#2a7cc4">O</text>
+<text x="300" y="18" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11"
+ fill="#5c7d77">T = 1000 Мбит/с</text>
+</svg></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Факторы производительности"><div class="head"><h1 class="t">Факторы, влияющие на производительность сети</h1><p class="sub">Фактическая производительность сети зависит от множества факторов.</p></div><div class="sc"><div class="g g6 "><div class="step "><div class="c d"><div class="ch"><span class="num">01</span><h3>Качество соединения</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13.6a4 4 0 0 0 5.7.3l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M14 10.4a4 4 0 0 0-5.7-.3l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg></div><div class="hr"></div><p>Состояние кабелей, разъёмов, уровень сигнала Wi-Fi, стабильность линии связи.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Радиочастотные и электромагнитные помехи</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5a13 13 0 0 1 17 0M6.5 13a8.5 8.5 0 0 1 11 0M9.5 16.4a4 4 0 0 1 5 0"/><circle cx="12" cy="19.4" r="1"/></svg></div><div class="hr"></div><p>Другие беспроводные сети, бытовые устройства, электромагнитные источники создают помехи.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">03</span><h3>Приоритет трафика и отбрасывание пакетов</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="4.2" rx="1.2"/><rect x="3" y="10" width="18" height="4.2" rx="1.2"/><rect x="3" y="16" width="18" height="4.2" rx="1.2"/></svg></div><div class="hr"></div><p>Часть пакетов может быть отброшена на этапе обработки выходных очередей порта из-за низкого приоритета.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">04</span><h3>Отбрасывание и повторная пересылка</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4.6h6V7M6.4 7l1 13.4h9.2L17.6 7"/></svg></div><div class="hr"></div><p>При ошибках передачи данные могут быть отброшены и отправлены заново — это увеличивает задержки и снижает полезную скорость.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">05</span><h3>Ошибки в формировании данных</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></div><div class="hr"></div><p>Некорректная работа приложений, ошибки при подготовке данных к отправке приводят к повторной передаче или потере пакетов.</p></div></div><div class="step "><div class="c d"><div class="ch"><span class="num">06</span><h3>Накладные расходы протоколов</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p>Заголовки и служебные поля не несут полезной информации, но занимают пропускную способность.</p><div style="display:flex;gap:5px;margin-top:9px;flex-wrap:wrap"><span class="pill b">Заголовок</span><span class="pill g">Полезные данные</span><span class="pill d">Служебные поля</span></div></div></div></div></div></section>
+<section class="slide" data-label="Почему измеренная скорость ниже" data-scen="load"><div class="head"><h1 class="t">Почему измеренная скорость может быть ниже?</h1><p class="sub">Показания производительности сети зависят от объёма и количества пакетов, проходящих через неё.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="step "><div class="c l"><div class="ch"><h3>Небольшая нагрузка</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6l4.6 4.6L19 7.4"/></svg></div><div class="hr"></div><p>При низкой нагрузке и передаче небольших пакетов скорость может быть близка к пропускной способности.</p><div style="margin:12px 0 6px;display:flex;justify-content:space-between;font-size:11.5px;color:#5c7d77"><span>Измеренная скорость</span><span class="pill g">≈ пропускной способности</span></div><div class="bar green" id="loadA"><i data-w="92%" style="width:0"></i></div><ul class="ck loadlist" style="margin-top:12px"><li>Небольшие пакеты данных</li><li>Минимальные задержки</li><li>Сеть не перегружена</li></ul></div></div>
+<div class="step "><div class="c d"><div class="ch"><h3>Пиковая нагрузка</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6L21 19.4H3z"/><path d="M12 9.4v4.4M12 16.6h.01"/></svg></div><div class="hr"></div><p>При высоких нагрузках и передаче больших пакетов реальная скорость будет значительно ниже.</p><div style="margin:12px 0 6px;display:flex;justify-content:space-between;font-size:11.5px;color:#9dc4bc"><span>Измеренная скорость</span><span class="pill r">значительно ниже</span></div><div class="bar red" id="loadB"><i data-w="31%" style="width:0"></i></div><ul class="ck minus loadlist" style="margin-top:12px"><li>Большой объём трафика и крупные пакеты</li><li>Отбрасывание пакетов</li><li>Повторная пересылка данных</li><li>Уменьшение скользящего окна</li><li>Снижение скорости для сохранения стабильности</li></ul></div></div>
+</div>
+<div style="height:14px"></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Вывод</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.4h6M10 20.6h4"/><path d="M12 3.4a5.6 5.6 0 0 1 3.4 10.1c-.6.5-.9 1.1-.9 1.8H9.5c0-.7-.3-1.3-.9-1.8A5.6 5.6 0 0 1 12 3.4z"/></svg></div><div class="hr"></div><p>Производительность сети — это <b>не фиксированное значение</b>. Она зависит от текущей нагрузки, условий передачи и множества факторов. Поэтому измерение всегда привязано к условиям, в которых оно сделано.</p></div></div></div></section>
+<section class="slide" data-label="Накладные расходы: преамбула" data-scen="frame"><div class="head"><h1 class="t">Накладные расходы <em>(overhead)</em>: преамбула</h1><p class="sub">Часть трафика, необходимая для работы сети, но не содержащая полезной информации.</p></div><div class="sc">
+<div class="step "><div class="c d"><div class="ch"><span class="num">01</span><h3>Преамбула в Ethernet</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l8 4v9.6l-8 4-8-4V7.2z"/><path d="M4 7.2l8 4 8-4M12 11.2v9.6"/></svg></div><div class="hr"></div><p>Преамбула в заголовке кадра Ethernet состоит из <b>32 байт</b>, представляющих собой комбинацию нулей и единиц. Они служат для уведомления приёмника о начале передачи кадра, но не содержат полезной информации.</p></div></div>
+<div style="height:14px"></div>
+<div class="step "><div class="c l">
+<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:stretch"><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#49d67f22;border:1.4px solid #49d67f;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">Преамбула</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">32 байта</div><div style="font:600 10px Consolas,monospace;color:#1f9b4f;margin-top:5px">10101010 … 10101011</div></div><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#49d67f22;border:1.4px solid #49d67f;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">SFD</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">1 байт</div></div><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#8fb8b022;border:1.4px solid #8fb8b0;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">MAC получателя</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">6 байт</div></div><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#8fb8b022;border:1.4px solid #8fb8b0;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">MAC отправителя</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">6 байт</div></div><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#8fb8b022;border:1.4px solid #8fb8b0;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">Тип</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">2 байта</div></div><div class="fld" data-k="use" style="flex:3 1 90px;border-radius:12px;padding:10px 11px;background:#19b89f22;border:1.4px solid #19b89f;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">Полезные данные</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">46 – 1500 байт</div></div><div class="fld" data-k="srv" style="flex:1 1 90px;border-radius:12px;padding:10px 11px;background:#8fb8b022;border:1.4px solid #8fb8b0;min-width:88px"><div style="font:700 12px Segoe UI,sans-serif;color:#0a2c28;line-height:1.2">FCS</div><div style="font:600 10.5px Consolas,monospace;color:#3f6660;margin-top:3px">4 байта</div></div></div>
+<div style="display:flex;gap:7px;margin-top:9px;font-size:11px;color:#5c7d77">
+<div style="flex:2;border-top:1.4px solid #b7d8cf;padding-top:5px">Служебные данные (накладные расходы)</div>
+<div style="flex:3;border-top:1.4px solid #19b89f;padding-top:5px;color:#0e8d78">Полезная информация</div>
+</div>
+<div id="ovShare" style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="pill b">Минимальный кадр: 64 байта данных + 26 байт служебных</span>
+<span class="pill r">доля overhead ≈ 29 %</span>
+<span class="pill g">Кадр 1500 байт: доля overhead ≈ 2 %</span>
+</div></div></div>
+<div style="height:14px"></div>
+<div class="g g2">
+<div class="step "><div class="c l"><div class="ch"><h3>Зачем она нужна</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h3l2.2-6 3 13 3-9.5 2.2 4.5H22"/></svg></div><div class="hr"></div><p>Преамбула помогает приёмнику синхронизироваться и понять, что начинается новый кадр. Без неё приёмник не определит границу кадра в потоке бит.</p><div class="res"><i>✓</i><div>Служебные данные не бесполезны — без них сеть не будет работать. Но в полезную скорость они не попадают.</div></div></div></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Накладные расходы — это</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p>Информация, которая передаётся по сети, но не воспринимается непосредственно как полезная для конечного пользователя.</p><ul class="ck"><li>Преамбула и SFD</li><li>MAC-адреса получателя и отправителя</li><li>Поле типа и контрольная сумма FCS</li><li>Межпакетный разрыв</li><li>Повторные передачи</li></ul></div></div>
+</div></div></section>
+<section class="slide" data-label="Межпакетный разрыв (IPG)"><div class="head"><h1 class="t">Межпакетный разрыв <em>(Interpacket Gap)</em></h1><p class="sub">После каждого кадра нужно дать понять приёмнику, что передача прекращена.</p></div><div class="sc"><div class="g g32" style="align-items:start">
+<div class="col">
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Как это работает</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7v5.3l3.4 2"/></svg></div><div class="hr"></div><p>После каждого кадра необходимо дать понять устройству-приёмнику, что передача прекращена. Для этого используется межпакетный разрыв (interpacket gap) размером <b>96 бит</b>.</p><p>Во время этого интервала в канале нет передачи данных, то есть он находится в простое, хотя это не несёт полезной информации. Тем не менее, это необходимый элемент в передаче данных.</p></div></div>
+<div class="step "><div class="c l" style="padding:12px 14px 8px">
+<svg class="wide" viewBox="0 0 620 180" style="width:100%" aria-hidden="true">
+<rect x="20" y="58" width="130" height="62" rx="9" fill="#12423c"/>
+<text x="85" y="84" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12.5" font-weight="700" fill="#eafaf6">Кадр 1</text>
+<text x="85" y="102" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#9dc4bc">(данные)</text>
+<rect x="470" y="58" width="130" height="62" rx="9" fill="#12423c"/>
+<text x="535" y="84" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12.5" font-weight="700" fill="#eafaf6">Кадр 2</text>
+<text x="535" y="102" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#9dc4bc">(данные)</text>
+<line x1="150" y1="89" x2="470" y2="89" stroke="#b7d8cf" stroke-width="2" stroke-dasharray="7 7"/>
+<path d="M160 89h300" stroke="#19b89f" stroke-width="1.6" marker-start="url(#ar)" marker-end="url(#ar)" opacity="0"/>
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+<path d="M0 4h8M4 0l4 4-4 4" stroke="#0a2c28" stroke-width="1.4" fill="none"/></marker></defs>
+<path d="M165 46h290" stroke="#0a2c28" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="310" y="26" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="750" fill="#0a2c28">Межпакетный разрыв</text>
+<text x="310" y="40" text-anchor="middle" font-family="Consolas,monospace" font-size="14" font-weight="800" fill="#0e8d78">96 бит</text>
+<text x="310" y="137" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" fill="#3f6660">Канал в простое</text>
+<text x="310" y="153" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#5c7d77">(нет передачи данных)</text>
+<text x="85" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#5c7d77">время →</text>
+</svg></div></div>
+</div>
+<div class="col">
+<div class="step "><div class="c l"><div class="ch"><h3>Сколько это по времени</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 13l4.2-3.4M12 4v1.6M4.6 7.2l1.1 1.1M19.4 7.2l-1.1 1.1"/></svg></div><div class="hr"></div><p>Время, которое затрачивается на передачу этих 96 бит, зависит от скорости сетевого адаптера.</p><div class="tw "><table><thead><tr><th>Скорость</th><th>Длительность IPG</th></tr></thead><tbody><tr><td><span class='mono'>10 Мбит/с</span></td><td><span class='mono'>9,6 мкс</span></td></tr><tr><td><span class='mono'>100 Мбит/с</span></td><td><span class='mono'>0,96 мкс</span></td></tr><tr><td><span class='mono'>1 Гбит/с</span></td><td><span class='mono'>96 нс</span></td></tr><tr><td><span class='mono'>10 Гбит/с</span></td><td><span class='mono'>9,6 нс</span></td></tr></tbody></table></div></div></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Почему это накладные расходы</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6L21 19.4H3z"/><path d="M12 9.4v4.4M12 16.6h.01"/></svg></div><div class="hr"></div><p>Канал в эти моменты свободен, но передать по нему ничего нельзя. При большом количестве мелких кадров суммарное время простоя становится заметной долей секунды.</p><div class="res bad"><i>!</i><div>Чем мельче кадры, тем выше доля overhead в общем трафике.</div></div></div></div>
+</div>
+</div></div></section>
+<section class="slide" data-label="Повторная передача в TCP" data-scen="tcp"><div class="head"><h1 class="t">Накладные расходы: повторная передача в TCP</h1><p class="sub">Протокол TCP также увеличивает накладные расходы.</p></div><div class="sc"><div class="g g32" style="align-items:start">
+<div class="col">
+<div class="step "><div class="c d"><div class="ch"><span class="num">03</span><h3>Повторная передача</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5.6v5h-5"/><path d="M19.4 10.6A7.6 7.6 0 1 0 19 15.4"/></svg></div><div class="hr"></div><p>Протокол TCP постоянно переотправляет сегменты, для которых не получено подтверждение <b>(ACK)</b> от приёмника.</p><p>Это необходимо для обеспечения надёжной доставки данных, но увеличивает объём служебного трафика в сети.</p></div></div>
+<div class="step "><div class="c l" style="padding:12px 14px 8px">
+<svg class="wide" viewBox="0 0 620 230" style="width:100%" aria-hidden="true">
+<rect x="14" y="78" width="118" height="72" rx="10" fill="#12423c"/>
+<text x="73" y="112" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#eafaf6">Отправитель</text>
+<text x="73" y="128" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#9dc4bc">(клиент)</text>
+<rect x="488" y="78" width="118" height="72" rx="10" fill="#12423c"/>
+<text x="547" y="112" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#eafaf6">Получатель</text>
+<text x="547" y="128" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#9dc4bc">(сервер)</text>
+<defs>
+<marker id="agr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+<path d="M0 0l9 4.5L0 9z" fill="#2aa85d"/></marker>
+<marker id="abl" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+<path d="M0 0l9 4.5L0 9z" fill="#2a7cc4"/></marker></defs>
+<g id="tSeg"><path d="M140 52h336" stroke="#2aa85d" stroke-width="2.4" marker-end="url(#agr)"/>
+<text x="308" y="40" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#1f9b4f">Сегмент данных</text></g>
+<g id="tAck"><path d="M476 104H146" stroke="#ef5a5a" stroke-width="2.4" stroke-dasharray="8 6"/>
+<path d="M300 94l16 16M316 94l-16 16" stroke="#ef5a5a" stroke-width="3" stroke-linecap="round"/>
+<text x="308" y="88" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#d13c3c">ACK не получен</text></g>
+<g id="tTo"><rect x="206" y="132" width="204" height="26" rx="8" fill="#fde8e8" stroke="#ef5a5a"/>
+<text x="308" y="149" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11.5" fill="#c23434">Истёк таймаут ожидания</text></g>
+<g id="tRe"><path d="M140 186h336" stroke="#2a7cc4" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#abl)"/>
+<text x="308" y="208" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#2a7cc4">Повторная отправка того же сегмента</text></g>
+</svg></div></div>
+</div>
+<div class="col">
+<div class="step "><div class="c l"><div class="ch"><h3>Счётчик служебного трафика</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7.4" y="12" width="2.8" height="5"/><rect x="12" y="8.4" width="2.8" height="8.6"/><rect x="16.6" y="5" width="2.8" height="12"/></svg></div><div class="hr"></div><div style="font-size:11.5px;color:#5c7d77">Повторно передано за сеанс</div><div class="big"><span id="tCnt">0</span> КБ</div><p style='margin-top:8px'>Каждый потерянный сегмент оплачивается дважды: сам сегмент плюс ожидание таймаута.</p></div></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Зависимость</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18L9.6 11.6l3.6 3.2L20 6"/><path d="M15 6h5v5"/></svg></div><div class="hr"></div><p>Чем больше потеря пакетов или выше нагрузка на сеть, тем больше повторных передач и, соответственно, накладных расходов.</p><div class="res bad"><i>!</i><div>Рост нагрузки → рост потерь → рост повторов → ещё больше нагрузки. Петля затягивается сама на себе.</div></div></div></div>
+</div>
+</div></div></section>
+<section class="slide" data-label="Тест производительности"><div class="head"><h1 class="t">Тест производительности сети</h1><p class="sub">Показывает, с какой скоростью передаются данные в вашей сети.</p></div><div class="sc">
+<div class="step "><div class="c d" style="padding:20px 24px">
+<div class="g g4" style="align-items:center">
+<div style="text-align:center">
+  <div style="width:56px;height:56px;margin:0 auto 9px;border-radius:50%;display:grid;
+   place-items:center;background:rgba(94,224,200,.12);border:1px solid rgba(94,224,200,.45)">
+  <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#5ee0c8;fill:none;stroke-width:1.5">
+  <circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4a14 14 0 0 1 0 17.2 14 14 0 0 1 0-17.2"/></svg></div>
+  <div style="font:700 13px Segoe UI,sans-serif;color:#eafaf6">Проверка завершена</div>
+  <div style="font-size:11px;color:#9dc4bc;margin-top:3px">Соединение стабильное</div>
+</div>
+<div style="text-align:center;border-left:1px solid rgba(94,224,200,.18)">
+  <div style="font:700 11.5px Segoe UI,sans-serif;color:#9dc4bc;letter-spacing:.08em">СКАЧИВАНИЕ</div>
+  <div style="font:800 clamp(28px,4vw,52px)/1 Consolas,monospace;color:#fff;margin:6px 0">83.49</div>
+  <div style="font-size:12px;color:#5ee0c8;font-weight:700">Мбит/с</div>
+</div>
+<div style="text-align:center;border-left:1px solid rgba(94,224,200,.18)">
+  <div style="font:700 11.5px Segoe UI,sans-serif;color:#9dc4bc;letter-spacing:.08em">ОТПРАВКА</div>
+  <div style="font:800 clamp(28px,4vw,52px)/1 Consolas,monospace;color:#fff;margin:6px 0">84.94</div>
+  <div style="font-size:12px;color:#9b7fe0;font-weight:700">Мбит/с</div>
+</div>
+<div style="text-align:center;border-left:1px solid rgba(94,224,200,.18)">
+  <div style="font:700 11.5px Segoe UI,sans-serif;color:#9dc4bc;letter-spacing:.08em">PING</div>
+  <div style="font:800 clamp(28px,4vw,52px)/1 Consolas,monospace;color:#fff;margin:6px 0">3</div>
+  <div style="font-size:12px;color:#e8a33d;font-weight:700">мс</div>
+  <div style="font-size:10.5px;color:#9dc4bc;margin-top:7px">при скачивании 7 мс · при отправке 9 мс</div>
+</div>
+</div></div></div>
+<div style="height:14px"></div>
+<div class="g g4">
+<div class="step "><div class="c l"><div class="ch"><h3>Скачивание (Download)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.4 10.6L12 15.2l4.6-4.6M4.6 19.4h14.8"/></svg></div><div class="hr"></div><p><b>Мбит/с.</b> Скорость, с которой данные загружаются из интернета на ваше устройство.</p><div class="res"><i>✓</i><div>Загрузка сайтов, файлов, видео.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>Отправка (Upload)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V9M7.4 13.4L12 8.8l4.6 4.6M4.6 4.6h14.8"/></svg></div><div class="hr"></div><p><b>Мбит/с.</b> Скорость, с которой данные отправляются с вашего устройства в интернет.</p><div class="res"><i>✓</i><div>Отправка файлов, видеозвонки, работа в облаке.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>Пинг (Ping)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7v5.3l3.4 2"/></svg></div><div class="hr"></div><p><b>мс.</b> Время, за которое данные доходят до сервера и возвращаются обратно. Чем меньше значение, тем быстрее отклик.</p><div class="res"><i>✓</i><div>Особенно важен в онлайн-играх и видеозвонках.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><h3>Хорошие значения</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6l4.6 4.6L19 7.4"/></svg></div><div class="hr"></div><div class="tw "><table><thead><tr><th>Параметр</th><th>Ориентир</th></tr></thead><tbody><tr><td>Скачивание</td><td><span class='mono'>&gt; 50 Мбит/с</span></td></tr><tr><td>Отправка</td><td><span class='mono'>&gt; 50 Мбит/с</span></td></tr><tr><td>Пинг</td><td><span class='mono'>&lt; 20 мс</span></td></tr></tbody></table></div><div class="res"><i>✓</i><div>Точные значения зависят от тарифного плана и типа подключения.</div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Доступность сети"><div class="head"><h1 class="t">Доступность сети <em>(network availability)</em></h1><p class="sub">Процентное соотношение времени, в котором сеть фактически использовалась, к общему времени периода.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><span class="num">01</span><h3>Определение</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7v5.3l3.4 2"/></svg></div><div class="hr"></div><p><b>Доступность сети (network availability)</b> — это процентное соотношение времени, в котором сеть фактически использовалась <b>(uptime)</b>, к общему времени периода.</p><p>По умолчанию за «время периода» принимают год — <b>365 дней</b>.</p><div class="res"><i>✓</i><div>Время фактического использования вычисляется как общее время периода за вычетом времени простоя (downtime) — времени, в течение которого пользователи не могут использовать все сервисы сети.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><span class="num">02</span><h3>Как считается</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.6" width="16" height="18.8" rx="2.2"/><path d="M7.6 7h8.8M8 12h.01M12 12h.01M16 12h.01M8 16.4h.01M12 16.4h.01M16 16.4h.01"/></svg></div><div class="hr"></div><div class="fml" style="margin:14px 0 16px">A = <span class="frac"><span class="n">t<sub>общ</sub> − t<sub>пр</sub></span><span class="d">t<sub>общ</sub></span></span> × 100 %</div><div class="tw "><table><thead><tr><th>Обозначение</th><th>Что это</th></tr></thead><tbody><tr><td><span class='mono'>A</span></td><td>доступность сети, %</td></tr><tr><td><span class='mono'>t<sub>общ</sub></span></td><td>общее время периода (например, год)</td></tr><tr><td><span class='mono'>t<sub>пр</sub></span></td><td>время простоя сети</td></tr></tbody></table></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Доступность: пример расчёта" data-scen="avail"><div class="head"><h1 class="t">Доступность сети: пример расчёта</h1><p class="sub">Рассчитаем доступность сети при простое 2 часа в год.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="c l"><div class="ch"><span class="num">01</span><h3>Подстановка по шагам</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.6" width="16" height="18.8" rx="2.2"/><path d="M7.6 7h8.8M8 12h.01M12 12h.01M16 12h.01M8 16.4h.01M12 16.4h.01M16 16.4h.01"/></svg></div><div class="hr"></div><div class="astep"><div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid #cfe3dc;margin-bottom:8px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(25,184,159,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7v5.3l3.4 2"/></svg></span><span style="flex:1;font-size:12.5px;color:#3b625c">Общее время (год)</span><span style="font:700 13.5px Consolas,monospace;color:#0e8d78">t<sub>общ</sub> = 24 × 365 = 8760 часов</span></div></div><div class="astep"><div style="display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid #cfe3dc;margin-bottom:8px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(25,184,159,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6L21 19.4H3z"/><path d="M12 9.4v4.4M12 16.6h.01"/></svg></span><span style="flex:1;font-size:12.5px;color:#3b625c">Время простоя</span><span style="font:700 13.5px Consolas,monospace;color:#0e8d78">t<sub>пр</sub> = 2 часа</span></div></div><div class="astep" style="margin-top:14px"><div class="fml">A = <span class="frac"><span class="n">24 × 365 − 2</span><span class="d">24 × 365</span></span> = <span class="frac"><span class="n">8758</span><span class="d">8760</span></span> = <b style="color:#0e8d78">99,97 %</b></div></div><div class="astep"><div class="res"><i>✓</i><div>Результат очень высокий — рядом со 100 %. Но для многих организаций этого недостаточно.</div></div></div></div>
+<div class="c d"><div class="ch"><span class="num">02</span><h3>Тренажёр: калькулятор доступности</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 13l4.2-3.4M12 4v1.6M4.6 7.2l1.1 1.1M19.4 7.2l-1.1 1.1"/></svg></div><div class="hr"></div><p>Введите время простоя за год и выберите единицы — доступность пересчитается.</p><div class="ui"><label for="dt">Простой за год</label><input id="dt" type="number" min="0" step="0.1" value="2"><select id="dtu"><option value="min">минут</option><option value="h" selected>часов</option><option value="d">дней</option></select></div><div style="margin-top:14px;font-size:11.5px;color:#9dc4bc">Доступность A</div><div class="big" id="aOut" style="color:#5ee0c8">99,9772 %</div><div id="aNote" style="font-size:11.5px;color:#9dc4bc;margin-top:4px"></div><div class="hr"></div><div style="font-size:11.5px;color:#9dc4bc">Какому классу соответствует</div><div id="aCls" style="font-size:13.5px;color:#eafaf6;font-weight:650;margin-top:4px;line-height:1.35"></div></div>
+</div></div></section>
+<section class="slide" data-label="Доступность: требования и рост" data-scen="scales"><div class="head"><h1 class="t">Какой показатель доступности считать приемлемым?</h1><p class="sub">Приемлемый показатель зависит от типа организации и её задач.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Требования по типам организаций</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7.4" y="12" width="2.8" height="5"/><rect x="12" y="8.4" width="2.8" height="8.6"/><rect x="16.6" y="5" width="2.8" height="12"/></svg></div><div class="hr"></div><div style="display:flex;gap:11px;align-items:flex-start;margin-bottom:13px"><span style="flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(25,184,159,.12);border:1px solid rgba(25,184,159,.35)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 10.6L12 3.8l8.4 6.8V20a.9.9 0 0 1-.9.9H4.5a.9.9 0 0 1-.9-.9z"/><path d="M9.6 20.9v-6.4h4.8v6.4"/></svg></span><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b style="font-size:13px;color:#0a2c28">Домашняя сеть (развлечения)</b><span class="pill">&gt; 80 %</span></div><div style="margin:6px 0 4px"><div class="bar "><i data-w="80%" style="width:0"></i></div></div><div style="font-size:11px;color:#5c7d77">Критично, только если ниже 80 %.</div></div></div><div style="display:flex;gap:11px;align-items:flex-start;margin-bottom:13px"><span style="flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(25,184,159,.12);border:1px solid rgba(25,184,159,.35)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.4" rx="1.6"/><path d="M2 18.8h20"/></svg></span><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b style="font-size:13px;color:#0a2c28">Удалённая работа из дома</b><span class="pill">&gt; 95 %</span></div><div style="margin:6px 0 4px"><div class="bar "><i data-w="95%" style="width:0"></i></div></div><div style="font-size:11px;color:#5c7d77">Требования существенно выше.</div></div></div><div style="display:flex;gap:11px;align-items:flex-start;margin-bottom:13px"><span style="flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(25,184,159,.12);border:1px solid rgba(25,184,159,.35)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20.4V5.2l8-2.6v17.8M12 20.4h8V9.6l-8-2.6"/><path d="M7 9h2M7 13h2M15.4 13h1.6M15.4 16.6h1.6"/></svg></span><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b style="font-size:13px;color:#0a2c28">Малый бизнес</b><span class="pill">&gt; 90 %</span></div><div style="margin:6px 0 4px"><div class="bar "><i data-w="90%" style="width:0"></i></div></div><div style="font-size:11px;color:#5c7d77">Доступность выше 90 % — это уже хорошо.</div></div></div><div style="display:flex;gap:11px;align-items:flex-start;margin-bottom:13px"><span style="flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(25,184,159,.12);border:1px solid rgba(25,184,159,.35)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.4L12 4l9 5.4M4.6 9.4v8.8M9.2 9.4v8.8M14.8 9.4v8.8M19.4 9.4v8.8M3 20.6h18"/></svg></span><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b style="font-size:13px;color:#0a2c28">Финансовые организации (биржи, валютные торги)</b><span class="pill">&gt; 99,995 %</span></div><div style="margin:6px 0 4px"><div class="bar "><i data-w="100%" style="width:0"></i></div></div><div style="font-size:11px;color:#5c7d77">Падение ниже 99,995 % может означать катастрофу.</div></div></div></div></div>
+<div class="col">
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Стандартные значения</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.8l5.9-.8z"/></svg></div><div class="hr"></div><div class="g g2"><div><div class="big" style="color:#5ee0c8">99,99 %</div><div style="font-size:11.5px;color:#9dc4bc">≈ 53 минуты в год</div><div class="hr"></div><b>Корпоративные сети</b></div><div><div class="big" style="color:#5ee0c8">99,999 %</div><div style="font-size:11.5px;color:#9dc4bc">≈ 5,3 минуты в год</div><div class="hr"></div><b>Центры обработки данных (ЦОД)</b></div></div><div class="res"><i>✓</i><div>Чем критичнее сервисы, тем выше требования к доступности сети.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Как повысить доступность</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18L9.6 11.6l3.6 3.2L20 6"/><path d="M15 6h5v5"/></svg></div><div class="hr"></div><p>Увеличить доступность можно за счёт:</p><ul class="ck"><li>резервирования оборудования и каналов связи</li><li>грамотной архитектуры сети</li><li>оперативного мониторинга и реагирования</li><li>регулярного обслуживания и обновления</li><li>подготовленного и опытного персонала</li></ul></div></div>
+<div class="step "><div class="bub ">Высокая доступность — это не только стабильная работа сегодня, но и доверие пользователей завтра.</div></div>
+</div>
+</div></div></section>
+<section class="slide" data-label="Надёжность сети"><div class="head"><h1 class="t">Надёжность сети <em>(reliability)</em></h1><p class="sub">Свойство сети сохранять способность выполнять требуемые функции.</p></div><div class="sc">
+<div class="step "><div class="c d"><div class="ch"><h3>Определение</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.6 3v5.6c0 4.6-3.1 8.2-7.6 9.8-4.5-1.6-7.6-5.2-7.6-9.8V5.8z"/><path d="M8.8 12l2.3 2.3 4.1-4.3"/></svg></div><div class="hr"></div><p style='font-size:clamp(13px,1.1vw,17px)'><b>Надёжность сети</b> — это свойство сети сохранять способность выполнять требуемые функции в требуемом объёме в условиях воздействия дестабилизирующих факторов.</p></div></div>
+<div style="height:14px"></div>
+<p class="sub" style="font-weight:700;color:#0a2c28;font-size:clamp(14px,1.3vw,20px);margin-bottom:12px">
+Дестабилизирующие факторы</p>
+<div class="g g4">
+<div class="step "><div class="c d"><div class="ch"><span class="num">01</span><h3>Оборудование</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6.4" rx="1.6"/><rect x="3" y="13.6" width="18" height="6.4" rx="1.6"/><path d="M6.6 7.2h.01M6.6 16.8h.01"/></svg></div><div class="hr"></div><ul class="ck ask"><li>Насколько проверенным является сетевое оборудование?</li><li>Каков показатель среднего времени наработки на отказ (MTBF), заявленный производителем?</li><li>Оценено ли оборудование сторонними агентствами?</li><li>Каковы предельно допустимые режимы работы?</li><li>Сколько времени оборудование может проработать в таких режимах?</li></ul></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Электропитание</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L5 13h6l-1 9 9-12h-6z"/></svg></div><div class="hr"></div><ul class="ck ask"><li>Как обеспечивается электропитание сетевого оборудования?</li><li>Есть ли запас по доступной мощности в случае расширения сети?</li><li>Используются ли резервные источники (ИБП, генераторы)?</li><li>На какое время работы они рассчитаны?</li></ul><div class="res"><i>✓</i><div>Резервное питание = непрерывная работа.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">03</span><h3>Безопасность</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.6" y="10.4" width="14.8" height="10" rx="2.2"/><path d="M8.2 10.4V7.6a3.8 3.8 0 0 1 7.6 0v2.8"/></svg></div><div class="hr"></div><ul class="ck ask"><li>Защищён ли физический вход в помещения с оборудованием?</li><li>Как регулируются и разграничиваются административные и другие уровни доступа?</li><li>Как контролируется доступ пользователей к сетевым ресурсам?</li><li>Насколько качественно защищена сеть от вредоносного ПО и атак злоумышленников?</li></ul><div class="res"><i>✓</i><div>Физическая и цифровая безопасность — основа надёжности.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">04</span><h3>Персонал</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.4" r="3.2"/><path d="M3.4 19.6c0-3.1 2.5-5.4 5.6-5.4s5.6 2.3 5.6 5.4"/><path d="M16.2 6.4a3 3 0 0 1 0 5.6M17.4 14.6c2 .7 3.3 2.5 3.3 5"/></svg></div><div class="hr"></div><ul class="ck ask"><li>Какие критерии отбора сотрудников?</li><li>Проходит ли персонал обучение по работе с оборудованием?</li><li>Какими полномочиями обладает каждый сотрудник?</li><li>Существует ли практика взаимного контроля?</li></ul><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:9px"><span class="pill d">Обучение</span><span class="pill d">Контроль</span><span class="pill d">Опыт</span><span class="pill d">Ответственность</span></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Что происходит при проблемах"><div class="head"><h1 class="t">Что происходит при возникновении проблем?</h1><p class="sub">Все эти факторы взаимосвязаны, и за каждым из них закреплены сотрудники, которые отвечают за него и за его работоспособность.</p></div><div class="sc">
+<div class="step "><div class="c l"><div class="ch"><h3>Цикл реагирования</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5.6v5h-5"/><path d="M19.4 10.6A7.6 7.6 0 1 0 19 15.4"/></svg></div><div class="hr"></div><div class="chain"><div class="lk"><span class="bl"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6L21 19.4H3z"/><path d="M12 9.4v4.4M12 16.6h.01"/></svg></span><span class="lb">Возникновение<br>дестабилизирующего фактора</span></div><span class="cv">›</span><div class="lk"><span class="bl"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.4 12S5.8 6 12 6s9.6 6 9.6 6-3.4 6-9.6 6-9.6-6-9.6-6z"/><circle cx="12" cy="12" r="2.8"/></svg></span><span class="lb">Оценка влияния<br>на сеть</span></div><span class="cv">›</span><div class="lk"><span class="bl"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><span class="lb">Определение<br>необходимых действий</span></div><span class="cv">›</span><div class="lk"><span class="bl"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/></svg></span><span class="lb">Реализация мер по устранению<br>или минимизации последствий</span></div><span class="cv">›</span><div class="lk fin"><span class="bl"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6l4.6 4.6L19 7.4"/></svg></span><span class="lb">Сеть продолжает<br>выполнять свои функции</span></div></div></div></div>
+<div style="height:14px"></div>
+<div class="g g2">
+<div class="step "><div class="c d"><div class="ch"><h3>Надёжность — результат комплексного подхода</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.6 3v5.6c0 4.6-3.1 8.2-7.6 9.8-4.5-1.6-7.6-5.2-7.6-9.8V5.8z"/><path d="M8.8 12l2.3 2.3 4.1-4.3"/></svg></div><div class="hr"></div><p>Устойчивая работа сети достигается за счёт правильного выбора оборудования, резервирования, безопасности и квалифицированного персонала.</p><div class="res"><i>✓</i><div>Нельзя закрыть один фактор и считать сеть надёжной: отказ приходит через самое слабое звено.</div></div></div></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Надёжность и доступность — не одно и то же</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4v17M6 7.4h12M8.6 20.4h6.8"/><path d="M3 15l3-7.6L9 15a3 3 0 0 1-6 0zM15 15l3-7.6L21 15a3 3 0 0 1-6 0z"/></svg></div><div class="hr"></div><p><b>Доступность</b> измеряется в процентах и считается постфактум: сколько времени сеть работала.</p><p><b>Надёжность</b> — это свойство конструкции: способность сети сохранять работу при воздействии факторов. Надёжность — причина, доступность — её числовое следствие.</p></div></div>
+</div></div></section>
+<section class="slide" data-label="Единая точка отказа (SPOF)" data-scen="spof"><div class="head"><h1 class="t">Единая точка отказа <em>(Single Point of Failure)</em></h1><p class="sub">Узел системы, выход из строя которого приводит к отказу всей системы.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="c l"><div class="ch"><span class="num">01</span><h3>Пример единой точки отказа</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg></div><div class="hr"></div><p>Если выйдет из строя коммутатор <b>SW2</b>, вся правая часть сети перестанет работать.</p><svg viewBox="0 0 400 250" aria-hidden="true">
+<rect id="domain" x="196" y="36" width="194" height="198" rx="14" fill="#fde8e8" stroke="#ef5a5a"
+ stroke-dasharray="6 5" opacity="0"/>
+<text x="293" y="30" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11"
+ font-weight="700" fill="#c23434">Домен отказа</text>
+<g stroke="#0a2c28" stroke-width="1.8" fill="none">
+<path d="M176 62L106 108M176 62l70 46M106 130v34M246 130l-34 34M246 130l34 34"/></g>
+<g fill="#1f6f9c">
+<rect x="150" y="44" width="52" height="24" rx="7"/>
+<rect x="80" y="96" width="52" height="24" rx="7"/>
+<rect x="220" y="96" width="52" height="24" rx="7"/></g>
+<g fill="#eafaf6" font-family="Segoe UI,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">
+<text x="176" y="60">R1</text><text x="106" y="112">SW1</text><text x="246" y="112">SW2</text></g>
+<g fill="#2b6ea8">
+<rect x="86" y="164" width="40" height="28" rx="4"/>
+<rect x="192" y="164" width="40" height="28" rx="4"/>
+<rect x="260" y="164" width="40" height="28" rx="4"/></g>
+<g fill="#3f6660" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+<text x="106" y="206">PC1</text><text x="212" y="206">PC2</text><text x="280" y="206">PC3</text></g>
+<g class="dead" data-o="1" opacity="0">
+<circle cx="276" cy="92" r="10" fill="#ef5a5a"/>
+<path d="M272 88l8 8M280 88l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></g>
+<g class="dead" opacity="0">
+<circle cx="212" cy="178" r="10" fill="#ef5a5a"/>
+<path d="M208 174l8 8M216 174l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="280" cy="178" r="10" fill="#ef5a5a"/>
+<path d="M276 174l8 8M284 174l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></g>
+</svg><div class="res bad"><i>!</i><div>Выход из строя SW2 — недоступны все устройства в домене отказа.</div></div></div>
+<div class="c d"><div class="ch"><span class="num">02</span><h3>Каскадный отказ</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13.6a4 4 0 0 0 5.7.3l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M14 10.4a4 4 0 0 0-5.7-.3l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg></div><div class="hr"></div><p>Если одна точка отказа связана с другой, её сбой может вызвать цепную реакцию.</p><svg viewBox="0 0 340 250" aria-hidden="true">
+<ellipse cx="170" cy="30" rx="54" ry="20" fill="#dcf0fb" stroke="#7bb8e0"/>
+<text x="170" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12"
+ font-weight="700" fill="#1f5f8c">Интернет</text>
+<g fill="#1f6f9c">
+<rect x="142" y="92" width="56" height="26" rx="7"/>
+<rect x="142" y="156" width="56" height="26" rx="7"/></g>
+<g fill="#eafaf6" font-family="Segoe UI,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">
+<text x="170" y="110">R1</text><text x="170" y="174">SW2</text></g>
+<g fill="#2b6ea8"><rect x="96" y="212" width="40" height="26" rx="4"/>
+<rect x="204" y="212" width="40" height="26" rx="4"/></g>
+<defs><marker id="ard" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+<path d="M0 0l8 4-8 4z" fill="#ef5a5a"/></marker></defs>
+<g class="casc" opacity="0"><path d="M170 52v34" stroke="#ef5a5a" stroke-width="2.4" marker-end="url(#ard)"/></g>
+<g class="casc" opacity="0"><path d="M170 120v30" stroke="#ef5a5a" stroke-width="2.4" marker-end="url(#ard)"/></g>
+<g class="casc" opacity="0">
+<path d="M158 184l-38 22M182 184l38 22" stroke="#ef5a5a" stroke-width="2.4" marker-end="url(#ard)"/></g>
+<g class="dead" data-o="1" opacity="0">
+<circle cx="170" cy="105" r="10" fill="#ef5a5a"/>
+<path d="M166 101l8 8M174 101l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></g>
+<g class="dead" opacity="0">
+<circle cx="170" cy="169" r="10" fill="#ef5a5a"/>
+<path d="M166 165l8 8M174 165l-8 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="116" cy="225" r="9" fill="#ef5a5a"/>
+<path d="M112.5 221.5l7 7M119.5 221.5l-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<circle cx="224" cy="225" r="9" fill="#ef5a5a"/>
+<path d="M220.5 221.5l7 7M227.5 221.5l-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g>
+<g fill="#9dc4bc" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" text-anchor="middle">
+<text x="116" y="248">PC2</text><text x="224" y="248">PC3</text></g>
+</svg><div class="res bad"><i>!</i><div>Отказ R1 приводит к отказу SW2, а за ним — к отказу PC2 и PC3.</div></div></div>
+</div></div></section>
+<section class="slide" data-label="Отказоустойчивость и резервирование"><div class="head"><h1 class="t">Как избежать единой точки отказа</h1><p class="sub">Используйте резервирование и избыточность — дублируйте критически важные компоненты и связи.</p></div><div class="sc"><div class="g g2" style="align-items:start">
+<div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Резервированная схема</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6l4.6 4.6L19 7.4"/></svg></div><div class="hr"></div><svg viewBox="0 0 360 240" aria-hidden="true">
+<ellipse cx="180" cy="26" rx="52" ry="19" fill="#dcf0fb" stroke="#7bb8e0"/>
+<text x="180" y="31" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12"
+ font-weight="700" fill="#1f5f8c">Интернет</text>
+<g stroke="#0a2c28" stroke-width="1.6" fill="none">
+<path d="M180 45l-62 32M180 45l62 32M118 103v30M242 103v30M118 89h124M118 133h124
+ M118 103l124 30M242 103l-124 30M100 160l-18 24M136 160l18 24M224 160l-44 24M260 160l34 24"/></g>
+<g fill="#1f6f9c">
+<rect x="92" y="77" width="52" height="24" rx="7"/><rect x="216" y="77" width="52" height="24" rx="7"/>
+<rect x="92" y="133" width="52" height="24" rx="7"/><rect x="216" y="133" width="52" height="24" rx="7"/></g>
+<g fill="#eafaf6" font-family="Segoe UI,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">
+<text x="118" y="93">R1</text><text x="242" y="93">R2</text>
+<text x="118" y="149">SW1</text><text x="242" y="149">SW2</text></g>
+<g fill="#2b6ea8"><rect x="60" y="184" width="40" height="26" rx="4"/>
+<rect x="160" y="184" width="40" height="26" rx="4"/><rect x="272" y="184" width="40" height="26" rx="4"/></g>
+<g fill="#3f6660" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" text-anchor="middle">
+<text x="80" y="224">PC1</text><text x="180" y="224">PC2</text><text x="292" y="224">PC3</text></g>
+</svg><ul class="ck"><li>Несколько устройств вместо одного</li><li>Резервные каналы связи</li><li>Автоматическое переключение при сбое</li><li>Отсутствие единой точки отказа</li></ul><div class="res"><i>✓</i><div>Даже при отказе одного устройства сеть продолжает работать.</div></div></div></div>
+<div class="col">
+<div class="step "><div class="c d"><div class="ch"><span class="num">04</span><h3>Отказоустойчивость (Fault Tolerance)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.6 3v5.6c0 4.6-3.1 8.2-7.6 9.8-4.5-1.6-7.6-5.2-7.6-9.8V5.8z"/><path d="M8.8 12l2.3 2.3 4.1-4.3"/></svg></div><div class="hr"></div><p>Способность сети сохранять работоспособность в случаях отказа отдельных компонентов или сбоев в работе оборудования и служб.</p><div class="res"><i>✓</i><div>Цель — обеспечить непрерывную работу сервисов даже при возникновении сбоев.</div></div></div></div>
+<div class="step "><div class="c l"><div class="ch"><span class="num">05</span><h3>Резервирование (Redundancy)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p>Намеренное завышение количества требуемого оборудования и ресурсов для обеспечения работы сети. Например, вторым устройством резервируется основное на случай выхода его из строя.</p><p>Но резервирование не бесплатно: оно увеличивает стоимость сети и требует корректного включения резерва в работу в нужный момент.</p><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px"><span class="pill">Дублирование критических устройств</span><span class="pill">Резервные соединения</span><span class="pill">Корректное включение при необходимости</span></div></div></div>
+<div class="step "><div class="bub ">Резервирование может применяться не только между устройствами, но и внутри одного устройства: два блока питания, два модуля управления.</div></div>
+</div>
+</div></div></section>
+<section class="slide" data-label="Масштабируемость"><div class="head"><h1 class="t">Масштабируемость <em>(scalability)</em></h1><p class="sub">Характеристика, которая показывает, насколько быстро и просто можно расширить сеть без потери производительности.</p></div><div class="sc">
+<div class="step "><div class="c d"><div class="ch"><h3>Определение</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18L9.6 11.6l3.6 3.2L20 6"/><path d="M15 6h5v5"/></svg></div><div class="hr"></div><p style='font-size:clamp(13px,1.1vw,17px)'><b>Масштабируемость</b> — это характеристика, которая показывает, насколько быстро и просто можно расширить сеть, а также подключить к ней новые сервисы и конечные устройства, не ухудшая при этом основные показатели производительности.</p></div></div>
+<div style="height:14px"></div>
+<div class="g g3">
+<div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Масштабируемость ≠ расширяемость</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4v17M6 7.4h12M8.6 20.4h6.8"/><path d="M3 15l3-7.6L9 15a3 3 0 0 1-6 0zM15 15l3-7.6L21 15a3 3 0 0 1-6 0z"/></svg></div><div class="hr"></div><p>Эти понятия часто путают. Расширяемость — это возможность добавить ещё устройства в принципе.</p><p>Пример: локальная сеть обладает расширяемостью, но не обладает масштабируемостью, так как добавление узлов ведёт к росту задержек и падению скорости — работает только ограниченное количество устройств.</p><div class="res bad"><i>!</i><div>Можно добавить ≠ будет хорошо работать.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>От чего зависит</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/></svg></div><div class="hr"></div><p>Требования к масштабируемости определяются целями и сроком использования сети.</p><ul class="ck"><li>Если это временная сеть для конкретного мероприятия и её построили под конкретное число устройств — требования минимальны.</li><li>Если это сеть растущей компании, где через год будет вдвое больше сотрудников, — масштабируемость критична.</li></ul></div></div>
+<div class="step "><div class="c l"><div class="ch"><span class="num">03</span><h3>Что закладывают заранее</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.6" r="2.2"/><circle cx="4.6" cy="18" r="2.2"/><circle cx="19.4" cy="18" r="2.2"/><path d="M10.6 6.6L6 16M13.4 6.6L18 16M6.8 18h10.4"/></svg></div><div class="hr"></div><ul class="ck"><li>Запас портов на коммутаторах</li><li>Иерархическая архитектура (доступ / распределение / ядро)</li><li>Запас по пропускной способности аплинков</li><li>Адресное пространство с резервом подсетей</li><li>Запас по мощности электропитания и охлаждения</li></ul><div class="res"><i>✓</i><div>Масштабируемую сеть проектируют заранее — потом переделывать дороже.</div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Топологии сети"><div class="head"><h1 class="t">Топологии сети</h1><p class="sub">Топология определяет, как устройства соединены между собой и по каким каналам передаются данные.</p></div><div class="sc"><div class="g g3" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><h3>«Звезда»</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.6" r="2.2"/><circle cx="4.6" cy="18" r="2.2"/><circle cx="19.4" cy="18" r="2.2"/><path d="M10.6 6.6L6 16M13.4 6.6L18 16M6.8 18h10.4"/></svg></div><div class="hr"></div><p>Все устройства подключены к центральному узлу.</p><svg viewBox="0 0 300 180" aria-hidden="true">
+<g stroke="#5ee0c8" stroke-width="1.8" fill="none" opacity=".9">
+<path d="M150 90L62 46M150 90l88-44M150 90L62 134M150 90l88 44M150 90V30"/></g>
+<rect x="116" y="76" width="68" height="28" rx="7" fill="#1f6f9c"/>
+<text x="150" y="95" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5"
+ font-weight="700" fill="#eafaf6">Коммутатор</text>
+<g fill="#2b6ea8">
+<rect x="36" y="32" width="42" height="28" rx="4"/><rect x="222" y="32" width="42" height="28" rx="4"/>
+<rect x="36" y="120" width="42" height="28" rx="4"/><rect x="222" y="120" width="42" height="28" rx="4"/>
+<rect x="130" y="8" width="42" height="24" rx="4"/></g>
+<text x="150" y="172" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5"
+ fill="#9dc4bc">центральный узел</text>
+</svg><div class="res"><i>✓</i><div>Если одно устройство выходит из строя, остальные продолжают работать.</div></div><div class="hr"></div><div class="g g2"><div><h4 style="color:#49d67f">Преимущества</h4><ul class="ck"><li>Простое управление</li><li>Лёгкий поиск неисправностей</li><li>Масштабируемость</li></ul></div><div><h4 style="color:#ef5a5a">Недостатки</h4><ul class="ck minus"><li>Зависимость от центрального узла</li><li>Больше кабелей и выше стоимость</li></ul></div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><h3>Полносвязная топология</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13.6a4 4 0 0 0 5.7.3l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M14 10.4a4 4 0 0 0-5.7-.3l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg></div><div class="hr"></div><p>Каждое устройство соединено со всеми остальными.</p><svg viewBox="0 0 300 180" aria-hidden="true"><g stroke="#5ee0c8" stroke-width="1.6" fill="none" opacity=".85"><path d="M150 24L246 80"/><path d="M150 24L216 148"/><path d="M150 24L84 148"/><path d="M150 24L54 80"/><path d="M246 80L216 148"/><path d="M246 80L84 148"/><path d="M246 80L54 80"/><path d="M216 148L84 148"/><path d="M216 148L54 80"/><path d="M84 148L54 80"/></g><circle cx="150" cy="24" r="17" fill="#1f6f9c" stroke="#5ee0c8" stroke-width="1.6"/><circle cx="246" cy="80" r="17" fill="#1f6f9c" stroke="#5ee0c8" stroke-width="1.6"/><circle cx="216" cy="148" r="17" fill="#1f6f9c" stroke="#5ee0c8" stroke-width="1.6"/><circle cx="84" cy="148" r="17" fill="#1f6f9c" stroke="#5ee0c8" stroke-width="1.6"/><circle cx="54" cy="80" r="17" fill="#1f6f9c" stroke="#5ee0c8" stroke-width="1.6"/><text x="150" y="176" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5" fill="#9dc4bc">каждый соединён с каждым</text></svg><div class="res"><i>✓</i><div>Обеспечивает высокую надёжность — существует несколько путей передачи данных.</div></div><div class="hr"></div><div class="g g2"><div><h4 style="color:#49d67f">Преимущества</h4><ul class="ck"><li>Максимальная надёжность</li><li>Высокая отказоустойчивость</li><li>Быстрая передача данных</li></ul></div><div><h4 style="color:#ef5a5a">Недостатки</h4><ul class="ck minus"><li>Большое количество соединений</li><li>Высокая стоимость</li><li>Сложная настройка и масштабирование</li></ul></div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><h3>Шина</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.6h13l-3.2-3.2M20 15.4H7l3.2 3.2"/></svg></div><div class="hr"></div><p>Все устройства подключены к общей линии связи.</p><svg viewBox="0 0 300 180" aria-hidden="true">
+<path d="M28 90h244" stroke="#5ee0c8" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="90" r="9" fill="#12423c" stroke="#5ee0c8"/>
+<circle cx="278" cy="90" r="9" fill="#12423c" stroke="#5ee0c8"/>
+<text x="22" y="72" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#9dc4bc">терминатор</text>
+<text x="278" y="72" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#9dc4bc">терминатор</text>
+<g stroke="#5ee0c8" stroke-width="1.6"><path d="M80 90V52M150 90V52M220 90V52M110 90v38M190 90v38"/></g>
+<g fill="#2b6ea8">
+<rect x="59" y="24" width="42" height="28" rx="4"/><rect x="129" y="24" width="42" height="28" rx="4"/>
+<rect x="199" y="24" width="42" height="28" rx="4"/>
+<rect x="89" y="128" width="42" height="28" rx="4"/><rect x="169" y="128" width="42" height="28" rx="4"/></g>
+<g fill="#5ee0c8"><circle cx="80" cy="90" r="3.4"/><circle cx="150" cy="90" r="3.4"/>
+<circle cx="220" cy="90" r="3.4"/><circle cx="110" cy="90" r="3.4"/><circle cx="190" cy="90" r="3.4"/></g>
+</svg><div class="res"><i>✓</i><div>Простая и недорогая топология, подходит для небольших сетей.</div></div><div class="hr"></div><div class="g g2"><div><h4 style="color:#49d67f">Преимущества</h4><ul class="ck"><li>Низкая стоимость</li><li>Простая реализация</li><li>Минимальное количество кабелей</li></ul></div><div><h4 style="color:#ef5a5a">Недостатки</h4><ul class="ck minus"><li>Сбой на линии останавливает всю сеть</li><li>Сложнее искать неисправности</li><li>Ограниченная длина и число устройств</li></ul></div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Сетевые угрозы: 1–3"><div class="head"><h1 class="t">Сетевые угрозы: основные виды</h1><p class="sub">Обеспечение сетевой безопасности — одна из ключевых задач в сфере сетевых технологий. Защищать нужно не только данные, но и сами устройства.</p></div><div class="sc"><div class="g g3" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><span class="num">1</span><h3>Программы-шифровальщики (Ransomware)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.6" y="10.4" width="14.8" height="10" rx="2.2"/><path d="M8.2 10.4V7.6a3.8 3.8 0 0 1 7.6 0v2.8"/></svg></div><div class="hr"></div><p>Вредоносное ПО, которое блокирует доступ к системе и шифрует данные пользователя с последующим требованием «выкупа» за пароль для расшифровки данных.</p><div class="res bad"><i>!</i><div><b>Результат:</b> потеря доступа к важным данным.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">2</span><h3>Фишинг (phishing)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6v6a5 5 0 0 0 5 5h2"/><path d="M14.5 19.5c-2.6 0-4.5-1.9-4.5-4.2 0-2.3 1.9-4.2 4.5-4.2s4.5 1.9 4.5 4.2c0 2.3-1.9 4.2-4.5 4.2z"/><path d="M19 15.3l2.4-2v4z"/></svg></div><div class="hr"></div><p>Рассылка электронных сообщений с поддельных адресов, которые могут напоминать знакомые пользователю адреса, с целью получения доступа к личным данным или другой чувствительной информации (например, банковским счетам).</p><div class="res bad"><i>!</i><div><b>Результат:</b> кража личных данных, доступ к аккаунтам и финансовым ресурсам.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">3</span><h3>Вирусы, черви и «троянские кони»</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="8" height="10" rx="4"/><path d="M8 11H4.6M16 11h3.4M8 15H4.6M16 15h3.4M9.4 7l-1.6-2M14.6 7l1.6-2"/></svg></div><div class="hr"></div><p>Вредоносное ПО или произвольный код, который исполняется на пользовательских устройствах.</p><div class="hr"></div><p><b style='color:#ff8484'>Вирусы</b> — для запуска им необходимо внешнее участие: например, чтобы пользователь запустил или открыл файл, содержащий вирус.</p><p><b style='color:#ffb067'>Черви</b> — могут самостоятельно создавать копии себя и распространяться без заражения других файлов, как внутри компьютера, так и по сети.</p><p><b style='color:#5ee0c8'>«Трояны»</b> — маскируются под легитимные программы, после запуска которых злоумышленник может получить доступ к компьютеру жертвы.</p></div></div>
+</div></div></section>
+<section class="slide" data-label="Сетевые угрозы: 4–8"><div class="head"><h1 class="t">Сетевые угрозы: продолжение</h1><p class="sub">Знай врага, чтобы защитить свои данные.</p></div><div class="sc"><div class="g g3" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><span class="num">4</span><h3>Шпионское ПО (spyware)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.4 12S5.8 6 12 6s9.6 6 9.6 6-3.4 6-9.6 6-9.6-6-9.6-6z"/><circle cx="12" cy="12" r="2.8"/></svg></div><div class="hr"></div><p>Программное обеспечение, которое устанавливается на устройство и тайно собирает сведения о пользователе.</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px"><span class="pill d">Местоположение</span><span class="pill d">История просмотра</span><span class="pill d">Пароли</span><span class="pill d">Контакты</span></div><div class="res bad"><i>!</i><div><b>Результат:</b> утечка личной информации без ведома пользователя.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">5</span><h3>Рекламное ПО (adware)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V3.6h12l-2.4 4 2.4 4H5"/></svg></div><div class="hr"></div><p>Программное обеспечение, предназначенное для показа рекламы или перенаправления на сайты, предлагающие различные товары и услуги.</p><div class="res bad"><i>!</i><div><b>Результат:</b> навязчивая реклама, перенаправления, снижение производительности устройства.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">6</span><h3>Хакерские атаки</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.4 9.6c0-3.4 3.4-6.2 7.6-6.2s7.6 2.8 7.6 6.2c0 5.2-3.4 11-7.6 11S4.4 14.8 4.4 9.6z"/><path d="M9 11h.01M15 11h.01"/></svg></div><div class="hr"></div><p>Атаки злоумышленников на устройства или сетевые ресурсы с целью получения несанкционированного доступа, кражи данных, изменения информации или нарушения работы систем.</p><ul class="ck minus"><li>Доступ к данным</li><li>Изменение информации</li><li>Нарушение работы систем</li></ul></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">7</span><h3>Отказ в обслуживании (DoS / DDoS)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M6.2 6.2l11.6 11.6"/></svg></div><div class="hr"></div><p>Атаки, направленные на снижение производительности или полную остановку работы сетевого устройства.</p><p>При <b>DDoS</b>-атаке запросы поступают с множества заражённых устройств (ботов), управляемых из одного командно-управляющего центра <b>(command and control center, 3C)</b>.</p><svg viewBox="0 0 300 170" aria-hidden="true"><g><rect x="12" y="18" width="36" height="24" rx="4" fill="#2b6ea8"/><circle cx="54" cy="30" r="7" fill="#ef5a5a"/><text x="54" y="34" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="800" fill="#fff">!</text><path d="M64 30h110" stroke="#ef5a5a" stroke-width="1.6" stroke-dasharray="5 4"/></g><g><rect x="12" y="54" width="36" height="24" rx="4" fill="#2b6ea8"/><circle cx="54" cy="66" r="7" fill="#ef5a5a"/><text x="54" y="70" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="800" fill="#fff">!</text><path d="M64 66h110" stroke="#ef5a5a" stroke-width="1.6" stroke-dasharray="5 4"/></g><g><rect x="12" y="90" width="36" height="24" rx="4" fill="#2b6ea8"/><circle cx="54" cy="102" r="7" fill="#ef5a5a"/><text x="54" y="106" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="800" fill="#fff">!</text><path d="M64 102h110" stroke="#ef5a5a" stroke-width="1.6" stroke-dasharray="5 4"/></g><g><rect x="12" y="126" width="36" height="24" rx="4" fill="#2b6ea8"/><circle cx="54" cy="138" r="7" fill="#ef5a5a"/><text x="54" y="142" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="800" fill="#fff">!</text><path d="M64 138h110" stroke="#ef5a5a" stroke-width="1.6" stroke-dasharray="5 4"/></g><rect x="178" y="42" width="60" height="78" rx="8" fill="#12423c" stroke="#5ee0c8"/><g fill="#5ee0c8"><rect x="188" y="54" width="40" height="4" rx="2"/><rect x="188" y="66" width="40" height="4" rx="2"/><rect x="188" y="78" width="40" height="4" rx="2"/><rect x="188" y="90" width="26" height="4" rx="2"/></g><circle cx="238" cy="120" r="13" fill="#ef5a5a"/><path d="M233 115l10 10M243 115l-10 10" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><text x="208" y="140" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#9dc4bc">сервис перегружен</text><text x="30" y="166" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#9dc4bc">боты</text></svg><div class="res bad"><i>!</i><div><b>Результат:</b> перегрузка и недоступность сервиса.</div></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">8</span><h3>Социальная инженерия</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.4" r="3.2"/><path d="M3.4 19.6c0-3.1 2.5-5.4 5.6-5.4s5.6 2.3 5.6 5.4"/><path d="M16.2 6.4a3 3 0 0 1 0 5.6M17.4 14.6c2 .7 3.3 2.5 3.3 5"/></svg></div><div class="hr"></div><p>Метод манипуляции людьми с целью получения личной информации или доступа к ресурсам. Злоумышленники используют психологические приёмы, чтобы обойти технические системы защиты — они воздействуют на человека.</p><div class="hr"></div><h4>Распространённые приёмы</h4><ul class="ck minus"><li>Фишинговые письма</li><li>Поддельные сайты</li><li>Выдача себя за доверенную организацию</li><li>Психологическое давление</li><li>Обман и манипуляция</li></ul></div></div>
+<div class="step "><div class="c l"><div class="ch"><h3>Общий вывод</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.4h6M10 20.6h4"/><path d="M12 3.4a5.6 5.6 0 0 1 3.4 10.1c-.6.5-.9 1.1-.9 1.8H9.5c0-.7-.3-1.3-.9-1.8A5.6 5.6 0 0 1 12 3.4z"/></svg></div><div class="hr"></div><p>Сетевые угрозы могут маскироваться под обычные файлы, письма или сайты. Задачи защиты решаются не одной технологией, а их сочетанием.</p><div class="res bad"><i>!</i><div>Даже самая сложная система защиты не поможет, если человек сам раскрывает свои данные.</div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Информационная безопасность"><div class="head"><h1 class="t">Решения по безопасности: антивирус и межсетевой экран</h1><p class="sub">Нет единственного метода, который защитит от всех угроз. Эффективная защита — это сочетание разных технологий.</p></div><div class="sc">
+<div class="step "><div class="c d"><div class="ch"><h3>Два направления защиты</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.6 3v5.6c0 4.6-3.1 8.2-7.6 9.8-4.5-1.6-7.6-5.2-7.6-9.8V5.8z"/><path d="M8.8 12l2.3 2.3 4.1-4.3"/></svg></div><div class="hr"></div><p>Решения сетевой безопасности разделяются на два вида: <b>защита оконечных устройств</b> (например, компьютеров пользователей) и <b>защита сети</b>.</p></div></div>
+<div style="height:14px"></div>
+<div class="g g2" style="align-items:start">
+<div class="step "><div class="c l"><div class="ch"><span class="num">01</span><h3>Защита оконечных устройств: антивирусное ПО</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.4" rx="1.6"/><path d="M2 18.8h20"/></svg></div><div class="hr"></div><p>Защита оконечных устройств осуществляется с помощью антивирусного ПО — специализированного программного обеспечения.</p><ul class="ck"><li>защищает устройства от заражения вирусами</li><li>обнаруживает вредоносное ПО</li><li>устраняет уже существующие заражения</li></ul><div class="hr"></div><h4>От чего защищает</h4><div style="display:flex;gap:5px;flex-wrap:wrap"><span class="pill r">Вирусы</span><span class="pill r">Черви</span><span class="pill r">Трояны</span><span class="pill r">Шпионское ПО</span><span class="pill r">Другое вредоносное ПО</span></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Защита сети: межсетевой экран (Firewall)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2s4.6 3.8 4.6 8.2a4.6 4.6 0 0 1-9.2 0c0-1.4.6-2.6 1.4-3.6 0 1.6.8 2.6 1.8 2.6 1.4 0 1.4-2.4 1.4-7.2z"/><path d="M12 20.8v-1.8"/></svg></div><div class="hr"></div><p>Контролирует данные, поступающие в сеть и отправляемые из неё, и пропускает только разрешённый трафик на основе заданных правил.</p><svg viewBox="0 0 340 170" aria-hidden="true">
+<ellipse cx="54" cy="46" rx="44" ry="18" fill="#123e38" stroke="#5ee0c8"/>
+<text x="54" y="51" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11"
+ font-weight="700" fill="#eafaf6">Интернет</text>
+<rect x="150" y="20" width="34" height="130" rx="8" fill="#0d332f" stroke="#ef8a5a" stroke-width="1.6"/>
+<g stroke="#ef8a5a" stroke-width="1.2" opacity=".65">
+<path d="M150 46h34M150 72h34M150 98h34M150 124h34M167 20v130"/></g>
+<text x="167" y="12" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10"
+ font-weight="700" fill="#ef8a5a">Firewall</text>
+<g fill="#2b6ea8"><rect x="250" y="28" width="52" height="34" rx="5"/>
+<rect x="250" y="76" width="52" height="34" rx="5"/><rect x="250" y="120" width="52" height="30" rx="5"/></g>
+<text x="276" y="18" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10.5"
+ font-weight="700" fill="#9dc4bc">Внутренняя сеть</text>
+<defs><marker id="agn" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+<path d="M0 0l8 4-8 4z" fill="#49d67f"/></marker>
+<marker id="arn" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+<path d="M0 0l8 4-8 4z" fill="#ef5a5a"/></marker></defs>
+<path d="M98 46h46" stroke="#49d67f" stroke-width="2.2" marker-end="url(#agn)"/>
+<path d="M190 46h54" stroke="#49d67f" stroke-width="2.2" marker-end="url(#agn)"/>
+<path d="M98 94h40" stroke="#ef5a5a" stroke-width="2.2" marker-end="url(#arn)"/>
+<circle cx="146" cy="94" r="9" fill="#ef5a5a"/>
+<path d="M142.5 90.5l7 7M149.5 90.5l-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<path d="M98 132h40" stroke="#ef5a5a" stroke-width="2.2" marker-end="url(#arn)"/>
+<circle cx="146" cy="132" r="9" fill="#ef5a5a"/>
+<path d="M142.5 128.5l7 7M149.5 128.5l-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<text x="118" y="38" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#8ae8ad">разрешено</text>
+<text x="112" y="86" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9.5" fill="#ff9d9d">заблокировано</text>
+</svg><ul class="ck"><li>Фильтрация трафика</li><li>Блокировка подозрительных соединений</li><li>Защита от внешних атак</li><li>Контроль доступа к ресурсам</li></ul></div></div>
+</div>
+<div style="height:14px"></div>
+<div class="step "><div class="c l tint"><div class="ch"><h3>Многоуровневая защита — залог безопасности</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4.6-9 4.6-9-4.6z"/><path d="M3 12.4l9 4.6 9-4.6M3 16.9l9 4.6 9-4.6"/></svg></div><div class="hr"></div><p>Используйте комбинацию технологий и подходов на всех уровнях: от устройств до сети. Это позволяет минимизировать риски и повысить устойчивость к современным угрозам.</p><div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px"><span class="pill">Защита устройств</span> <span style="color:#19b89f;font-weight:800">+</span> <span class="pill">Защита сети</span> <span style="color:#19b89f;font-weight:800">+</span> <span class="pill">Обучение пользователей</span> <span style="color:#19b89f;font-weight:800">+</span> <span class="pill">Регулярные обновления</span> <span style="color:#19b89f;font-weight:800">+</span> <span class="pill">Политики доступа</span></div></div></div></div></section>
+<section class="slide" data-label="Дополнительные средства защиты"><div class="head"><h1 class="t">Дополнительные средства защиты информации</h1><p class="sub">На корпоративном уровне недостаточно только антивирусов и межсетевых экранов.</p></div><div class="sc"><div class="g g4" style="align-items:start">
+<div class="step "><div class="c d"><div class="ch"><span class="num">01</span><h3>Контроль доступа в сеть (NAC) и политика AAA</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="3.6"/><path d="M11.6 12H21M18 12v3.2M15 12v2.4"/></svg></div><div class="hr"></div><p><b>Network Admission Control.</b> Позволяет предоставлять доступ к сетевым ресурсам только тем пользователям и устройствам, которые соответствуют заданным требованиям.</p><ul class="ck"><li>Проверка устройства</li><li>Соответствие политике</li><li>Доступ к сети</li></ul><div class="hr"></div><h4>AAA — три ключевых процесса</h4><p><b>Аутентификация</b> — подтверждение личности (логин/пароль, карта, метка доступа).</p><p><b>Авторизация</b> — определение, к каким ресурсам можно получать доступ и какие действия выполнять.</p><p><b>Учёт</b> — фиксация и отслеживание использования сетевых ресурсов: кто, к чему, когда и как долго. Например: «adm_ivanov подключался к серверу Serv_Prod по протоколу SSH и просматривал журнал 18 минут».</p></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">02</span><h3>Системы обнаружения и предотвращения вторжений (IDS / IPS)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.4 12S5.8 6 12 6s9.6 6 9.6 6-3.4 6-9.6 6-9.6-6-9.6-6z"/><circle cx="12" cy="12" r="2.8"/></svg></div><div class="hr"></div><p>Позволяют выявлять подозрительную активность и блокировать атаки, в том числе быстро распространяющиеся угрозы — например, атаки нулевого дня.</p><ul class="ck"><li>Анализ сетевого трафика в реальном времени</li><li>Выявление известных и новых угроз</li><li>Автоматическая блокировка подозрительной активности</li><li>Снижение рисков и повышение устойчивости сети</li></ul><div style="display:flex;gap:6px;margin-top:9px;flex-wrap:wrap"><span class="pill r">Обнаружена атака</span><span class="pill g">Угроза заблокирована</span></div></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">03</span><h3>Межсетевые экраны следующего поколения (NGFW)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2s4.6 3.8 4.6 8.2a4.6 4.6 0 0 1-9.2 0c0-1.4.6-2.6 1.4-3.6 0 1.6.8 2.6 1.8 2.6 1.4 0 1.4-2.4 1.4-7.2z"/><path d="M12 20.8v-1.8"/></svg></div><div class="hr"></div><p>Совмещают в себе функции межсетевого экрана, системы предотвращения вторжений, антивирусной защиты и часто используют облачные сервисы и актуальные базы угроз.</p><ul class="ck"><li>Глубокая инспекция трафика (DPI)</li><li>Интеграция с облачными сервисами</li><li>Защита от современных угроз</li><li>Централизованное управление</li></ul></div></div>
+<div class="step "><div class="c d"><div class="ch"><span class="num">04</span><h3>Виртуальные частные сети (VPN)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4a14 14 0 0 1 0 17.2 14 14 0 0 1 0-17.2"/></svg></div><div class="hr"></div><p>Позволяют установить безопасный доступ для удалённых сотрудников или организовать шифрованный канал связи между различными сегментами сети.</p><ul class="ck"><li>Шифрование данных</li><li>Безопасный удалённый доступ</li><li>Соединение между офисами</li><li>Работа из любой точки мира</li></ul><div class="res"><i>✓</i><div>Например, связь центрального офиса с региональным через публичный интернет.</div></div></div></div>
+</div></div></section>
+<section class="slide" data-label="Стоимость: CapEx и OpEx" data-scen="sum"><div class="head"><h1 class="t">Стоимость сети: CapEx и OpEx</h1><p class="sub">Два типа затрат на развитие и поддержание сетевой инфраструктуры.</p></div><div class="sc">
+<div class="c d"><div class="ch"><h3>Стоимость (cost)</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6.4" rx="7.6" ry="3.2"/><path d="M4.4 6.4v5c0 1.8 3.4 3.2 7.6 3.2s7.6-1.4 7.6-3.2v-5"/><path d="M4.4 11.6v5c0 1.8 3.4 3.2 7.6 3.2s7.6-1.4 7.6-3.2v-5"/></svg></div><div class="hr"></div><p>Общая сумма средств, необходимых для построения сети, её сопровождения и развития. Разные показатели требуют разных вложений, поэтому стоимость рассчитывается вместе с остальными характеристиками, а не отдельно от них.</p></div>
+<div style="height:14px"></div>
+<div class="g g2" style="align-items:start">
+<div class="c l"><div class="ch"><span class="num">01</span><h3>CapEx (Capital Expenditures) — капитальные затраты</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20.4V5.2l8-2.6v17.8M12 20.4h8V9.6l-8-2.6"/><path d="M7 9h2M7 13h2M15.4 13h1.6M15.4 16.6h1.6"/></svg></div><div class="hr"></div><p>Это единовременное вложение средств, направленное на приобретение активов или их модернизацию.</p><h4 style='margin-top:10px'>К этому параметру могут относиться</h4><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid #cfe3dc;margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(25,184,159,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.6" width="18" height="9" rx="1.8"/><path d="M6.4 12h.01M9.4 12h.01M12.4 12h.01M15.4 12h.01M18 12h.01"/></svg></span><div><b style="font-size:12.5px;color:#0a2c28">Закупка оборудования</b><div style="font-size:11px;color:#5c7d77;margin-top:2px">например, коммутаторов и маршрутизаторов</div></div></div></div><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid #cfe3dc;margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(25,184,159,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20.4V5.2l8-2.6v17.8M12 20.4h8V9.6l-8-2.6"/><path d="M7 9h2M7 13h2M15.4 13h1.6M15.4 16.6h1.6"/></svg></span><div><b style="font-size:12.5px;color:#0a2c28">Строительство зданий</b><div style="font-size:11px;color:#5c7d77;margin-top:2px">или иной инфраструктуры</div></div></div></div><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid #cfe3dc;margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(25,184,159,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.4" r="3.2"/><path d="M3.4 19.6c0-3.1 2.5-5.4 5.6-5.4s5.6 2.3 5.6 5.4"/><path d="M16.2 6.4a3 3 0 0 1 0 5.6M17.4 14.6c2 .7 3.3 2.5 3.3 5"/></svg></span><div><b style="font-size:12.5px;color:#0a2c28">Обучение сотрудников</b><div style="font-size:11px;color:#5c7d77;margin-top:2px">для работы с новыми технологиями</div></div></div></div><div class="res"><i>✓</i><div>Как правило, такие капитальные затраты могут быть весьма значительными и требуют тщательного планирования.</div></div><div class="sumtot fz" style="margin-top:12px;padding:14px 18px"><div class="f" style="font-size:clamp(18px,2.2vw,30px)">CapEx <span class="op">=</span> <span class="g">x₁</span> <span class="op">+</span> <span class="g">x₂</span> <span class="op">+ … +</span> <span class="g">xₙ</span></div></div></div>
+<div class="c d"><div class="ch"><span class="num">02</span><h3>OpEx (Operational Expenditures) — операционные затраты</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/></svg></div><div class="hr"></div><p>Это регулярные расходы за определённый период времени, необходимые для поддержания жизнедеятельности предприятия.</p><h4 style='margin-top:10px'>К этому параметру могут относиться</h4><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(94,224,200,.07);border:1px solid rgba(94,224,200,.18);margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(94,224,200,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.4" r="3.2"/><path d="M3.4 19.6c0-3.1 2.5-5.4 5.6-5.4s5.6 2.3 5.6 5.4"/><path d="M16.2 6.4a3 3 0 0 1 0 5.6M17.4 14.6c2 .7 3.3 2.5 3.3 5"/></svg></span><div><b style="font-size:12.5px;color:#eafaf6">Оплата труда сотрудников</b></div></div></div><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(94,224,200,.07);border:1px solid rgba(94,224,200,.18);margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(94,224,200,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20.4V5.2l8-2.6v17.8M12 20.4h8V9.6l-8-2.6"/><path d="M7 9h2M7 13h2M15.4 13h1.6M15.4 16.6h1.6"/></svg></span><div><b style="font-size:12.5px;color:#eafaf6">Аренда помещений</b></div></div></div><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(94,224,200,.07);border:1px solid rgba(94,224,200,.18);margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(94,224,200,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.1"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5"/></svg></span><div><b style="font-size:12.5px;color:#eafaf6">Обслуживание оборудования</b></div></div></div><div class="sumit"><div style="display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:12px;background:rgba(94,224,200,.07);border:1px solid rgba(94,224,200,.18);margin-bottom:7px"><span style="flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(94,224,200,.1)"><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5a13 13 0 0 1 17 0M6.5 13a8.5 8.5 0 0 1 11 0M9.5 16.4a4 4 0 0 1 5 0"/><circle cx="12" cy="19.4" r="1"/></svg></span><div><b style="font-size:12.5px;color:#eafaf6">Аренда линий связи</b></div></div></div><div class="res"><i>✓</i><div>Такие регулярные затраты могут значительно варьироваться от выбранного промежутка времени для расчёта.</div></div><div class="sumtot fz" style="margin-top:12px;padding:14px 18px;background:#0a2a26"><div class="f" style="font-size:clamp(18px,2.2vw,30px)">OpEx <span class="op">=</span> <span class="o">y₁</span> <span class="op">+</span> <span class="o">y₂</span> <span class="op">+ … +</span> <span class="o">yₙ</span></div></div></div>
+</div>
+<div style="height:14px"></div>
+<div class="c l tint"><div class="ch"><h3>Главное отличие</h3><svg class="ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4v17M6 7.4h12M8.6 20.4h6.8"/><path d="M3 15l3-7.6L9 15a3 3 0 0 1-6 0zM15 15l3-7.6L21 15a3 3 0 0 1-6 0z"/></svg></div><div class="hr"></div><div class="g g2"><div><b style="color:#0e8d78">CapEx</b><p>Единовременные крупные вложения в развитие инфраструктуры.</p></div><div><b style="color:#2a7cc4">OpEx</b><p>Регулярные расходы на поддержание и эксплуатацию инфраструктуры.</p></div></div><div class="res"><i>✓</i><div>Дешёвое на этапе закупки решение может оказаться дороже в эксплуатации — и наоборот. Сравнивать нужно сумму CapEx и OpEx за срок жизни сети.</div></div></div></div></section>
+<section class="slide" data-label="Словарь терминов"><div class="head"><h1 class="t">Словарь терминов главы</h1><p class="sub">Сводная таблица для повторения перед контрольной.</p></div><div class="sc"><div class="step "><div class="tw "><table><thead><tr><th>Термин</th><th>Английский</th><th>Определение</th></tr></thead><tbody><tr><td><b>Пропускная способность</b></td><td>bandwidth</td><td>Количество бит, переданных за одну секунду; теоретический максимум канала</td></tr><tr><td><b>Производительность сети</b></td><td>network performance</td><td>Фактический объём данных, передаваемых между узлами за единицу времени</td></tr><tr><td><b>Эффективная производительность</b></td><td>goodput</td><td>Полезные данные (G), которые действительно доходят до получателя</td></tr><tr><td><b>Накладные расходы</b></td><td>overhead</td><td>Служебные данные (O): заголовки, преамбула, IPG, повторные передачи</td></tr><tr><td><b>Межпакетный разрыв</b></td><td>interpacket gap</td><td>Интервал 96 бит между кадрами Ethernet, в течение которого канал в простое</td></tr><tr><td><b>Доступность сети</b></td><td>network availability</td><td>Отношение времени работы сети (uptime) к общему времени периода, в процентах</td></tr><tr><td><b>Время простоя</b></td><td>downtime</td><td>Время, в течение которого пользователи не могут использовать сервисы сети</td></tr><tr><td><b>Надёжность</b></td><td>reliability</td><td>Свойство сети сохранять способность выполнять функции при воздействии дестабилизирующих факторов</td></tr><tr><td><b>Наработка на отказ</b></td><td>MTBF</td><td>Среднее время между отказами оборудования, заявленное производителем</td></tr><tr><td><b>Единая точка отказа</b></td><td>Single Point of Failure, SPOF</td><td>Узел, выход из строя которого приводит к отказу всей системы</td></tr><tr><td><b>Отказоустойчивость</b></td><td>fault tolerance</td><td>Способность сети сохранять работоспособность при отказе отдельных компонентов</td></tr><tr><td><b>Резервирование</b></td><td>redundancy</td><td>Намеренное завышение количества оборудования и ресурсов для обеспечения работы</td></tr><tr><td><b>Масштабируемость</b></td><td>scalability</td><td>Возможность расширить сеть и добавить сервисы без потери производительности</td></tr><tr><td><b>Капитальные затраты</b></td><td>CapEx</td><td>Единовременные вложения в приобретение или модернизацию активов</td></tr><tr><td><b>Операционные затраты</b></td><td>OpEx</td><td>Регулярные расходы на поддержание работы инфраструктуры</td></tr><tr><td><b>Контроль доступа в сеть</b></td><td>NAC</td><td>Допуск в сеть только пользователей и устройств, отвечающих требованиям</td></tr><tr><td><b>Политика AAA</b></td><td>authentication, authorization, accounting</td><td>Аутентификация, авторизация и учёт использования сетевых ресурсов</td></tr><tr><td><b>Системы обнаружения / предотвращения вторжений</b></td><td>IDS / IPS</td><td>Выявление подозрительной активности и блокировка атак</td></tr><tr><td><b>Межсетевой экран нового поколения</b></td><td>NGFW</td><td>Экран, совмещающий фильтрацию, IPS, антивирус и облачные базы угроз</td></tr><tr><td><b>Виртуальная частная сеть</b></td><td>VPN</td><td>Шифрованный канал для удалённого доступа и связи сегментов сети</td></tr></tbody></table></div></div></div></section>
+<section class="slide" data-label="Проверь себя"><div class="head"><h1 class="t">Проверь себя</h1><p class="sub">Восемь вопросов по главе. Выберите вариант — появится разбор. Счёт: <span id="score">0 / 8</span> <button id="qreset" style="margin-left:10px;font:600 12px Segoe UI,sans-serif;padding:5px 11px;border-radius:9px;border:1px solid #cfe3dc;background:#fff;color:#255c54;cursor:pointer">Сбросить</button></p></div><div class="sc"><div class="g g2 "><div class="q"><div class="qt"><i>01</i><span>Чем пропускная способность отличается от производительности сети?</span></div><div class="opts"><button data-a="0">Это синонимы, разные названия одной величины</button><button data-a="1">Пропускная способность — теоретический максимум канала, производительность — фактический объём данных за секунду</button><button data-a="0">Пропускная способность измеряется в байтах, производительность — в битах</button></div><div class="ex"><b>Разбор. </b>Пропускная способность описывает максимально возможное значение, производительность — фактический объём данных, переданный между узлами за единицу времени.</div></div><div class="q"><div class="qt"><i>02</i><span>Что означает формула T = G + O?</span></div><div class="opts"><button data-a="1">Производительность равна сумме полезных данных и накладных расходов</button><button data-a="0">Время передачи равно сумме задержек и ожидания</button><button data-a="0">Трафик равен сумме входящего и исходящего потоков</button></div><div class="ex"><b>Разбор. </b>T — производительность сети, G — эффективная производительность (goodput), O — накладные расходы (overhead). Отсюда G = T − O.</div></div><div class="q"><div class="qt"><i>03</i><span>Какой размер имеет межпакетный разрыв в Ethernet?</span></div><div class="opts"><button data-a="0">32 байта</button><button data-a="1">96 бит</button><button data-a="0">1500 байт</button></div><div class="ex"><b>Разбор. </b>Межпакетный разрыв (interpacket gap) составляет 96 бит. Время на его передачу зависит от скорости сетевого адаптера: при 1 Гбит/с это 96 нс.</div></div><div class="q"><div class="qt"><i>04</i><span>Сеть простаивала 2 часа за год. Какова её доступность?</span></div><div class="opts"><button data-a="0">98,00 %</button><button data-a="1">99,97 %</button><button data-a="0">99,999 %</button></div><div class="ex"><b>Разбор. </b>A = (24 × 365 − 2) / (24 × 365) = 8758 / 8760 = 99,97 %. Для корпоративной сети это ниже типового требования 99,99 %.</div></div><div class="q"><div class="qt"><i>05</i><span>Доступность 99,99 % — это сколько простоя в год?</span></div><div class="opts"><button data-a="1">около 53 минут</button><button data-a="0">около 5,3 минуты</button><button data-a="0">около 8,8 часа</button></div><div class="ex"><b>Разбор. </b>99,99 % соответствует примерно 53 минутам простоя в год, а 99,999 % — примерно 5,3 минуты.</div></div><div class="q"><div class="qt"><i>06</i><span>Что такое единая точка отказа (SPOF)?</span></div><div class="opts"><button data-a="0">Самое дорогое устройство в сети</button><button data-a="1">Узел, выход из строя которого приводит к отказу всей системы</button><button data-a="0">Точка подключения сети к интернету</button></div><div class="ex"><b>Разбор. </b>Если такая точка отказа связана с другой, её сбой может вызвать каскадный отказ. Устраняется резервированием и избыточностью.</div></div><div class="q"><div class="qt"><i>07</i><span>Почему локальная сеть расширяема, но не масштабируема?</span></div><div class="opts"><button data-a="0">Потому что в ней нельзя добавить новые устройства</button><button data-a="1">Потому что добавление узлов ведёт к росту задержек и падению производительности</button><button data-a="0">Потому что она не поддерживает IP-адресацию</button></div><div class="ex"><b>Разбор. </b>Расширяемость — возможность добавить устройства. Масштабируемость — возможность добавить их без ухудшения основных показателей производительности.</div></div><div class="q"><div class="qt"><i>08</i><span>Аренда линий связи и оплата труда сотрудников — это какие затраты?</span></div><div class="opts"><button data-a="0">CapEx — капитальные</button><button data-a="1">OpEx — операционные</button><button data-a="0">Это не относится к стоимости сети</button></div><div class="ex"><b>Разбор. </b>OpEx — регулярные расходы за период: зарплата, аренда помещений и линий связи, обслуживание оборудования. CapEx — единовременные вложения: закупка оборудования, строительство, обучение.</div></div></div></div></section>
+</div>
+
+<div id="prog" style="width:0"></div>
+<div id="hud">
+  <button id="btoc" title="Содержание (Esc)">Содержание</button>
+  <button id="bprev" title="Назад (←)">←</button>
+  <button id="bnext" title="Вперёд (→)">→</button>
+  <button id="brun" title="Прогон слайда (R)">Прогон</button>
+  <button id="bspeed" title="Скорость прогона">1×</button>
+  <span id="count">1 / 1</span>
+  <span id="sname"></span>
+  <span class="hint" style="font-size:11.5px;color:#8aa8a2">← → шаги · ↑ ↓ слайды · цифры · R прогон · Esc содержание</span>
+</div>
+<div id="toc"><h2>Содержание</h2><div id="tocg"></div></div>
+
+<script>
+(function(){
+'use strict';
+var slides=[].slice.call(document.querySelectorAll('.slide'));
+var cur=0, step=0, timer=null, speed=1;
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var elCount=document.getElementById('count'), elName=document.getElementById('sname'),
+    elProg=document.getElementById('prog'), toc=document.getElementById('toc');
+
+function steps(i){return [].slice.call(slides[i].querySelectorAll('.step'));}
+
+/* ---------- сценарии слайдов ---------- */
+var SCEN={}, scenTimers=[];
+function later(fn,ms){scenTimers.push(setTimeout(fn,ms/speed));}
+function clearScen(){scenTimers.forEach(clearTimeout);scenTimers=[];}
+function runScen(){
+  var s=slides[cur], k=s.dataset.scen;
+  if(!k||!SCEN[k])return;
+  clearScen(); SCEN[k](s, reduce);
+}
+
+function paint(){
+  var st=steps(cur);
+  st.forEach(function(e,k){e.classList.toggle('vis',k<step);});
+  elCount.textContent=(cur+1)+' / '+slides.length+(st.length?'  ·  '+step+'/'+st.length:'');
+  elName.textContent=slides[cur].dataset.label||'';
+  elProg.style.width=((cur+1)/slides.length*100)+'%';
+}
+function show(i,openAll){
+  stop(); clearScen();
+  slides[cur].classList.remove('on');
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides[cur].classList.add('on');
+  var box=slides[cur].querySelector('.sc'); if(box)box.scrollTop=0;
+  step=(openAll||reduce)?steps(cur).length:0;
+  paint(); runScen();
+  if(!reduce&&!openAll) run();
+}
+function run(){
+  stop();
+  var total=steps(cur).length;
+  if(step>=total){runScen();return;}
+  timer=setInterval(function(){
+    if(step>=total){stop();return;}
+    step++;paint();
+  },420/speed);
+}
+function stop(){if(timer){clearInterval(timer);timer=null;}}
+function next(){stop();if(step<steps(cur).length){step++;paint();}else if(cur<slides.length-1)show(cur+1);}
+function prev(){stop();if(step>0){step--;paint();}else if(cur>0)show(cur-1,true);}
+
+/* ---------- содержание ---------- */
+(function(){
+  var g=document.getElementById('tocg');
+  slides.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='tocit';
+    b.innerHTML='<i>'+(i+1)+'</i><span></span>';
+    b.querySelector('span').textContent=s.dataset.label||'';
+    b.onclick=function(){toc.classList.remove('on');show(i);};
+    g.appendChild(b);
+  });
+})();
+
+/* ---------- клавиатура ---------- */
+function inField(e){var t=e.target;return t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable);}
+var digits='';
+document.addEventListener('keydown',function(e){
+  if(inField(e))return;
+  var k=e.key;
+  if(k==='Escape'){toc.classList.toggle('on');e.preventDefault();return;}
+  if(toc.classList.contains('on')){if(k==='Enter')toc.classList.remove('on');return;}
+  if(k>='0'&&k<='9'){
+    digits+=k; clearTimeout(window.__dt);
+    window.__dt=setTimeout(function(){var n=parseInt(digits,10);digits='';if(n>=1)show(n-1);},550);
+    e.preventDefault(); return;
+  }
+  if(k==='ArrowRight'){next();e.preventDefault();}
+  else if(k===' '){if(timer){stop();}else{next();}e.preventDefault();}
+  else if(k==='ArrowLeft'){prev();e.preventDefault();}
+  else if(k==='ArrowDown'||k==='PageDown'){show(cur+1);e.preventDefault();}
+  else if(k==='ArrowUp'||k==='PageUp'){show(cur-1);e.preventDefault();}
+  else if(k==='Home'){show(0);}
+  else if(k==='End'){show(slides.length-1);}
+  else if(k==='r'||k==='R'||k==='к'||k==='К'){step=0;paint();clearScen();run();runScen();}
+});
+
+/* ---------- колесо и свайп ---------- */
+var lock=0;
+window.addEventListener('wheel',function(e){
+  if(toc.classList.contains('on'))return;
+  var box=e.target.closest('.sc,.tw,.q');
+  if(box){
+    var atTop=box.scrollTop<=0, atEnd=box.scrollTop+box.clientHeight>=box.scrollHeight-1;
+    if((e.deltaY>0&&!atEnd)||(e.deltaY<0&&!atTop))return;
+  }
+  var now=Date.now(); if(now-lock<420)return; lock=now;
+  if(e.deltaY>0)next(); else prev();
+},{passive:true});
+var tx=0,ty=0;
+window.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+window.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
+},{passive:true});
+
+document.getElementById('bprev').onclick=prev;
+document.getElementById('bnext').onclick=next;
+document.getElementById('btoc').onclick=function(){toc.classList.toggle('on');};
+document.getElementById('brun').onclick=function(){step=0;paint();clearScen();run();runScen();};
+document.getElementById('bspeed').onclick=function(){
+  speed=speed===1?2:(speed===2?0.5:1);
+  this.textContent=speed+'×';
+  if(timer)run();
+};
+
+/* ================= СЦЕНАРИИ ================= */
+function q(s,sel){return s.querySelector(sel);}
+function qa(s,sel){return [].slice.call(s.querySelectorAll(sel));}
+
+/* лесенка единиц */
+SCEN.ladder=function(s,rm){
+  var st=qa(s,'.ladder .stp'), mu=qa(s,'.ladder .mul');
+  st.forEach(function(e){e.style.opacity=0;e.style.transform='translateY(14px)';});
+  mu.forEach(function(e){e.style.opacity=0;});
+  st.forEach(function(e,i){
+    later(function(){e.style.transition='.45s cubic-bezier(.22,.7,.3,1)';e.style.opacity=1;e.style.transform='none';
+      if(mu[i-1]){mu[i-1].style.transition='.3s';mu[i-1].style.opacity=1;}},rm?0:i*420);
+  });
+};
+
+/* труба T = G + O */
+function pipePaint(s,ov){
+  var g=q(s,'#pipeG'), o=q(s,'#pipeO'), lg=q(s,'#labG'), lo=q(s,'#labO'),
+      bg=q(s,'#brG'), bo=q(s,'#brO');
+  var W=640, x0=120;
+  var ow=W*ov/100, gw=W-ow;
+  if(g){g.setAttribute('width',gw);}
+  if(o){o.setAttribute('x',x0+gw);o.setAttribute('width',ow);}
+  if(lg){lg.setAttribute('x',x0+gw/2);}
+  if(lo){lo.setAttribute('x',x0+gw+ow/2);}
+  if(bg){bg.setAttribute('d','M'+x0+' 250 v8 h'+gw+' v-8');}
+  if(bo){bo.setAttribute('d','M'+(x0+gw)+' 250 v8 h'+ow+' v-8');}
+}
+SCEN.pipe=function(s,rm){
+  var g=q(s,'#pipeG'), o=q(s,'#pipeO'), br=qa(s,'.brk');
+  var ov=22;
+  br.forEach(function(e){e.style.opacity=0;});
+  if(rm){pipePaint(s,ov);br.forEach(function(e){e.style.opacity=1;});return;}
+  g.setAttribute('width',0); o.setAttribute('width',0); o.setAttribute('x',120);
+  var W=640, ow=W*ov/100, gw=W-ow, t0=null, D=900;
+  function frame(ts){
+    if(!t0)t0=ts;
+    var k=Math.min(1,(ts-t0)/(D/speed));
+    var e=1-Math.pow(1-k,3);
+    g.setAttribute('width',gw*e);
+    if(k>=1){
+      var t1=null;
+      function frame2(ts2){
+        if(!t1)t1=ts2;
+        var k2=Math.min(1,(ts2-t1)/(520/speed)), e2=1-Math.pow(1-k2,3);
+        o.setAttribute('x',120+gw); o.setAttribute('width',ow*e2);
+        if(k2<1)requestAnimationFrame(frame2);
+        else{pipePaint(s,ov);br.forEach(function(el,i){later(function(){el.style.transition='.4s';el.style.opacity=1;},i*220);});}
+      }
+      requestAnimationFrame(frame2);
+    } else requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+};
+
+/* нагрузка: два индикатора */
+SCEN.load=function(s,rm){
+  var a=q(s,'#loadA>i'), b=q(s,'#loadB>i');
+  var li=qa(s,'.loadlist li');
+  if(a)a.style.width='0'; if(b)b.style.width='0';
+  li.forEach(function(e){e.style.opacity=0;});
+  later(function(){if(a)a.style.width='92%';if(b)b.style.width='31%';},rm?0:220);
+  li.forEach(function(e,i){later(function(){e.style.transition='.35s';e.style.opacity=1;},rm?0:600+i*170);});
+};
+
+/* кадр Ethernet */
+SCEN.frame=function(s,rm){
+  var f=qa(s,'.fld'), ov=q(s,'#ovShare');
+  f.forEach(function(e){e.style.opacity=0;e.style.transform='translateY(10px)';});
+  if(ov)ov.style.opacity=0;
+  f.forEach(function(e,i){
+    later(function(){e.style.transition='.35s cubic-bezier(.22,.7,.3,1)';e.style.opacity=1;e.style.transform='none';},rm?0:i*230);
+  });
+  later(function(){
+    f.forEach(function(e){if(e.dataset.k==='srv')e.style.opacity=.26;});
+    if(ov){ov.style.transition='.5s';ov.style.opacity=1;}
+  },rm?0:f.length*230+700);
+};
+
+/* повторы TCP */
+SCEN.tcp=function(s,rm){
+  var seg=q(s,'#tSeg'), ack=q(s,'#tAck'), re=q(s,'#tRe'), to=q(s,'#tTo'), cnt=q(s,'#tCnt');
+  [seg,ack,re,to].forEach(function(e){if(e)e.style.opacity=0;});
+  if(cnt)cnt.textContent='0';
+  var o=[[seg,0],[ack,900],[to,1700],[re,2500]];
+  o.forEach(function(p){later(function(){if(p[0]){p[0].style.transition='.45s';p[0].style.opacity=1;}},rm?0:p[1]);});
+  later(function(){
+    if(!cnt)return;
+    var n=0, id=setInterval(function(){n+=4;cnt.textContent=n;if(n>=48)clearInterval(id);},40);
+    scenTimers.push(id);
+  },rm?0:2900);
+};
+
+/* доступность: подстановка значений */
+SCEN.avail=function(s,rm){
+  var st=qa(s,'.astep');
+  st.forEach(function(e){e.style.opacity=0;e.style.transform='translateY(8px)';});
+  st.forEach(function(e,i){later(function(){e.style.transition='.4s cubic-bezier(.22,.7,.3,1)';e.style.opacity=1;e.style.transform='none';},rm?0:i*600);});
+};
+SCEN.scales=function(s,rm){
+  var b=qa(s,'.bar>i');
+  b.forEach(function(e){e.style.width='0';});
+  b.forEach(function(e,i){later(function(){e.style.width=e.dataset.w;},rm?0:200+i*300);});
+};
+
+/* SPOF */
+SCEN.spof=function(s,rm){
+  var dead=qa(s,'.dead'), dom=q(s,'#domain'), cas=qa(s,'.casc');
+  dead.forEach(function(e){e.style.opacity=0;});
+  cas.forEach(function(e){e.style.opacity=0;});
+  if(dom)dom.style.opacity=0;
+  later(function(){var e=q(s,'.dead[data-o="1"]');if(e){e.style.transition='.4s';e.style.opacity=1;}},rm?0:300);
+  later(function(){dead.forEach(function(e){if(e.dataset.o!=='1'){e.style.transition='.4s';e.style.opacity=1;}});},rm?0:1100);
+  later(function(){if(dom){dom.style.transition='.6s';dom.style.opacity=1;}},rm?0:1800);
+  cas.forEach(function(e,i){later(function(){e.style.transition='.4s';e.style.opacity=1;},rm?0:2300+i*450);});
+};
+
+/* угрозы и затраты — простое накопление */
+SCEN.sum=function(s,rm){
+  var it=qa(s,'.sumit'), tot=qa(s,'.sumtot');
+  it.forEach(function(e){e.style.opacity=0;e.style.transform='translateX(-8px)';});
+  tot.forEach(function(e){e.style.opacity=0;});
+  it.forEach(function(e,i){later(function(){e.style.transition='.35s cubic-bezier(.22,.7,.3,1)';e.style.opacity=1;e.style.transform='none';},rm?0:i*260);});
+  tot.forEach(function(e,i){later(function(){e.style.transition='.45s';e.style.opacity=1;},rm?0:it.length*260+300+i*300);});
+};
+
+/* ================= ИНТЕРАКТИВ ================= */
+
+/* калькулятор доступности */
+(function(){
+  var inp=document.getElementById('dt'), un=document.getElementById('dtu'),
+      out=document.getElementById('aOut'), cls=document.getElementById('aCls'),
+      note=document.getElementById('aNote');
+  if(!inp)return;
+  var K={min:1/60, h:1, d:24};
+  var CLS=[
+    [99.999,'Центры обработки данных — 99,999 % (≈5,3 минуты простоя в год)'],
+    [99.995,'Финансовые организации, биржи — от 99,995 %'],
+    [99.99 ,'Корпоративные сети — 99,99 % (≈53 минуты в год)'],
+    [95    ,'Удалённая работа из дома — от 95 %'],
+    [90    ,'Малый бизнес — от 90 %'],
+    [80    ,'Домашняя сеть, развлечения — от 80 %'],
+    [0     ,'Ниже 80 % — неприемлемо почти для любых задач']
+  ];
+  function calc(){
+    var v=parseFloat(inp.value); if(isNaN(v)||v<0)v=0;
+    var tot=24*365, dn=v*K[un.value];
+    if(dn>tot)dn=tot;
+    var a=(tot-dn)/tot*100;
+    out.textContent=a.toFixed(a>=99.99?4:2).replace('.',',')+' %';
+    var row=CLS.find(function(r){return a+0.0005>=r[0];});
+    cls.textContent=row[1];
+    note.textContent='Простой '+dn.toFixed(2).replace('.',',')+' ч из '+tot+' ч периода.';
+  }
+  inp.addEventListener('input',calc);
+  un.addEventListener('change',calc);
+  [inp,un].forEach(function(e){e.addEventListener('keydown',function(ev){ev.stopPropagation();});});
+  calc();
+})();
+
+/* ползунок overhead */
+(function(){
+  var sl=document.getElementById('ovr'); if(!sl)return;
+  var vO=document.getElementById('vO'), vG=document.getElementById('vG'), vP=document.getElementById('vP');
+  var g=document.getElementById('mpG'), o=document.getElementById('mpO'),
+      lg=document.getElementById('mlG'), lo=document.getElementById('mlO');
+  function upd(){
+    var p=+sl.value, T=1000, O=T*p/100, G=T-O;
+    vP.textContent=p+' %';
+    vO.textContent=O.toFixed(0)+' Мбит/с';
+    vG.textContent=G.toFixed(0)+' Мбит/с';
+    var W=560, x0=20, ow=W*p/100, gw=W-ow;
+    if(g){g.setAttribute('width',gw);}
+    if(o){o.setAttribute('x',x0+gw);o.setAttribute('width',ow);}
+    if(lg){lg.setAttribute('x',x0+gw/2);lg.textContent='G — '+G.toFixed(0)+' Мбит/с';}
+    if(lo){lo.setAttribute('x',x0+gw+ow/2);lo.setAttribute('opacity',p<6?0:1);
+           lo.textContent='O — '+O.toFixed(0);}
+  }
+  sl.addEventListener('input',upd);
+  sl.addEventListener('keydown',function(e){e.stopPropagation();});
+  upd();
+})();
+
+/* проверь себя */
+(function(){
+  var done={}, sc=document.getElementById('score');
+  var qs=[].slice.call(document.querySelectorAll('.q'));
+  qs.forEach(function(qq,qi){
+    var bs=[].slice.call(qq.querySelectorAll('.opts button'));
+    bs.forEach(function(b){
+      b.onclick=function(){
+        if(done[qi]!==undefined)return;
+        done[qi]=(b.dataset.a==='1');
+        bs.forEach(function(x){
+          if(x.dataset.a==='1')x.classList.add('good');
+          else if(x===b)x.classList.add('bad');
+        });
+        var ex=qq.querySelector('.ex'); if(ex)ex.classList.add('on');
+        if(sc){
+          var ok=Object.keys(done).filter(function(k){return done[k];}).length;
+          sc.textContent=ok+' / '+qs.length+'  (отвечено '+Object.keys(done).length+')';
+        }
+      };
+    });
+  });
+  var rb=document.getElementById('qreset');
+  if(rb)rb.onclick=function(){
+    done={};
+    qs.forEach(function(qq){
+      qq.querySelectorAll('.opts button').forEach(function(x){x.classList.remove('good','bad');});
+      var ex=qq.querySelector('.ex'); if(ex)ex.classList.remove('on');
+    });
+    if(sc)sc.textContent='0 / '+qs.length;
+  };
+  if(sc)sc.textContent='0 / '+qs.length;
+})();
+
+/* длины путей для stroke-dashoffset */
+[].forEach.call(document.querySelectorAll('.dash'),function(p){
+  try{var L=p.getTotalLength();p.style.setProperty('--L',Math.ceil(L));}catch(e){p.style.setProperty('--L','600');}
+});
+
+show(0);
+})();
+</script>
+</body>
+</html>
