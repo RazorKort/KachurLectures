@@ -199,58 +199,156 @@ def reservation(name):
 
 RES, RES_SC = reservation("res")
 
-# ---- selective method (8b)
-def selective(name):
-    g = ('<rect class="node o" x="40" y="150" width="250" height="90" rx="14"/>'
-         '<text class="nodet" x="165" y="185" text-anchor="middle">Управляющее</text>'
-         '<text class="nodet" x="165" y="215" text-anchor="middle">устройство</text>')
-    NY = [70, 195, 320]
-    for i, y in enumerate(NY):
-        g += f'<path class="ll" fill="none" d="M290 195 C 430 195, 470 {y+10}, 600 {y+10}"/>'
-        g += f'<g class="an" data-id="u{i}">' + pc(680, y + 10, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
-    g += ('<g class="an" data-id="pm" style="--md:900ms"><rect class="frb o" x="-62" y="-20" width="124" height="40" rx="10"/>'
-          '<text class="bxt sm" y="7" text-anchor="middle">можно</text></g>')
-    g += cap("scap8", 450, 420)
-    els = {"pm": {"p": {0: (330, 195)}, "o": {0: 0, 1: 1}}, "scap8": {"t": {}}}
-    for i in range(3): els[f"u{i}"] = {"c": {0: ""}}
-    order = [0, 1, 2]
-    for k, j in enumerate(order, 1):
-        els["pm"]["p"][k] = (680, NY[j] + 10)
-        for i in range(3): els[f"u{i}"]["c"][k] = "hot" if i == j else ""
-        els["scap8"]["t"][k] = f"Разрешение отдано узлу {j+1}: передаёт только он"
-    els["pm"]["p"][4] = (330, 195); els["pm"]["o"][4] = 0
-    for i in range(3): els[f"u{i}"]["c"][4] = ""
-    els["scap8"]["t"][4] = "Очередь замкнулась: управляющее устройство начинает круг заново"
-    return svg("0 0 900 440", g), scene(name, 4, els, {i: 1100 for i in range(5)})
+# ---- 8a. резервирование времени: расписание слотов
+def reservation8(name):
+    RY = [70, 160, 250]; X0, W, GAP = 230, 112, 125
+    g = ""
+    for i, y in enumerate(RY):
+        g += f'<text class="nl" x="30" y="{y+44}">Узел {i+1}</text>'
+    for sN in range(6):
+        x = X0 + sN * GAP
+        g += f'<text class="slt" x="{x+W/2}" y="48" text-anchor="middle">СЛОТ {sN+1}</text>'
+        for i, y in enumerate(RY):
+            g += f'<rect class="cellb an" data-id="c{sN}_{i}" x="{x}" y="{y}" width="{W}" height="70" rx="10"/>'
+        own = sN % 3; oy = RY[own]
+        if sN == 3:
+            g += (f'<g class="an" data-id="k{sN}" style="--md:500ms"><rect class="padb" x="{x+10}" y="{oy+16}" width="{W-20}" height="38" rx="8"/>'
+                  f'<text class="bxt xs" x="{x+W/2}" y="{oy+41}" text-anchor="middle">нет данных</text></g>')
+        else:
+            col = ["o", "v", "g"][own]
+            g += (f'<g class="an" data-id="k{sN}" style="--md:500ms"><rect class="frb {col}" x="{x+10}" y="{oy+16}" width="{W-20}" height="38" rx="8"/>'
+                  f'<text class="bxt xs" x="{x+W/2}" y="{oy+41}" text-anchor="middle">кадр</text></g>')
+    XE = X0 + 5 * GAP + W
+    g += (f'<line class="tl" x1="{X0}" y1="345" x2="{XE+20}" y2="345"/>'
+          f'<polygon class="tlh" points="{XE+32},345 {XE+14},336 {XE+14},354"/>'
+          f'<text class="nl" x="{XE+10}" y="382" text-anchor="end">время</text>')
+    g += cap("rscap", 520, 398)
+    els = {"rscap": {"t": {}}}
+    for sN in range(6):
+        els[f"k{sN}"] = {"o": {0: 0}}
+        for i in range(3): els[f"c{sN}_{i}"] = {"c": {0: ""}}
+    CAPS = ["Слот 1 закреплён за узлом 1: передаёт только он, узлы 2 и 3 молчат",
+            "Слот 2 — очередь узла 2, узлы 1 и 3 ждут своего промежутка",
+            "Слот 3 — передаёт узел 3, расписание известно заранее",
+            "Слот 4 снова у узла 1, но данных нет — канал простаивает впустую",
+            "Слот 5 — узел 2 передаёт в свой промежуток",
+            "Слот 6 — узел 3 передаёт, круг завершён",
+            "Расписание повторяется: коллизии невозможны, но пустые слоты теряют полосу"]
+    for k in range(1, 7):
+        sN = k - 1; own = sN % 3
+        for t in range(6):
+            for i in range(3):
+                els[f"c{t}_{i}"]["c"][k] = ("on" if i == own else "mute") if t == sN else ""
+            els[f"k{t}"]["o"][k] = 1 if t <= sN else 0
+        els["rscap"]["t"][k] = CAPS[sN]
+    for t in range(6):
+        for i in range(3): els[f"c{t}_{i}"]["c"][7] = ""
+    els["rscap"]["t"][7] = CAPS[6]
+    return svg("0 0 1000 412", g), scene(name, 7, els, {i: 1250 for i in range(8)})
 
-# ---- random access (8c)
+# ---- 8b. селективный метод: опрос и разрешение
+def selective(name):
+    g = ('<rect class="node o" x="40" y="165" width="250" height="100" rx="14"/>'
+         '<text class="nodet" x="165" y="202" text-anchor="middle">Управляющее</text>'
+         '<text class="nodet" x="165" y="232" text-anchor="middle">устройство</text>')
+    NY = [70, 215, 360]
+    for i, y in enumerate(NY):
+        g += f'<path class="ll" fill="none" d="M290 215 C 440 215, 500 {y}, 640 {y}"/>'
+        g += f'<g class="an" data-id="u{i}">' + pc(730, y, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
+    g += ('<g class="an" data-id="pm" style="--md:900ms"><rect class="frb o" x="-92" y="-21" width="184" height="42" rx="10"/>'
+          '<text class="bxt sm" y="7" text-anchor="middle" data-id="pmt"></text></g>')
+    g += cap("scap8", 470, 455)
+    HOME = (360, 215)
+    els = {"pm": {"p": {0: HOME}, "o": {0: 0, 1: 1}}, "pmt": {"t": {}}, "scap8": {"t": {}}}
+    for i in range(3): els[f"u{i}"] = {"c": {0: ""}}
+    SEQ = [(0, "опрос \u2192", "Контроллер спрашивает узел 1: есть что передавать?", True),
+           (0, "\u2190 нет данных", "Узел 1 отвечает «нечего» и в среду не выходит", False),
+           (1, "опрос \u2192", "Контроллер переходит к узлу 2", True),
+           (1, "\u2190 кадр узла 2", "Узел 2 получил разрешение и передаёт свой кадр", False),
+           (2, "опрос \u2192", "Очередь узла 3", True),
+           (2, "\u2190 кадр узла 3", "Узел 3 передаёт, остальные молчат — коллизий нет", False)]
+    for k, (jj, txt, capt, out) in enumerate(SEQ, 1):
+        els["pm"]["p"][k] = (610, NY[jj]) if out else HOME
+        els["pmt"]["t"][k] = txt
+        for i in range(3): els[f"u{i}"]["c"][k] = ("hot" if i == jj else "wait")
+        els["scap8"]["t"][k] = capt
+    els["pm"]["o"][7] = 0
+    for i in range(3): els[f"u{i}"]["c"][7] = ""
+    els["scap8"]["t"][7] = "Без разрешения контроллера никто не выходит в среду — но всё зависит от него"
+    return svg("0 0 960 475", g), scene(name, 7, els, {i: 1200 for i in range(8)})
+
+# ---- 8c. случайный доступ: слушаем среду, ловим коллизию
 def randacc(name):
-    g = '<line class="medl an" data-id="med" x1="60" y1="300" x2="840" y2="300"/><text class="nl" x="450" y="345" text-anchor="middle">общая среда (радиоканал)</text>'
+    g = '<line class="medl an" data-id="med" x1="60" y1="300" x2="840" y2="300"/><text class="nl" x="450" y="348" text-anchor="middle">общая среда (радиоканал)</text>'
     X = [180, 450, 720]
     for i, x in enumerate(X):
         g += f'<line class="ll" x1="{x}" y1="240" x2="{x}" y2="300"/>'
         g += f'<g class="an" data-id="r{i}">' + pc(x, 200, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
-    g += ('<g class="an" data-id="rp" style="--md:900ms"><rect class="frb o" x="-58" y="-19" width="116" height="38" rx="10"/>'
-          '<text class="bxt sm" y="6" text-anchor="middle" data-id="rpt"></text></g>')
-    g += cap("rcap8", 450, 400)
-    els = {"rp": {"p": {0: (450, 300)}, "o": {0: 0}}, "rpt": {"t": {}}, "med": {"c": {0: ""}}, "rcap8": {"t": {}}}
+    for n, col in (("rp", "o"), ("rq", "g")):
+        g += (f'<g class="an" data-id="{n}" style="--md:900ms"><rect class="frb {col}" x="-62" y="-19" width="124" height="38" rx="10"/>'
+              f'<text class="bxt xs" y="6" text-anchor="middle" data-id="{n}t"></text></g>')
+    g += f'<g class="an" data-id="rb"><polygon class="burst" points="{star(450,300,30,13)}"/><polygon class="burst2" points="{star(450,300,16,7)}"/></g>'
+    g += cap("rcap8", 450, 395)
+    els = {"rp": {"p": {0: (450, 300)}, "o": {0: 0}}, "rpt": {"t": {}},
+           "rq": {"p": {0: (720, 300)}, "o": {0: 0}}, "rqt": {"t": {}},
+           "rb": {"o": {0: 0}}, "med": {"c": {0: ""}}, "rcap8": {"t": {}}}
     for i in range(3): els[f"r{i}"] = {"c": {0: ""}}
-    els["r1"]["c"].update({1: "hot", 2: "hot", 3: "hot", 4: ""})
-    els["r0"]["c"].update({3: "wait", 4: "hot"})
-    els["rp"]["o"].update({2: 1, 4: 1})
-    els["rp"]["p"].update({1: (450, 300), 2: (450, 300), 3: (700, 300), 4: (180, 300)})
-    els["rpt"]["t"].update({2: "кадр узла 2", 3: "кадр узла 2", 4: "кадр узла 1"})
-    els["med"]["c"].update({2: "busy", 3: "busy", 4: "busy"})
-    els["rcap8"]["t"] = {1: "Узел 2 слушает среду: она свободна",
-                         2: "Узел 2 сразу занимает канал и передаёт",
-                         3: "Узел 1 слышит, что среда занята, и ждёт",
-                         4: "Канал освободился — узел 1 передаёт свой кадр"}
-    return svg("0 0 900 420", g), scene(name, 4, els, {i: 1200 for i in range(5)})
+    els["r1"]["c"].update({1: "hot", 2: "hot", 3: "hot", 4: "", 5: "", 6: ""})
+    els["r0"]["c"].update({3: "wait", 4: "hot", 5: "hot", 6: "wait"})
+    els["r2"]["c"].update({5: "hot", 6: "wait"})
+    els["rp"]["o"].update({2: 1, 4: 1, 6: 0})
+    els["rp"]["p"].update({1: (450, 300), 2: (450, 300), 3: (640, 300), 4: (180, 300), 5: (330, 300)})
+    els["rpt"]["t"].update({2: "кадр узла 2", 3: "кадр узла 2", 4: "кадр узла 1", 5: "кадр узла 1"})
+    els["rq"]["o"].update({5: 1, 6: 0})
+    els["rq"]["p"].update({5: (580, 300)})
+    els["rqt"]["t"].update({5: "кадр узла 3"})
+    els["rb"]["o"].update({5: 1, 6: 0})
+    els["med"]["c"].update({2: "busy", 3: "busy", 4: "busy", 5: "busy", 6: ""})
+    els["rcap8"]["t"] = {1: "Узел 2 прослушивает несущую: среда свободна",
+                         2: "Раз свободна — узел 2 сразу занимает канал",
+                         3: "Узел 1 хочет передать, но слышит занятую среду и ждёт",
+                         4: "Канал освободился — узел 1 передаёт свой кадр",
+                         5: "Узлы 1 и 3 начали одновременно: оба слышали тишину — коллизия",
+                         6: "Оба ждут случайное время и повторяют попытку: так работают CSMA/CD и CSMA/CA"}
+    return svg("0 0 900 415", g), scene(name, 6, els, {1: 1200, 2: 1200, 3: 1300, 4: 1200, 5: 1500, 6: 1600})
+
+# ---- 8d. передача токена
+def token8(name):
+    CX, CY, R = 450, 240, 155
+    POS = []
+    g = f'<circle class="ring" cx="{CX}" cy="{CY}" r="{R}"/>'
+    for i in range(6):
+        a = -math.pi / 2 + i * math.pi / 3
+        x, y = CX + R * math.cos(a), CY + R * math.sin(a); POS.append((x, y))
+        g += f'<g class="an" data-id="n{i}">' + pc(round(x), round(y) + 16, f"Узел {i+1}") + '</g>'
+    g += '<g class="an" data-id="tk" style="--md:800ms"><circle class="tkc" r="22"/><text class="tkt" y="7" text-anchor="middle">T</text></g>'
+    g += ('<g class="an" data-id="fr" style="--md:900ms"><rect class="frb v" x="-52" y="-18" width="104" height="36" rx="9"/>'
+          '<text class="bxt xs" y="6" text-anchor="middle">кадр</text></g>')
+    g += cap("tcap8", CX, 492)
+    def inner(jj, f=.56): return (round(CX + (POS[jj][0] - CX) * f), round(CY + (POS[jj][1] - CY) * f))
+    def outer(jj, f=1.42): return (round(CX + (POS[jj][0] - CX) * f), round(CY + (POS[jj][1] - CY) * f))
+    els = {"tk": {"p": {0: inner(0)}, "o": {0: 0, 1: 1}}, "fr": {"p": {0: outer(1)}, "o": {0: 0}}, "tcap8": {"t": {}}}
+    for i in range(6): els[f"n{i}"] = {"c": {0: ""}}
+    STEPS = [(0, None, 0, "Токен пришёл к узлу 1, но передавать ему нечего"),
+             (1, None, 0, "Узел 1 сразу отдаёт токен дальше — узлу 2"),
+             (1, 1, 1, "У узла 2 есть данные: владея токеном, он выпускает кадр в кольцо"),
+             (1, 2, 1, "Кадр идёт по кольцу, промежуточные узлы только ретранслируют его"),
+             (1, 4, 1, "Узел 5 — получатель: он копирует кадр себе"),
+             (2, None, 0, "Узел 2 закончил и отпустил токен — метка ушла к узлу 3"),
+             (2, None, 0, "Передавать может только владелец токена, поэтому коллизий нет вовсе")]
+    for k, (holder, fj, fo, capt) in enumerate(STEPS, 1):
+        els["tk"]["p"][k] = inner(holder)
+        els["fr"]["o"][k] = fo
+        if fj is not None: els["fr"]["p"][k] = outer(fj)
+        for i in range(6):
+            els[f"n{i}"]["c"][k] = "hot" if i == holder else ("rx" if (fj == 4 and i == 4) else "")
+        els["tcap8"]["t"][k] = capt
+    return svg("0 0 900 512", g), scene(name, 7, els, {i: 1300 for i in range(8)})
 
 SEL8, SEL8_SC = selective("sel8")
 RND8, RND8_SC = randacc("rnd8")
-RES8, RES8_SC = reservation("res8")
-TOK8, TOK8_SC = token_ring("tok8")
+RES8, RES8_SC = reservation8("res8")
+TOK8, TOK8_SC = token8("tok8")
 
 # ---- CSMA/CD and CSMA/CA flow (20, 21)
 def flow(name, items, order, caps):
@@ -475,6 +573,86 @@ for i, (lab, fr, cls) in enumerate(SEG):
 _m["mf"]["p"][5] = (880, 140); _m["mcap"]["t"][5] = "Пакет тот же, а формат кадра меняется в зависимости от среды"
 MED_SC = scene("med", 5, _m, {i: 1300 for i in range(6)})
 
+
+# ---- CSMA/CD: слушаем среду, ловим коллизию, ждём случайный интервал
+def csma_cd(name):
+    X = [180, 480, 780]
+    g = '<line class="medl an" data-id="cdm" x1="60" y1="300" x2="900" y2="300"/><text class="nl" x="480" y="346" text-anchor="middle">общая среда (один сегмент Ethernet)</text>'
+    for i, x in enumerate(X):
+        g += f'<line class="ll" x1="{x}" y1="242" x2="{x}" y2="300"/>'
+        g += f'<g class="an" data-id="s{i}">' + pc(x, 200, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
+        g += f'<text class="tag an" data-id="t{i}" x="{x}" y="118" text-anchor="middle"></text>'
+    for n, col in (("fa", "o"), ("fb", "g")):
+        g += (f'<g class="an" data-id="{n}" style="--md:900ms"><rect class="frb {col}" x="-58" y="-19" width="116" height="38" rx="10"/>'
+              f'<text class="bxt xs" y="6" text-anchor="middle" data-id="{n}t"></text></g>')
+    g += f'<g class="an" data-id="cb"><polygon class="burst" points="{star(480,300,30,13)}"/><polygon class="burst2" points="{star(480,300,16,7)}"/></g>'
+    g += cap("cdcap", 480, 398)
+    els = {"fa": {"p": {0: (180, 300)}, "o": {0: 0}}, "fat": {"t": {}},
+           "fb": {"p": {0: (780, 300)}, "o": {0: 0}}, "fbt": {"t": {}},
+           "cb": {"o": {0: 0}}, "cdm": {"c": {0: ""}}, "cdcap": {"t": {}}}
+    for i in range(3):
+        els[f"s{i}"] = {"c": {0: ""}}; els[f"t{i}"] = {"t": {0: ""}}
+    T = [  # шаг: (класс узлов, подписи-бейджи, позиции кадров, видимость, вспышка, среда, подпись)
+        (["hot", "", ""], ["слушаю среду", "", ""], None, (0, 0), 0, "", "Узел 1 прослушивает несущую: в среде тишина"),
+        (["hot", "", ""], ["передаю", "", ""], ((330, 300), None), (1, 0), 0, "busy", "Среда свободна — узел 1 начинает передачу"),
+        (["hot", "", "hot"], ["передаю", "", "тоже слышал тишину"], ((380, 300), (620, 300)), (1, 1), 0, "busy", "Узел 3 слышал ту же тишину и начинает передавать"),
+        (["hot", "", "hot"], ["коллизия!", "", "коллизия!"], ((440, 300), (560, 300)), (1, 1), 1, "busy", "Сигналы сталкиваются: обе станции слышат искажение — это и есть обнаружение коллизии (CD)"),
+        (["wait", "", "wait"], ["jam-сигнал", "", "jam-сигнал"], None, (0, 0), 1, "busy", "Обе шлют короткий jam-сигнал и прекращают передачу"),
+        (["wait", "", "wait"], ["жду 2 слота", "", "жду 5 слотов"], None, (0, 0), 0, "", "Каждая отсчитывает свой случайный интервал — поэтому доступ остаётся равноправным"),
+        (["hot", "", "wait"], ["передаю", "", "ещё жду"], ((600, 300), None), (1, 0), 0, "busy", "Узел 1 дождался первым и передал кадр уже без коллизии"),
+    ]
+    for k, (cls, tags, fp, vis, burst, med, capt) in enumerate(T, 1):
+        for i in range(3):
+            els[f"s{i}"]["c"][k] = cls[i]; els[f"t{i}"]["t"][k] = tags[i]
+        if fp:
+            if fp[0]: els["fa"]["p"][k] = fp[0]
+            if fp[1]: els["fb"]["p"][k] = fp[1]
+        els["fa"]["o"][k], els["fb"]["o"][k] = vis
+        els["fat"]["t"][k] = "кадр узла 1"; els["fbt"]["t"][k] = "кадр узла 3"
+        els["cb"]["o"][k] = burst; els["cdm"]["c"][k] = med
+        els["cdcap"]["t"][k] = capt
+    els["fa"]["p"][7] = (480, 300)
+    return svg("0 0 960 415", g), scene(name, 7, els, {4: 1500, 5: 1400, 6: 1500, 7: 1500})
+
+# ---- CSMA/CA: слушаем эфир, выжидаем DIFS и backoff, получаем ACK
+def csma_ca(name):
+    g = ap(480, 90, "Точка доступа")
+    g += '<line class="medl an" data-id="cam" x1="80" y1="250" x2="880" y2="250"/><text class="nl" x="480" y="296" text-anchor="middle">радиоэфир: коллизию здесь не услышать</text>'
+    STA = [(190, "Станция А", "o"), (770, "Станция Б", "v")]
+    for i, (x, lab, col) in enumerate(STA):
+        g += f'<line class="ll" x1="{x}" y1="250" x2="{x}" y2="322"/>'
+        g += f'<g class="an" data-id="a{i}">' + pc(x, 390, lab, col) + '</g>'
+        g += f'<text class="tag an" data-id="g{i}" x="{x}" y="335" text-anchor="middle"></text>'
+    g += ('<g class="an" data-id="cf" style="--md:900ms"><rect class="frb o" x="-62" y="-19" width="124" height="38" rx="10"/>'
+          '<text class="bxt xs" y="6" text-anchor="middle" data-id="cft"></text></g>')
+    g += cap("cacap", 480, 462)
+    els = {"cf": {"p": {0: (480, 250)}, "o": {0: 0}}, "cft": {"t": {}}, "cam": {"c": {0: ""}}, "cacap": {"t": {}}}
+    for i in range(2):
+        els[f"a{i}"] = {"c": {0: ""}}; els[f"g{i}"] = {"t": {0: ""}}
+    T = [(["wait", "wait"], ["слушаю: занято", "слушаю: занято"], (640, 250), 1, "чужой кадр", "busy",
+          "Станция А слушает эфир: идёт чужая передача, канал занят"),
+         (["wait", "wait"], ["жду DIFS", "жду DIFS"], (480, 250), 0, "", "",
+          "Канал освободился, но сразу никто не передаёт: все выжидают паузу DIFS"),
+         (["hot", "wait"], ["счётчик 3", "счётчик 5"], (480, 250), 0, "", "",
+          "Дальше каждая станция отсчитывает случайный backoff — у А 3 слота, у Б 5"),
+         (["hot", "wait"], ["счётчик 0 — передаю", "замерла на 2"], (330, 180), 1, "кадр станции А", "busy",
+          "У А счётчик дошёл до нуля — она передаёт, а Б замораживает свой счётчик"),
+         (["hot", "wait"], ["жду ACK", "замерла на 2"], (330, 180), 1, "ACK", "busy",
+          "Точка доступа отвечает ACK: кадр принят, иначе А повторила бы передачу"),
+         (["wait", "hot"], ["готово", "досчитала — передаю"], (640, 180), 1, "кадр станции Б", "busy",
+          "Б досчитывает оставшиеся 2 слота и передаёт следующей — очередь честная"),
+         (["", ""], ["", ""], (480, 250), 0, "", "",
+          "Коллизия предотвращается заранее: в эфире её нельзя обнаружить, как в кабеле")]
+    for k, (cls, tags, fp, vis, ftxt, med, capt) in enumerate(T, 1):
+        for i in range(2):
+            els[f"a{i}"]["c"][k] = cls[i]; els[f"g{i}"]["t"][k] = tags[i]
+        els["cf"]["p"][k] = fp; els["cf"]["o"][k] = vis; els["cft"]["t"][k] = ftxt
+        els["cam"]["c"][k] = med; els["cacap"]["t"][k] = capt
+    return svg("0 0 960 480", g), scene(name, 7, els, {i: 1500 for i in range(8)})
+
+CDV, CDV_SC = csma_cd("cdv")
+CAV, CAV_SC = csma_ca("cav")
+
 # ---------------------------------------------------------------- html helpers
 BCOL = ["b0", "b1", "b2", "b3", "b4"]
 
@@ -627,11 +805,21 @@ slide("Коллизии", "Коллизии", "и методы работы с �
 slide("CSMA/CD", "CSMA/CD", "пошагово", two(
     p("Важно объяснить, почему устройство ожидает именно <b>случайный</b> промежуток времени. Все устройства в сети конкурируют за среду передачи данных; использование определённых моментов времени привело бы к монополизации среды конкретным узлом. Случайность момента времени обеспечивает равноправный доступ к среде.",
       "С появлением коммутаторов и кабелей из более чем одной пары проводников значение CSMA/CD снизилось. Однако с развитием беспроводных сетей проблема коллизий вновь стала актуальной, что привело к появлению протокола CSMA/CA.", cls="p sm"),
+    dgcard(CDV, CDV_SC)))
+
+slide("CSMA/CD: шаги", "CSMA/CD", "алгоритм по шагам", two(
+    p("Станция не ждёт разрешения и не резервирует время: она просто слушает среду и передаёт, когда та свободна. Коллизия здесь — штатная ситуация, которую протокол умеет распознать и отработать.",
+      "Обнаружив искажение сигнала, обе станции обрывают передачу, подают jam-сигнал и расходятся по случайным интервалам ожидания — поэтому среду не монополизирует ни один узел.", cls="p sm"),
     CD))
 
 slide("CSMA/CA", "CSMA/CA", "предотвращение коллизий", two(
     p("<b>CSMA/CA</b> (Carrier-Sense Multiple Access with Collision Avoidance) – множественный доступ с контролем несущей и предотвращением коллизий. Похож на своего предшественника, но концептуально от него отличается.",
       "Вместо реагирования на коллизию, CSMA/CA стремится ее избежать, «работая» на упреждение. Устройство в терминах этого протокола называется <b>станцией</b>."),
+    dgcard(CAV, CAV_SC)))
+
+slide("CSMA/CA: шаги", "CSMA/CA", "алгоритм по шагам", two(
+    p("Радиостанция не слышит эфир в момент собственной передачи, поэтому обнаружить коллизию, как в кабеле, она не может. Единственный выход — не допустить её: выждать паузу, отсчитать случайный backoff и только потом выйти в эфир.",
+      "Подтверждением служит кадр ACK от получателя: если его нет, станция считает кадр потерянным и повторяет попытку.", cls="p sm"),
     CA))
 
 slide("CSMA/CD и CSMA/CA", "Сравнение", "CSMA/CD и CSMA/CA", p("Принципиальное отличие между этими протоколами заключается в их подходе к управлению коллизиями. Протокол CSMA/CD функционирует подобно <b>пожарной бригаде</b>, которая отправляется тушить пожар, тогда как протокол CSMA/CA действует как <b>нормативная система пожарной безопасности</b>, направленная на предотвращение возникновения пожара.", cls="p lg")
@@ -908,6 +1096,11 @@ tr[data-s],svg [data-s]{transform:none}
 .hot .pcb{stroke:var(--orange);stroke-width:5}
 .medl{stroke:var(--grey);stroke-width:6;stroke-linecap:round;transition:stroke 400ms}.medl.busy{stroke:var(--orange)}
 .wait .pcb{stroke:var(--grey);stroke-width:3;opacity:.55}
+.cellb{fill:#fff;stroke:#e3ddd4;stroke-width:2;transition:fill 300ms,stroke 300ms,opacity 300ms}
+.cellb.on{fill:#fff1e8;stroke:var(--orange);stroke-width:3}.cellb.mute{opacity:.35}
+.rx .pcb{stroke:var(--violet);stroke-width:5}
+.dg .bxt.xs{font-size:17px}
+.dg .tag{font-size:19px;font-weight:800;fill:var(--ink);opacity:.85}
 .burst{fill:var(--orange)}.burst2{fill:#ffd23f}
 .an[data-id="bst"]{transform-origin:450px 180px;animation:bpulse 900ms ease-in-out infinite}
 @keyframes bpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
@@ -959,7 +1152,8 @@ g.hot .bx{fill:#fff1e8;stroke:var(--orange);stroke-width:3}
 .authors{font-size:1.05rem;line-height:1.6}
 .cat{display:block;height:auto}
 .tcat{position:absolute;right:2%;bottom:-2rem;width:clamp(160px,24vw,420px)}
-.scat{position:absolute;right:0;bottom:-3rem;width:clamp(110px,13vw,230px)}
+.scat{position:absolute;right:-.5rem;bottom:-1.5rem;width:clamp(120px,14vw,250px);z-index:0;pointer-events:none;border-radius:50%;background:radial-gradient(circle at 50% 56%,#ffe3cd 0%,#ffe3cd 52%,rgba(255,227,205,0) 72%);filter:drop-shadow(0 10px 22px rgba(20,16,12,.18))}
+.bl,.p,.g2{position:relative;z-index:1}
 .catbox{display:grid;place-items:center}.catbox .cat{width:min(22rem,70%)}
 /* trainers */
 .trn,.quiz{padding:1.4rem 1.5rem}
