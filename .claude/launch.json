@@ -4,8 +4,8 @@
     {
       "name": "decks",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8777", "--directory", "decks"],
-      "port": 8777
+      "runtimeArgs": ["-m", "http.server", "8787", "--directory", "decks"],
+      "port": 8787
     }
   ]
 }

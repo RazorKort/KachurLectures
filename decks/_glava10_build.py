@@ -167,7 +167,7 @@ def token_ring(name):
         a = -math.pi / 2 + i * math.pi / 3; x, y = 450 + 160 * math.cos(a), 230 + 160 * math.sin(a); POS.append((x, y))
         tr += f'<g class="an" data-id="n{i}">' + pc(round(x), round(y) + 18) + '</g>'
     tr += '<g class="an" data-id="tk" style="--md:800ms"><circle class="tkc" r="22"/><text class="tkt" y="7" text-anchor="middle">T</text></g>'
-    tr += cap("tcap", 450, 450)
+    tr += cap("tcap", 450, 458)
     _tk = {"tk": {"p": {}}, "tcap": {"t": {}}}
     for i in range(6): _tk[f"n{i}"] = {"c": {}}
     for k in range(8):
@@ -175,7 +175,7 @@ def token_ring(name):
         _tk["tk"]["p"][k] = (round(cx), round(cy))
         for i in range(6): _tk[f"n{i}"]["c"][k] = "hot" if i == j else ""
         _tk["tcap"]["t"][k] = f"Метка у узла {j+1}: только он может передавать"
-    return svg("0 0 900 470", tr), scene(name, 7, _tk, {i: 1000 for i in range(8)})
+    return svg("0 0 900 490", tr), scene(name, 7, _tk, {i: 1000 for i in range(8)})
 
 TOK, TOK_SC = token_ring("tok")
 
@@ -206,7 +206,7 @@ def selective(name):
          '<text class="nodet" x="165" y="215" text-anchor="middle">устройство</text>')
     NY = [70, 195, 320]
     for i, y in enumerate(NY):
-        g += f'<path class="ll" d="M290 195 C 430 195, 470 {y+10}, 600 {y+10}"/>'
+        g += f'<path class="ll" fill="none" d="M290 195 C 430 195, 470 {y+10}, 600 {y+10}"/>'
         g += f'<g class="an" data-id="u{i}">' + pc(680, y + 10, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
     g += ('<g class="an" data-id="pm" style="--md:900ms"><rect class="frb o" x="-62" y="-20" width="124" height="40" rx="10"/>'
           '<text class="bxt sm" y="7" text-anchor="middle">можно</text></g>')
@@ -918,7 +918,7 @@ tr[data-s],svg [data-s]{transform:none}
 .tokb{fill:var(--ink)}.dg .tokt{fill:#fff;font-weight:800;font-size:19px}
 .node{stroke-width:2.5}.node.o{fill:#fff1e8;stroke:var(--orange)}.node.v{fill:#efeaf7;stroke:var(--violet)}
 .dg .nodet{font-weight:800;font-size:17px}
-.ll{stroke:var(--grey);stroke-width:2;stroke-dasharray:6 7}
+.ll{fill:none;stroke:var(--grey);stroke-width:2;stroke-dasharray:6 7}
 .ring{fill:none;stroke:var(--violet);stroke-width:3;stroke-dasharray:10 8}
 .tkc{fill:var(--orange);stroke:#fff;stroke-width:3}.dg .tkt{fill:#fff;font-weight:900;font-size:20px}
 .tl,.mkl{stroke:var(--violet);stroke-width:4}.tlh{fill:var(--violet)}.mkc{fill:var(--orange)}.mkl{stroke:var(--orange);stroke-width:3}
