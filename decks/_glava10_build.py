@@ -575,6 +575,14 @@ MED_SC = scene("med", 5, _m, {i: 1300 for i in range(6)})
 
 
 # ---- CSMA/CD: слушаем среду, ловим коллизию, ждём случайный интервал
+CD_STEPS = ["Станция слушает несущую (carrier sense)",
+            "Среда свободна — начинается передача кадра",
+            "Вторая станция слышала ту же тишину и тоже начала передавать",
+            "Сигналы искажаются — обнаружена коллизия (collision detection)",
+            "Обе станции шлют jam-сигнал и обрывают передачу",
+            "Каждая отсчитывает свой случайный интервал (backoff)",
+            "Передача повторяется — на этот раз без коллизии"]
+
 def csma_cd(name):
     X = [180, 480, 780]
     g = '<line class="medl an" data-id="cdm" x1="60" y1="300" x2="900" y2="300"/><text class="nl" x="480" y="346" text-anchor="middle">общая среда (один сегмент Ethernet)</text>'
@@ -585,22 +593,20 @@ def csma_cd(name):
     for n, col in (("fa", "o"), ("fb", "g")):
         g += (f'<g class="an" data-id="{n}" style="--md:900ms"><rect class="frb {col}" x="-58" y="-19" width="116" height="38" rx="10"/>'
               f'<text class="bxt xs" y="6" text-anchor="middle" data-id="{n}t"></text></g>')
-    g += f'<g class="an" data-id="cb"><polygon class="burst" points="{star(480,300,30,13)}"/><polygon class="burst2" points="{star(480,300,16,7)}"/></g>'
+    g += f'<g class="an" data-id="cb"><polygon class="burst" points="{star(480,300,46,20)}"/><polygon class="burst2" points="{star(480,300,25,11)}"/></g>'
     g += cap("cdcap", 480, 398)
     els = {"fa": {"p": {0: (180, 300)}, "o": {0: 0}}, "fat": {"t": {}},
            "fb": {"p": {0: (780, 300)}, "o": {0: 0}}, "fbt": {"t": {}},
            "cb": {"o": {0: 0}}, "cdm": {"c": {0: ""}}, "cdcap": {"t": {}}}
     for i in range(3):
         els[f"s{i}"] = {"c": {0: ""}}; els[f"t{i}"] = {"t": {0: ""}}
-    T = [  # шаг: (класс узлов, подписи-бейджи, позиции кадров, видимость, вспышка, среда, подпись)
-        (["hot", "", ""], ["слушаю среду", "", ""], None, (0, 0), 0, "", "Узел 1 прослушивает несущую: в среде тишина"),
-        (["hot", "", ""], ["передаю", "", ""], ((330, 300), None), (1, 0), 0, "busy", "Среда свободна — узел 1 начинает передачу"),
-        (["hot", "", "hot"], ["передаю", "", "тоже слышал тишину"], ((380, 300), (620, 300)), (1, 1), 0, "busy", "Узел 3 слышал ту же тишину и начинает передавать"),
-        (["hot", "", "hot"], ["коллизия!", "", "коллизия!"], ((440, 300), (560, 300)), (1, 1), 1, "busy", "Сигналы сталкиваются: обе станции слышат искажение — это и есть обнаружение коллизии (CD)"),
-        (["wait", "", "wait"], ["jam-сигнал", "", "jam-сигнал"], None, (0, 0), 1, "busy", "Обе шлют короткий jam-сигнал и прекращают передачу"),
-        (["wait", "", "wait"], ["жду 2 слота", "", "жду 5 слотов"], None, (0, 0), 0, "", "Каждая отсчитывает свой случайный интервал — поэтому доступ остаётся равноправным"),
-        (["hot", "", "wait"], ["передаю", "", "ещё жду"], ((600, 300), None), (1, 0), 0, "busy", "Узел 1 дождался первым и передал кадр уже без коллизии"),
-    ]
+    T = [(["hot", "", ""], ["слушаю среду", "", ""], None, (0, 0), 0, "", "Узел 1 прослушивает несущую: в среде тишина"),
+         (["hot", "", ""], ["передаю", "", ""], ((330, 300), None), (1, 0), 0, "busy", "Среда свободна — узел 1 начинает передачу"),
+         (["hot", "", "hot"], ["передаю", "", "тоже слышал тишину"], ((380, 300), (620, 300)), (1, 1), 0, "busy", "Узел 3 слышал ту же тишину и начинает передавать"),
+         (["hot", "", "hot"], ["коллизия!", "", "коллизия!"], ((330, 300), (630, 300)), (1, 1), 1, "busy", "Сигналы сталкиваются: обе станции слышат искажение — это и есть обнаружение коллизии"),
+         (["wait", "", "wait"], ["jam-сигнал", "", "jam-сигнал"], None, (0, 0), 1, "busy", "Обе шлют короткий jam-сигнал и прекращают передачу"),
+         (["wait", "", "wait"], ["жду 2 слота", "", "жду 5 слотов"], None, (0, 0), 0, "", "Каждая отсчитывает свой случайный интервал — доступ остаётся равноправным"),
+         (["hot", "", "wait"], ["передаю", "", "ещё жду"], ((600, 300), None), (1, 0), 0, "busy", "Узел 1 дождался первым и передал кадр уже без коллизии")]
     for k, (cls, tags, fp, vis, burst, med, capt) in enumerate(T, 1):
         for i in range(3):
             els[f"s{i}"]["c"][k] = cls[i]; els[f"t{i}"]["t"][k] = tags[i]
@@ -612,9 +618,18 @@ def csma_cd(name):
         els["cb"]["o"][k] = burst; els["cdm"]["c"][k] = med
         els["cdcap"]["t"][k] = capt
     els["fa"]["p"][7] = (480, 300)
-    return svg("0 0 960 415", g), scene(name, 7, els, {4: 1500, 5: 1400, 6: 1500, 7: 1500})
+    steps_track(els, len(CD_STEPS))
+    return svg("0 0 960 415", g), els
 
 # ---- CSMA/CA: слушаем эфир, выжидаем DIFS и backoff, получаем ACK
+CA_STEPS = ["Станция слушает эфир: канал занят чужой передачей",
+            "Канал освободился — выжидается обязательная пауза DIFS",
+            "Каждая станция отсчитывает свой случайный backoff",
+            "Счётчик дошёл до нуля — станция передаёт кадр",
+            "Получатель отвечает ACK: кадр принят",
+            "Остальные досчитывают свои слоты и передают следом",
+            "Коллизия предотвращена заранее — в эфире её не услышать"]
+
 def csma_ca(name):
     g = ap(480, 90, "Точка доступа")
     g += '<line class="medl an" data-id="cam" x1="80" y1="250" x2="880" y2="250"/><text class="nl" x="480" y="296" text-anchor="middle">радиоэфир: коллизию здесь не услышать</text>'
@@ -648,10 +663,26 @@ def csma_ca(name):
             els[f"a{i}"]["c"][k] = cls[i]; els[f"g{i}"]["t"][k] = tags[i]
         els["cf"]["p"][k] = fp; els["cf"]["o"][k] = vis; els["cft"]["t"][k] = ftxt
         els["cam"]["c"][k] = med; els["cacap"]["t"][k] = capt
-    return svg("0 0 960 480", g), scene(name, 7, els, {i: 1500 for i in range(8)})
+    steps_track(els, len(CA_STEPS))
+    return svg("0 0 960 480", g), els
 
-CDV, CDV_SC = csma_cd("cdv")
-CAV, CAV_SC = csma_ca("cav")
+def steps_track(els, n):
+    """подсветка пунктов алгоритма: текущий шаг — hot, пройденные — done"""
+    for i in range(n):
+        tr = {0: ""}
+        for k in range(1, n + 1):
+            tr[k] = "hot" if k - 1 == i else ("done" if i < k - 1 else "")
+        els[f"st{i}"] = {"c": tr}
+
+def csma_slide(label, t1, t2, intro, steps, svgc, els, name):
+    li = "".join(f'<li class="an" data-id="st{i}"><span class="badge {BCOL[i%5]}">{i+1:02d}</span><div>{t}</div></li>'
+                 for i, t in enumerate(steps))
+    sc = scene(name, len(steps), els, {i: 1400 for i in range(len(steps) + 1)})
+    bar = ('<div class="stepbar"><button class="sb" type="button" data-d="-1">\u2190 Шаг назад</button>'
+           '<span class="sbi mono"></span><button class="sb" type="button" data-d="1">Шаг вперёд \u2192</button></div>')
+    body = (f'<div class="two csma" {sc}><div class="txt">{intro}<ol class="bl sm algo">{li}</ol></div>'
+            f'<div class="vis"><div class="card dgc">{svgc}</div>{bar}</div></div>')
+    slide(label, t1, t2, body, "manual")
 
 # ---------------------------------------------------------------- html helpers
 BCOL = ["b0", "b1", "b2", "b3", "b4"]
@@ -681,6 +712,13 @@ def slide(label, t1, t2, body, cls=""):
     S.append((label, t1, t2, body, cls))
 
 CAT = {k: cat64(v) for k, v in (("a", "cat.png"), ("b", "cat-1.png"), ("c", "cat-2.png"), ("d", "cat-3.png"))}
+
+MEMES = HERE.parent / "assets" / "memes"
+
+def meme64(name, w=900, q=74):
+    im = Image.open(MEMES / name).convert("RGB"); im.thumbnail((w, w))
+    b = io.BytesIO(); im.save(b, "WEBP", quality=q, method=6)
+    return "data:image/webp;base64," + base64.b64encode(b.getvalue()).decode()
 
 # ---------------------------------------------------------------- slides (по 10.pptx)
 slide("Титул", "", "", f"""
@@ -795,25 +833,15 @@ slide("Коллизии", "Коллизии", "и методы работы с �
     "Одним из первых методов «работы» с коллизиями был протокол <b>CSMA/CD</b> (Carrier Sense Multiple Access with Collision Detection – множественный доступ с контролем несущей и обнаружением коллизий). CSMA/CD определяет порядок действий, которые должно предпринять устройство в результате обнаружения коллизии. В упрощенном виде CSMA/CD работает пошагово.", cls="p lg")
     + f'<img class="cat scat" src="{CAT["c"]}" alt="">')
 
-slide("CSMA/CD", "CSMA/CD", "пошагово", two(
-    p("Важно объяснить, почему устройство ожидает именно <b>случайный</b> промежуток времени. Все устройства в сети конкурируют за среду передачи данных; использование определённых моментов времени привело бы к монополизации среды конкретным узлом. Случайность момента времени обеспечивает равноправный доступ к среде.",
-      "С появлением коммутаторов и кабелей из более чем одной пары проводников значение CSMA/CD снизилось. Однако с развитием беспроводных сетей проблема коллизий вновь стала актуальной, что привело к появлению протокола CSMA/CA.", cls="p sm"),
-    dgcard(CDV, CDV_SC)))
+CDV, CDV_ELS = csma_cd("cdv")
+csma_slide("CSMA/CD", "CSMA/CD", "обнаружение коллизий",
+    p("Станция не ждёт разрешения и не резервирует время: она слушает среду и передаёт, когда та свободна. Коллизия здесь — штатная ситуация, которую протокол умеет распознать и отработать.", cls="p sm"),
+    CD_STEPS, CDV, CDV_ELS, "cdv")
 
-slide("CSMA/CD: шаги", "CSMA/CD", "алгоритм по шагам", two(
-    p("Станция не ждёт разрешения и не резервирует время: она просто слушает среду и передаёт, когда та свободна. Коллизия здесь — штатная ситуация, которую протокол умеет распознать и отработать.",
-      "Обнаружив искажение сигнала, обе станции обрывают передачу, подают jam-сигнал и расходятся по случайным интервалам ожидания — поэтому среду не монополизирует ни один узел.", cls="p sm"),
-    CD))
-
-slide("CSMA/CA", "CSMA/CA", "предотвращение коллизий", two(
-    p("<b>CSMA/CA</b> (Carrier-Sense Multiple Access with Collision Avoidance) – множественный доступ с контролем несущей и предотвращением коллизий. Похож на своего предшественника, но концептуально от него отличается.",
-      "Вместо реагирования на коллизию, CSMA/CA стремится ее избежать, «работая» на упреждение. Устройство в терминах этого протокола называется <b>станцией</b>."),
-    dgcard(CAV, CAV_SC)))
-
-slide("CSMA/CA: шаги", "CSMA/CA", "алгоритм по шагам", two(
-    p("Радиостанция не слышит эфир в момент собственной передачи, поэтому обнаружить коллизию, как в кабеле, она не может. Единственный выход — не допустить её: выждать паузу, отсчитать случайный backoff и только потом выйти в эфир.",
-      "Подтверждением служит кадр ACK от получателя: если его нет, станция считает кадр потерянным и повторяет попытку.", cls="p sm"),
-    CA))
+CAV, CAV_ELS = csma_ca("cav")
+csma_slide("CSMA/CA", "CSMA/CA", "предотвращение коллизий",
+    p("Радиостанция не слышит эфир в момент собственной передачи, поэтому обнаружить коллизию, как в кабеле, она не может. Единственный выход — не допустить её: выждать паузу, отсчитать случайный backoff и только потом выйти в эфир.", cls="p sm"),
+    CA_STEPS, CAV, CAV_ELS, "cav")
 
 slide("CSMA/CD и CSMA/CA", "Сравнение", "CSMA/CD и CSMA/CA", p("Принципиальное отличие между этими протоколами заключается в их подходе к управлению коллизиями. Протокол CSMA/CD функционирует подобно <b>пожарной бригаде</b>, которая отправляется тушить пожар, тогда как протокол CSMA/CA действует как <b>нормативная система пожарной безопасности</b>, направленная на предотвращение возникновения пожара.", cls="p lg")
     + '<div class="tw card"><table class="tbl"><thead><tr><th>CSMA/CD</th><th>CSMA/CA</th></tr></thead><tbody>'
@@ -1003,6 +1031,19 @@ slide("Проверь себя", "Проверь", "себя", '<div class="two 
     '<div class="trow"><button class="btn" id="qz-pv" type="button">Предыдущий</button><button class="btn pri" id="qz-nx" type="button">Следующий вопрос</button></div></div>'
     f'<div class="catbox"><img class="cat" src="{CAT["c"]}" alt=""></div></div>')
 
+slide("Спасибо за внимание", "", "", f"""
+<div class="thx">
+  <div class="thxtxt">
+    <h1>Спасибо<br><span class="o2">за внимание</span></h1>
+    <p class="thxsub">Жду выполнения тестов и домашнего задания</p>
+    <p class="authors">Ананко Софья Михайловна<br>Качур Анна Юрьевна</p>
+  </div>
+  <figure class="thxfig">
+    <img src="{meme64('trevozhnyi-pirozhok.jpg')}" alt="Гепард крупным планом">
+    <figcaption>я тревожный пирожок</figcaption>
+  </figure>
+</div>""", "tslide")
+
 # ---------------------------------------------------------------- CSS
 CSS = r"""
 :root{--paper:#fbf9f7;--card:#fff;--line:#e7e4e0;--ink:#14161c;--dim:#5c6270;
@@ -1060,7 +1101,24 @@ h3{font-size:1.08rem;font-weight:800;margin:.5rem 0 .4rem;line-height:1.25}
 .tbl th,.tbl td{text-align:left;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
 .tbl thead th{background:var(--ink);color:#fff;font-weight:800;text-transform:uppercase;font-size:.9rem;letter-spacing:.04em}
 /* flow */
+.thx{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,4vw,4rem);align-items:center;min-height:62vh}
+.thx h1{font-size:clamp(2.8rem,6.6vw,6rem);line-height:.95;font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+.thxsub{margin-top:1.4rem;font-size:clamp(1.1rem,1.8vw,1.75rem);font-weight:700;color:var(--dim);max-width:24ch}
+.thx .authors{margin-top:2.2rem}
+.thxfig{position:relative;justify-self:center;max-width:min(30rem,100%)}
+.thxfig img{width:100%;height:auto;border-radius:22px;display:block;box-shadow:0 24px 60px rgba(20,16,12,.26)}
+.thxfig figcaption{position:absolute;left:50%;bottom:-1.1rem;transform:translateX(-50%) rotate(-2deg);white-space:nowrap;
+background:var(--orange);color:#fff;font-weight:900;font-size:clamp(1rem,1.5vw,1.45rem);padding:.5rem 1.1rem;border-radius:12px;
+box-shadow:0 10px 22px rgba(242,96,12,.35)}
+@media (max-width:860px){.thx{grid-template-columns:1fr}}
 .flowcard{padding:1.2rem}
+.algo li{padding:.4rem .6rem;border-radius:10px;transition:background .28s,opacity .28s}
+.algo li.hot{background:#fff1e8;box-shadow:inset 0 0 0 2px var(--orange)}
+.algo li.done{opacity:.5}
+.stepbar{display:flex;align-items:center;justify-content:center;gap:.8rem;margin-top:.8rem}
+.sb{font:inherit;font-size:.95rem;font-weight:700;border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:.5rem .95rem;cursor:pointer;transition:background .2s,border-color .2s}
+.sb:hover:not(:disabled){background:#fff1e8;border-color:var(--orange)}.sb:disabled{opacity:.35;cursor:default}
+.sbi{font-size:.95rem;font-weight:800;color:var(--orange);min-width:3.4rem;text-align:center}
 .flow{display:flex;flex-direction:column;gap:.55rem}
 .fb{display:flex;gap:.8rem;align-items:center;padding:.65rem .9rem;border:2px solid var(--line);border-radius:12px;font-size:1.05rem;transition:border-color .28s,background .28s,opacity .28s}
 .fb.hot{border-color:var(--orange);background:#fff1e8}
@@ -1231,9 +1289,15 @@ function setStep(k,instant){
   sl._els.forEach(function(e){ e.classList.toggle('in',+e.dataset.s<=step); });
   if(sl._scene) applyScene(sl._scene,step,instant);
   if(instant){ void sl.offsetWidth; sl.classList.remove('ni'); }
+  var bar=sl.querySelector('.stepbar');
+  if(bar){ bar.querySelector('.sbi').textContent=step+' / '+sl._max;
+    bar.querySelector('.sb[data-d="-1"]').disabled=step<=0;
+    bar.querySelector('.sb[data-d="1"]').disabled=step>=sl._max; }
 }
 function tick(){ var sl=slides[cur]; if(step>=sl._max){ timer=null; return; } setStep(step+1,false); timer=setTimeout(tick,waitFor(sl,step)); }
-function play(){ clearTimeout(timer); timer=null; var sl=slides[cur]; if(RM.matches||!sl._max){ setStep(sl._max,true); return; } setStep(0,true); timer=setTimeout(tick,350); }
+function play(){ clearTimeout(timer); timer=null; var sl=slides[cur];
+  if(sl.classList.contains('manual')){ setStep(0,true); return; }
+  if(RM.matches||!sl._max){ setStep(sl._max,true); return; } setStep(0,true); timer=setTimeout(tick,350); }
 function go(i){
   i=Math.max(0,Math.min(N-1,i)); clearTimeout(timer); timer=null;
   slides.forEach(function(s){s.classList.remove('on')}); cur=i; slides[cur].classList.add('on');
@@ -1246,6 +1310,7 @@ function go(i){
 function next(){ if(cur<N-1) go(cur+1); }
 function prev(){ if(cur>0) go(cur-1); }
 $('#b-prev').onclick=prev; $('#b-next').onclick=next; $('#b-play').onclick=play;
+$$('.stepbar .sb').forEach(function(b){ b.onclick=function(){ setStep(step+ +b.dataset.d,false); }; });
 var ov=$('#ov'), ovg=$('.ovg',ov);
 slides.forEach(function(s,k){ var b=document.createElement('button'); b.className='ovi'; b.type='button';
   b.innerHTML='<span class="mono">'+(k+1)+'</span><span></span>'; b.lastChild.textContent=s.dataset.label;
