@@ -8,7 +8,9 @@ OUT = HERE / "glava10-kanalnyi.html"
 PPTX = pathlib.Path(r"C:/Users/anank/Downloads/10.pptx")
 CATS = pathlib.Path(r"D:/1111")
 
-_z = zipfile.ZipFile(PPTX)
+MEDIA = HERE / "_glava10_media.json"   # кеш картинок на случай, если 10.pptx недоступен
+_z = zipfile.ZipFile(PPTX) if PPTX.exists() else None
+_cache = json.loads(MEDIA.read_text(encoding="utf-8")) if MEDIA.exists() else {}
 
 def img64(name, w=1300, q=70):
     im = Image.open(io.BytesIO(_z.read("ppt/media/" + name))).convert("RGB")
@@ -23,7 +25,8 @@ def cat64(name, w=360):
 
 def photo(name, cap=""):
     c = f'<figcaption>{cap}</figcaption>' if cap else ""
-    return f'<figure class="card ph"><img src="{img64(name)}" alt="{cap or "Иллюстрация"}" loading="lazy">{c}</figure>'
+    src = img64(name) if _z else _cache[cap]
+    return f'<figure class="card ph"><img src="{src}" alt="{cap or "Иллюстрация"}" loading="lazy">{c}</figure>'
 
 # ---------------------------------------------------------------- scenes
 SCENES = {}
@@ -116,12 +119,18 @@ def collision(name):
     b += f'<path class="dr wo an" data-id="wl" pathLength="1" d="{wave(130, 450, 180)}"/>'
     b += f'<path class="dr wv an" data-id="wr" pathLength="1" d="{wave(770, 450, 180)}"/>'
     b += f'<g class="an" data-id="bst"><polygon class="burst" points="{star(450,180)}"/><polygon class="burst2" points="{star(450,180,24,10)}"/></g>'
+    b += '<text class="lblo an" data-id="lla" x="250" y="110" text-anchor="middle"></text>'
+    b += '<text class="lblv an" data-id="llb" x="650" y="110" text-anchor="middle"></text>'
     b += cap("ccap", 450, 320)
-    sc = scene(name, 3, {
-        "wl": {"c": {0: "", 1: "on"}}, "wr": {"c": {0: "", 1: "on"}},
-        "bst": {"o": {0: 0, 2: 1}},
-        "ccap": {"t": {1: "Два устройства начинают передачу одновременно", 2: "Сигналы перекрываются: коллизия", 3: "Данные теряются"}},
-    }, {1: 1000, 2: 900, 3: 900})
+    sc = scene(name, 4, {
+        "wl": {"c": {0: "", 1: "on", 4: "on lost"}}, "wr": {"c": {0: "", 2: "on", 4: "on lost"}},
+        "lla": {"t": {1: "кадр А →"}}, "llb": {"t": {2: "← кадр Б"}},
+        "bst": {"o": {0: 0, 3: 1}},
+        "ccap": {"t": {1: "Станция слева начинает передачу в общую среду",
+                       2: "В тот же момент начинает передавать станция справа",
+                       3: "Сигналы встречаются в середине канала: коллизия",
+                       4: "Оба кадра искажены — данные теряются, нужна повторная передача"}},
+    }, {1: 1000, 2: 1000, 3: 900, 4: 1100})
     return svg("0 0 900 340", b), sc
 
 COL7, COL7_SC = collision("col7")
@@ -151,38 +160,97 @@ po += arrow(150, 375, 745, 410, "c-o", 5, "подтверждение")
 POLL = svg("0 0 850 430", po)
 
 # ---- token ring (17)
-tr = '<circle class="ring" cx="450" cy="230" r="160"/>'
-POS = []
-for i in range(6):
-    a = -math.pi / 2 + i * math.pi / 3; x, y = 450 + 160 * math.cos(a), 230 + 160 * math.sin(a); POS.append((x, y))
-    tr += f'<g class="an" data-id="n{i}">' + pc(round(x), round(y) + 18) + '</g>'
-tr += '<g class="an" data-id="tk" style="--md:800ms"><circle class="tkc" r="22"/><text class="tkt" y="7" text-anchor="middle">T</text></g>'
-tr += cap("tcap", 450, 450)
-TOK = svg("0 0 900 470", tr)
-_tk = {"tk": {"p": {}}, "tcap": {"t": {}}}
-for i in range(6): _tk[f"n{i}"] = {"c": {}}
-for k in range(8):
-    j = k % 6; x, y = POS[j]; cx, cy = 450 + (x - 450) * .62, 230 + (y - 230) * .62
-    _tk["tk"]["p"][k] = (round(cx), round(cy))
-    for i in range(6): _tk[f"n{i}"]["c"][k] = "hot" if i == j else ""
-    _tk["tcap"]["t"][k] = f"Метка у узла {j+1}: только он может передавать"
-TOK_SC = scene("tok", 7, _tk, {i: 1000 for i in range(8)})
+def token_ring(name):
+    tr = '<circle class="ring" cx="450" cy="230" r="160"/>'
+    POS = []
+    for i in range(6):
+        a = -math.pi / 2 + i * math.pi / 3; x, y = 450 + 160 * math.cos(a), 230 + 160 * math.sin(a); POS.append((x, y))
+        tr += f'<g class="an" data-id="n{i}">' + pc(round(x), round(y) + 18) + '</g>'
+    tr += '<g class="an" data-id="tk" style="--md:800ms"><circle class="tkc" r="22"/><text class="tkt" y="7" text-anchor="middle">T</text></g>'
+    tr += cap("tcap", 450, 450)
+    _tk = {"tk": {"p": {}}, "tcap": {"t": {}}}
+    for i in range(6): _tk[f"n{i}"] = {"c": {}}
+    for k in range(8):
+        j = k % 6; x, y = POS[j]; cx, cy = 450 + (x - 450) * .62, 230 + (y - 230) * .62
+        _tk["tk"]["p"][k] = (round(cx), round(cy))
+        for i in range(6): _tk[f"n{i}"]["c"][k] = "hot" if i == j else ""
+        _tk["tcap"]["t"][k] = f"Метка у узла {j+1}: только он может передавать"
+    return svg("0 0 900 470", tr), scene(name, 7, _tk, {i: 1000 for i in range(8)})
+
+TOK, TOK_SC = token_ring("tok")
 
 # ---- reservation (18)
-rs = '<line class="tl" x1="40" y1="250" x2="860" y2="250"/><polygon class="tlh" points="870,250 852,241 852,259"/><text class="nl" x="840" y="290">время</text>'
-COLS = ["v", "o", "g", "v", "o", "g"]
-for i in range(6):
-    x = 70 + i * 130
-    rs += (f'<g class="an slot" data-id="s{i}"><rect class="slotb" x="{x}" y="120" width="110" height="110" rx="12"/>'
-           f'<text class="slt" x="{x+55}" y="100" text-anchor="middle">УЗЕЛ {i%3+1}</text></g>' + pc(x + 55, 190, "", COLS[i]))
-rs += '<g class="an" data-id="mk" style="--md:1000ms"><line class="mkl" x1="0" y1="110" x2="0" y2="262"/><circle class="mkc" cy="250" r="8"/></g>'
-RES = svg("0 0 900 310", rs)
-_rs = {"mk": {"p": {0: (70, 0)}}}
-for i in range(6): _rs[f"s{i}"] = {"c": {0: ""}}
-for k in range(1, 7):
-    _rs["mk"]["p"][k] = (70 + (k - 1) * 130 + 110, 0)
-    for i in range(6): _rs[f"s{i}"]["c"][k] = "on" if i == k - 1 else ""
-RES_SC = scene("res", 6, _rs, {i: 1100 for i in range(7)})
+def reservation(name):
+    rs = '<line class="tl" x1="40" y1="250" x2="860" y2="250"/><polygon class="tlh" points="870,250 852,241 852,259"/><text class="nl" x="840" y="290">время</text>'
+    COLS = ["v", "o", "g", "v", "o", "g"]
+    for i in range(6):
+        x = 70 + i * 130
+        rs += (f'<g class="an slot" data-id="s{i}"><rect class="slotb" x="{x}" y="120" width="110" height="110" rx="12"/>'
+               f'<text class="slt" x="{x+55}" y="100" text-anchor="middle">УЗЕЛ {i%3+1}</text></g>' + pc(x + 55, 190, "", COLS[i]))
+    rs += '<g class="an" data-id="mk" style="--md:1000ms"><line class="mkl" x1="0" y1="110" x2="0" y2="262"/><circle class="mkc" cy="250" r="8"/></g>'
+    rs += cap("rcap", 450, 300)
+    _rs = {"mk": {"p": {0: (70, 0)}}, "rcap": {"t": {}}}
+    for i in range(6): _rs[f"s{i}"] = {"c": {0: ""}}
+    for k in range(1, 7):
+        _rs["mk"]["p"][k] = (70 + (k - 1) * 130 + 110, 0)
+        for i in range(6): _rs[f"s{i}"]["c"][k] = "on" if i == k - 1 else ""
+        _rs["rcap"]["t"][k] = f"Слот {k}: канал занят узлом {(k-1)%3+1}, остальные молчат"
+    return svg("0 0 900 330", rs), scene(name, 6, _rs, {i: 1100 for i in range(7)})
+
+RES, RES_SC = reservation("res")
+
+# ---- selective method (8b)
+def selective(name):
+    g = ('<rect class="node o" x="40" y="150" width="250" height="90" rx="14"/>'
+         '<text class="nodet" x="165" y="185" text-anchor="middle">Управляющее</text>'
+         '<text class="nodet" x="165" y="215" text-anchor="middle">устройство</text>')
+    NY = [70, 195, 320]
+    for i, y in enumerate(NY):
+        g += f'<path class="ll" d="M290 195 C 430 195, 470 {y+10}, 600 {y+10}"/>'
+        g += f'<g class="an" data-id="u{i}">' + pc(680, y + 10, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
+    g += ('<g class="an" data-id="pm" style="--md:900ms"><rect class="frb o" x="-62" y="-20" width="124" height="40" rx="10"/>'
+          '<text class="bxt sm" y="7" text-anchor="middle">можно</text></g>')
+    g += cap("scap8", 450, 420)
+    els = {"pm": {"p": {0: (330, 195)}, "o": {0: 0, 1: 1}}, "scap8": {"t": {}}}
+    for i in range(3): els[f"u{i}"] = {"c": {0: ""}}
+    order = [0, 1, 2]
+    for k, j in enumerate(order, 1):
+        els["pm"]["p"][k] = (680, NY[j] + 10)
+        for i in range(3): els[f"u{i}"]["c"][k] = "hot" if i == j else ""
+        els["scap8"]["t"][k] = f"Разрешение отдано узлу {j+1}: передаёт только он"
+    els["pm"]["p"][4] = (330, 195); els["pm"]["o"][4] = 0
+    for i in range(3): els[f"u{i}"]["c"][4] = ""
+    els["scap8"]["t"][4] = "Очередь замкнулась: управляющее устройство начинает круг заново"
+    return svg("0 0 900 440", g), scene(name, 4, els, {i: 1100 for i in range(5)})
+
+# ---- random access (8c)
+def randacc(name):
+    g = '<line class="medl an" data-id="med" x1="60" y1="300" x2="840" y2="300"/><text class="nl" x="450" y="345" text-anchor="middle">общая среда (радиоканал)</text>'
+    X = [180, 450, 720]
+    for i, x in enumerate(X):
+        g += f'<line class="ll" x1="{x}" y1="240" x2="{x}" y2="300"/>'
+        g += f'<g class="an" data-id="r{i}">' + pc(x, 200, f"Узел {i+1}", ["o", "v", "g"][i]) + '</g>'
+    g += ('<g class="an" data-id="rp" style="--md:900ms"><rect class="frb o" x="-58" y="-19" width="116" height="38" rx="10"/>'
+          '<text class="bxt sm" y="6" text-anchor="middle" data-id="rpt"></text></g>')
+    g += cap("rcap8", 450, 400)
+    els = {"rp": {"p": {0: (450, 300)}, "o": {0: 0}}, "rpt": {"t": {}}, "med": {"c": {0: ""}}, "rcap8": {"t": {}}}
+    for i in range(3): els[f"r{i}"] = {"c": {0: ""}}
+    els["r1"]["c"].update({1: "hot", 2: "hot", 3: "hot", 4: ""})
+    els["r0"]["c"].update({3: "wait", 4: "hot"})
+    els["rp"]["o"].update({2: 1, 4: 1})
+    els["rp"]["p"].update({1: (450, 300), 2: (450, 300), 3: (700, 300), 4: (180, 300)})
+    els["rpt"]["t"].update({2: "кадр узла 2", 3: "кадр узла 2", 4: "кадр узла 1"})
+    els["med"]["c"].update({2: "busy", 3: "busy", 4: "busy"})
+    els["rcap8"]["t"] = {1: "Узел 2 слушает среду: она свободна",
+                         2: "Узел 2 сразу занимает канал и передаёт",
+                         3: "Узел 1 слышит, что среда занята, и ждёт",
+                         4: "Канал освободился — узел 1 передаёт свой кадр"}
+    return svg("0 0 900 420", g), scene(name, 4, els, {i: 1200 for i in range(5)})
+
+SEL8, SEL8_SC = selective("sel8")
+RND8, RND8_SC = randacc("rnd8")
+RES8, RES8_SC = reservation("res8")
+TOK8, TOK8_SC = token_ring("tok8")
 
 # ---- CSMA/CD and CSMA/CA flow (20, 21)
 def flow(name, items, order, caps):
@@ -481,6 +549,26 @@ slide("Разграничение доступа", "Предоставление
             "<b>Метод случайного доступа</b> (random access methods): устройство само отслеживает состояние среды и пользуется ею при первой возможности (применяется в Wi-Fi).",
             "<b>Передача токена</b> (web token): использовался в топологии Token Ring. Только обладатель токена мог передавать информацию, остальные устройства только принимали. В современных сетях практически не используется."], "sm"),
     photo("image6.png", "Разграничения доступа к среде")))
+
+slide("01 Резервирование времени", "Резервирование", "времени (time reservation)", two(
+    p("<b>Резервирование времени</b> (time reservation): каждый узел может пользоваться каналом связи только в отведённый ему промежуток времени.",
+      "Время в канале заранее делится на равные слоты, и каждый слот закреплён за конкретным узлом. Пока идёт чужой слот, узел молчит, даже если среда физически свободна. Коллизии при этом невозможны в принципе, но часть пропускной способности теряется: слот «простаивает», если его владельцу нечего передавать.", cls="p sm"),
+    dgcard(RES8, RES8_SC)))
+
+slide("02 Селективный метод", "Селективный", "метод (selective method)", two(
+    p("<b>Селективный метод</b> (selective method): управляющее устройство сообщает узлам, когда они могут передавать информацию.",
+      "Право на передачу раздаёт один выделенный узел-контроллер: он по очереди опрашивает устройства и выдаёт разрешение. Узел без разрешения в среду не выходит, поэтому коллизий нет. Минус — зависимость всей сети от управляющего устройства и накладные расходы на опрос.", cls="p sm"),
+    dgcard(SEL8, SEL8_SC)))
+
+slide("03 Случайный доступ", "Метод", "случайного доступа (random access)", two(
+    p("<b>Метод случайного доступа</b> (random access methods): устройство само отслеживает состояние среды и пользуется ею при первой возможности. Применяется в Wi-Fi.",
+      "Узел прослушивает несущую: если среда свободна — передаёт сразу, если занята — ждёт её освобождения. Централизованного арбитра нет, поэтому метод прост и хорошо масштабируется, но два узла могут начать передачу одновременно — отсюда коллизии и механизмы CSMA/CD и CSMA/CA.", cls="p sm"),
+    dgcard(RND8, RND8_SC)))
+
+slide("04 Передача токена", "Передача", "токена (web token)", two(
+    p("<b>Передача токена</b> (web token): использовался в топологии Token Ring. Только обладатель токена мог передавать информацию, остальные устройства только принимали.",
+      "Специальная метка-токен ходит по кольцу от узла к узлу. Получив её, устройство либо передаёт кадр, либо сразу отдаёт токен дальше. Доступ получается строго честным и без коллизий, но в современных сетях метод практически не используется — его вытеснил коммутируемый Ethernet с полным дуплексом.", cls="p sm"),
+    dgcard(TOK8, TOK8_SC)))
 
 slide("Форматирование", "Форматирование", "данных для передачи", p(
     "Одной из функций канального уровня является подготовка кадров к отправке по среде на физическом уровне. В среде вся информация передается в виде импульсов, соответствующих битам. Поэтому принимающему устройству крайне необходимо понимать, с какого именно бита начинается блок информации, предназначенный именно ему, а также сколько бит нужно принять, и какой из принятых бит что означает.",
@@ -818,7 +906,12 @@ tr[data-s],svg [data-s]{transform:none}
 .dg .cap{font-size:21px;font-weight:800;fill:var(--orange)}
 .pcb{fill:#fff;stroke:var(--ink);stroke-width:3}.pc.o .pcs{fill:var(--orange)}.pc.v .pcs{fill:var(--violet)}.pc.g .pcs{fill:var(--green)}.pcs{fill:var(--orange)}
 .hot .pcb{stroke:var(--orange);stroke-width:5}
+.medl{stroke:var(--grey);stroke-width:6;stroke-linecap:round;transition:stroke 400ms}.medl.busy{stroke:var(--orange)}
+.wait .pcb{stroke:var(--grey);stroke-width:3;opacity:.55}
 .burst{fill:var(--orange)}.burst2{fill:#ffd23f}
+.an[data-id="bst"]{transform-origin:450px 180px;animation:bpulse 900ms ease-in-out infinite}
+@keyframes bpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+.dr.lost{opacity:.3}
 .lblo{fill:var(--orange)!important;font-weight:800}.lblv{fill:var(--violet)!important;font-weight:800}
 .lay{stroke-width:2}.lay.o{fill:#fff1e8;stroke:var(--orange)}.lay.vio{fill:#efeaf7;stroke:var(--violet)}.lay.am{fill:#fff6e6;stroke:var(--amber)}
 .dg .layk{font-family:var(--mono);font-weight:900;font-size:26px}.dg .layt{font-size:19px;font-weight:600}
