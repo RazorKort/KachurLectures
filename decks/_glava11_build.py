@@ -9,7 +9,7 @@ PPTX = pathlib.Path(r"C:/Users/anank/Downloads/11.pptx")
 CATS = pathlib.Path(r"D:/1111")
 BG = pathlib.Path(r"C:/Users/anank/Downloads/zHDKUE6krFw42D8vgc2b3Xcj8W_mDQlROtUAFORgYN9H1cECMEMtRnAuw1-5ArsqLBBNieJAFTGqczC3BDl-hjo0.jpg")
 
-_z = zipfile.ZipFile(PPTX)
+_z = zipfile.ZipFile(PPTX) if PPTX.exists() else None  # картинки уже выгружены в decks/img11
 
 def enc(im, fmt="WEBP", q=58):
     b = io.BytesIO(); im.save(b, fmt, quality=q, method=6)
@@ -357,7 +357,8 @@ def slide(label, t1, t2, body, cls=""):
     S.append((label, t1, t2, body, cls))
 
 CAT = {k: cat64(v) for k, v in (("a", "cat.png"), ("b", "cat-1.png"), ("c", "cat-2.png"), ("d", "cat-3.png"))}
-_bg = Image.open(BG).convert("RGB"); _bg.thumbnail((1500, 1500)); BGI = enc(_bg, q=50)
+_BG_LOCAL = HERE / "img11" / "_title-bg.webp"   # копия фона титула на случай, если исходник недоступен
+_bg = Image.open(BG if BG.exists() else _BG_LOCAL).convert("RGB"); _bg.thumbnail((1500, 1500)); BGI = enc(_bg, q=50)
 MEDIA_SVG = (CATS / "Среда передачи.svg").read_text(encoding="utf-8")
 MEDIA_SVG = re.sub(r'<svg[^>]*>', '<svg class="media" viewBox="0 0 483 378" role="img" aria-label="Среда передачи">', MEDIA_SVG, count=1)
 MEDIA_SVG = re.sub(r'fill="(?!none)[^"]*"', 'fill="currentColor"', MEDIA_SVG)
@@ -496,15 +497,14 @@ slide("Коаксиальный кабель", "Коаксиальный", "ка
     + '<div class="card lyd" id="coax-d" aria-live="polite"><b>Наведите на слой</b><span>Коаксиальный кабель состоит из 4 слоев.</span></div>',
     '<div class="card dgc coax" ' + COAX_SC + '>' + COAX + '</div>'))
 
-slide("Коаксиал: фото", "Коаксиальный", "кабель: слои", photo("image13.png", "Строение коаксиального кабеля"))
+slide("Коннекторы коаксиала: фото", "Виды коннекторов", "для коаксиального кабеля", photo("image14.png", "Виды коннекторов коаксиального кабеля"))
 
-slide("Коннекторы коаксиала", "Виды коннекторов", "для коаксиального кабеля", two(
+slide("Коннекторы коаксиала", "Виды коннекторов", "для коаксиального кабеля",
     table(["Коннектор", "Особенность", "Применение"], [("BNC", "Байонетный, с поворотной фиксацией", "Видеонаблюдение, измерительная техника"),
         ("F-Type", "Резьбовой", "Кабельное телевидение, спутниковое ТВ"), ("N-Type", "Резьбовой, высокочастотный", "Профессиональные радиосистемы, базовые станции"),
         ("TNC", "Резьбовая версия BNC, защита от вибраций", "Радиосвязь, измерительное оборудование"), ("SMA", "Компактный резьбовой", "Wi-Fi антенны, радиомодули"),
         ("RP-SMA", "Реверсная SMA, обратная полярность", "Маршрутизаторы, Wi-Fi антенны"), ("SMB", "Защёлкивающийся", "Автомобильная электроника, GPS"),
-        ("UHF (PL-259)", "Резьбовой, большого диаметра", "Радиолюбительская связь")], "sm"),
-    photo("image14.png", "Виды коннекторов коаксиального кабеля")))
+        ("UHF (PL-259)", "Резьбовой, большого диаметра", "Радиолюбительская связь")], "sm"))
 
 slide("Оптоволокно", "Оптоволоконные", "кабели", two(
     p("В отличие от медных кабелей, в оптоволоконных кабелях носителем информации является <b>свет</b>, передаваемый по волокнам из стекла или плотного пластика.",
