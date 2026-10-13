@@ -34,8 +34,8 @@ body{font-family:var(--f);color:var(--ink);background:var(--canvas);overflow:hid
 .slide>.sc>.step{flex:0 0 auto}
 .slide>.sc>.col{flex:1 1 auto}
 .g>.step{display:flex;flex-direction:column;min-height:0}
-.g>.step>.c,.g>.step>.q,.g>.step>.bub{flex:1 1 auto}
-.g>.c,.g>.q{height:100%}
+.g>.step>.c,.g>.step>.q,.g>.step>.bub{flex:1 1 auto;min-height:0;height:auto}
+.g>.c,.g>.q{min-height:100%;height:auto}
 .col>.step{display:flex;flex-direction:column}
 .col{min-height:0}
 .slide>.sc::-webkit-scrollbar{width:8px}
@@ -147,6 +147,7 @@ ul.ck.ask li::after{content:"?";border:none;transform:none;left:5.5px;top:1px;wi
 
 /* ---------- сетки ---------- */
 .g{display:grid;gap:14px}
+.g>*{min-width:0}
 .g2{grid-template-columns:1fr 1fr}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g4{grid-template-columns:repeat(4,1fr)}
