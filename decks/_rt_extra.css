@@ -104,3 +104,22 @@
 .qzm{margin:0 0 .6rem;color:#fff;font-size:1.1rem}
 .qzmiss{margin:.3rem 0 0;padding-left:1.2rem;color:var(--dim);font-size:.95rem;line-height:1.4}
 @media (max-width:1023px){.qzo{grid-template-columns:minmax(0,1fr)}.qzq{font-size:1.2rem}}
+
+/* ---------------- практикум ---------------- */
+.tsk{display:flex;flex-direction:column;gap:.8rem;width:100%}
+.tfs{display:flex;flex-wrap:wrap;gap:.8rem 1.4rem}
+.tfl{display:flex;flex-direction:column;gap:.3rem;font-size:1rem;color:var(--ink);border-bottom:2px solid transparent;padding-bottom:.2rem}
+.tfl input{font:inherit;font-family:var(--mono);font-size:1.05rem;background:#03120e;color:#fff;border:1px solid var(--gold);border-radius:8px;padding:.35rem .6rem}
+.tfl input::placeholder{color:#5f776d}
+.tfl.ok input{border-color:#8fe07a;box-shadow:0 0 10px rgba(143,224,122,.3)}
+.tfl.no input{border-color:#e0735f;box-shadow:0 0 10px rgba(224,115,95,.3)}
+.tck{display:flex;align-items:flex-start;gap:.55rem;font-size:1rem;line-height:1.35;padding:.45rem .7rem;border:1px solid rgba(232,200,122,.4);border-radius:9px;background:rgba(8,38,32,.7);cursor:pointer;flex:1 1 20rem}
+.tck input{accent-color:var(--gold);width:1.1rem;height:1.1rem;margin-top:.12rem;flex:none}
+.tck.ok{border-color:#8fe07a;background:rgba(143,224,122,.12)}
+.tck.no{border-color:#e0735f;background:rgba(224,115,95,.12)}
+.trow{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.trow .btn{font:inherit;font-size:1rem;background:rgba(232,200,122,.1);color:var(--gold-2);border:1px solid var(--gold);border-radius:8px;padding:.4rem .9rem;cursor:pointer}
+.trow .btn.on{background:rgba(232,200,122,.26);color:#fff}
+.tmsg{min-height:1.6rem;font-size:1.02rem;opacity:0;transition:opacity .3s}
+.tmsg.on{opacity:1}.tmsg.good b{color:#8fe07a}.tmsg.bad b{color:#e0735f}
+.tsol{border-left:2px solid var(--gold);padding-left:.9rem}
