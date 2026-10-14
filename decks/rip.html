@@ -996,18 +996,10 @@ document.addEventListener('keydown',function(e){
   else if(k==='r'||k==='R'||k==='к'||k==='К')replay();
 });
 
-/* ---------- колесо и свайп ---------- */
-var lock=0;
-window.addEventListener('wheel',function(e){
-  if(toc.classList.contains('on'))return;
-  var box=e.target.closest?e.target.closest('.sc,.tw,.cli,.figwrap'):null;
-  if(box){
-    var atTop=box.scrollTop<=0, atEnd=box.scrollTop+box.clientHeight>=box.scrollHeight-1;
-    if((e.deltaY>0&&!atEnd)||(e.deltaY<0&&!atTop))return;
-  }
-  var now=Date.now(); if(now-lock<420)return; lock=now;
-  if(e.deltaY>0)next(); else prev();
-},{passive:true});
+/* ---------- колесо и свайп ----------
+   Колесо НЕ листает слайды: оно только прокручивает содержимое слайда,
+   таблицы и длинные блоки кода. Листание — стрелки клавиатуры и кнопки
+   на нижней панели. */
 var tx=0,ty=0;
 window.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
 window.addEventListener('touchend',function(e){
