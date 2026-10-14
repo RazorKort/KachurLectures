@@ -705,7 +705,11 @@ def _auto_dl(body):
     return re.sub(r'<[a-z0-9]+ [^>]*data-s="1"[^>]*>', rep, body)
 
 def render(out_path, title, extra_js=""):
-    sky = pic("image2.jpeg", (0, 640, 1672, 941), w=1000, q=38)
+    cache = HERE / "_rt_assets" / "sky.webp"
+    if cache.exists():
+        sky = "data:image/webp;base64," + base64.b64encode(cache.read_bytes()).decode()
+    else:
+        sky = pic("image2.jpeg", (0, 640, 1672, 941), w=1000, q=38)
     css = CSS.replace("__F_REG__", _font("PT_Serif-Web-Regular.ttf")).replace("__F_BOLD__", _font("PT_Serif-Web-Bold.ttf"))
     css = re.sub(r"\n\s*", "", css)
     out = ['<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
