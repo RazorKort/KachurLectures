@@ -9,7 +9,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from _ripglass_style import CSS, background, tint
+from _ripglass_style import CSS, background, tint, pick_bg
 from _rip_engine import JS
 import _rip_lib
 import _rip_s1
@@ -46,7 +46,8 @@ def main():
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>RIP — стеклянная дека</title>\n'
         '<style>' + CSS + '</style>\n</head>\n<body>\n'
-        + background() + '\n<div id="stage">\n' + tint("\n".join(_rip_lib.SL)) + '\n</div>\n'
+        + background() + '\n<div id="stage">\n'
+        + tint("\n".join(_rip_lib.with_bg(_rip_lib.SL, pick_bg))) + '\n</div>\n'
         + HUD + '\n<script>' + JS + '</script>\n</body>\n</html>\n'
     )
 

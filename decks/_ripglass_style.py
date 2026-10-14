@@ -29,6 +29,8 @@ body{font-family:var(--f);color:var(--ink);background:var(--bg);overflow:hidden;
 
 /* ---------- сцена ---------- */
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#bg .bgv{opacity:0;transition:opacity .9s var(--ease)}
+#bg .bgv.on{opacity:1}
 #stage{position:fixed;inset:0;z-index:1}
 .slide{position:absolute;inset:0;padding:clamp(20px,2vw,40px) clamp(22px,2.8vw,54px) 76px;
  display:none;overflow:hidden;flex-direction:column}
@@ -358,43 +360,202 @@ tr.new td{background:rgba(93,220,166,.13)}
 # ======================================================================
 #  Сцена: северное сияние, стеклянные пластины, светящиеся листья
 # ======================================================================
-def background():
-    leaves = []
-    spots = [
-        (-30, 120, 1.35, -26, .20), (-58, 320, 1.75, 16, .15),
-        (-14, 520, 1.15, -50, .18), (-42, 720, 1.55, 26, .13),
-        (1366, 100, 1.45, 196, .19), (1400, 290, 1.75, 164, .14),
-        (1358, 490, 1.2, 212, .17), (1392, 700, 1.6, 150, .13),
-    ]
-    for (x, y, s, rot, op) in spots:
-        leaves.append('<use href="#gleaf" class="leaf" transform="translate(%d %d) rotate(%d) '
-                      'scale(%.2f)" opacity="%.2f"/>' % (x, y, rot, s, op))
+def _gl(x, y, sc, rot, op):
+    return ('<use href="#gleaf" class="leaf" transform="translate(%d %d) rotate(%d) scale(%.2f)" '
+            'opacity="%.2f"/>' % (x, y, rot, sc, op))
 
-    plates = []
-    for (x, y, w, h, rot, op) in [(110, 530, 330, 200, -12, .07), (970, 110, 320, 190, 9, .06),
-                                  (600, 650, 400, 180, -5, .05), (1050, 530, 280, 160, 14, .06)]:
-        plates.append('<rect x="%d" y="%d" width="%d" height="%d" rx="34" fill="#ffffff" '
-                      'opacity="%.2f" transform="rotate(%d %d %d)" stroke="rgba(255,255,255,.22)" '
-                      'stroke-width="1.5"/>' % (x, y, w, h, op, rot, x + w / 2, y + h / 2))
 
-    dots = []
-    for (x, y, w, h) in [(330, 160, 86, 60), (1080, 390, 74, 50), (520, 800, 100, 52)]:
-        dots.append('<rect x="%d" y="%d" width="%d" height="%d" fill="url(#gdot)" opacity=".45"/>'
-                    % (x, y, w, h))
+def _go(cls, cx, cy, rx, ry, g, op=1.0):
+    return ('<ellipse class="orb %s" cx="%d" cy="%d" rx="%d" ry="%d" fill="url(#%s)" '
+            'opacity="%.2f"/>' % (cls, cx, cy, rx, ry, g, op))
 
-    stars = []
-    seed = 7
-    for i in range(46):
+
+def _gplate(x, y, w, h, rot, op):
+    return ('<rect x="%d" y="%d" width="%d" height="%d" rx="34" fill="#ffffff" opacity="%.2f" '
+            'transform="rotate(%d %d %d)" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>'
+            % (x, y, w, h, op, rot, x + w / 2, y + h / 2))
+
+
+def _gdots(x, y, w, h, op=.45):
+    return ('<rect x="%d" y="%d" width="%d" height="%d" fill="url(#gdot)" opacity="%.2f"/>'
+            % (x, y, w, h, op))
+
+
+def _gring(cx, cy, r, w=1.5, op=.14):
+    return ('<circle cx="%d" cy="%d" r="%d" fill="none" stroke="#9ff0cf" stroke-width="%.1f" '
+            'opacity="%.2f"/>' % (cx, cy, r, w, op))
+
+
+def _stars(n, seed, scale=1.0):
+    out = []
+    for _ in range(n):
         seed = (seed * 1103515245 + 12345) % 2147483648
         x = seed % 1440
         seed = (seed * 1103515245 + 12345) % 2147483648
         y = seed % 900
         seed = (seed * 1103515245 + 12345) % 2147483648
-        r = 0.8 + (seed % 100) / 90.0
-        stars.append('<circle class="st" style="--d:%.1fs" cx="%d" cy="%d" r="%.1f" '
-                     'fill="#dffaf0" opacity="%.2f"/>'
-                     % (2.4 + (seed % 70) / 10.0, x, y, r, .10 + (seed % 30) / 100.0))
+        r = (0.8 + (seed % 100) / 90.0) * scale
+        out.append('<circle class="st" style="--d:%.1fs" cx="%d" cy="%d" r="%.1f" fill="#dffaf0" '
+                   'opacity="%.2f"/>' % (2.4 + (seed % 70) / 10.0, x, y, r,
+                                         .10 + (seed % 30) / 100.0))
+    return "".join(out)
 
+
+AUR_A = ('M-60 300 C 240 180 520 420 820 300 C 1080 196 1300 330 1500 250 L1500 520 '
+         'C 1300 600 1080 460 820 560 C 520 676 240 440 -60 560 Z')
+AUR_B = ('M-60 560 C 260 430 460 690 780 560 C 1040 456 1280 600 1500 500 L1500 760 '
+         'C 1280 860 1040 716 780 820 C 460 950 260 690 -60 820 Z')
+AUR_C = ('M-60 120 C 300 40 480 300 820 190 C 1100 100 1300 240 1500 150 L1500 330 '
+         'C 1300 420 1100 280 820 370 C 480 480 300 220 -60 300 Z')
+
+
+def _aur(d):
+    return '<path d="%s" fill="url(#gaur)" class="aur"/>' % d
+
+
+
+def _gbar(x, y, w, h, op=.5):
+    return ('<rect x="%d" y="%d" width="%d" height="%d" rx="%d" fill="url(#gaur)" '
+            'opacity="%.2f"/>' % (x, y, w, h, h // 2, op))
+
+
+# Мотивы в видимых зонах: полоса шапки (y < 200) и низ (y > 760).
+def _gbands():
+    B = []
+    # 0 · широкая световая полоса над заголовком
+    B.append("".join([_go("oa", 620, 30, 620, 190, "o1", .9), _gbar(60, 182, 1320, 10, .55),
+                      _gdots(900, 30, 130, 56, .4), _stars(14, 4441),
+                      _go("ob", 700, 890, 560, 170, "o4", .8)]))
+    # 1 · розовое сияние справа сверху
+    B.append("".join([_go("oc", 1120, 30, 560, 200, "o2", 1), _gbar(60, 176, 760, 8, .5),
+                      _gdots(130, 30, 120, 52, .4), _stars(12, 9173),
+                      _go("od", 260, 890, 480, 160, "o3", .8)]))
+    # 2 · лавандовая диагональ через шапку
+    B.append("".join([_go("od", 420, 40, 520, 190, "o3", 1),
+                      '<g opacity=".4" transform="rotate(-9 720 110)">%s%s%s</g>'
+                      % (_gdots(120, 36, 150, 48), _gdots(560, 72, 150, 48),
+                         _gdots(1000, 108, 150, 48)),
+                      _gbar(760, 180, 620, 8, .45), _stars(16, 2267),
+                      _go("oa", 1120, 890, 520, 170, "o1", .8)]))
+    # 3 · бирюзовая полоса и кольца справа
+    B.append("".join([_go("ob", 760, 20, 620, 190, "o4", 1),
+                      _gring(1330, 40, 210, 1.5, .16), _gring(1330, 40, 150, 2, .13),
+                      _gbar(60, 184, 900, 8, .5), _stars(18, 5507),
+                      _go("oa", 180, 890, 460, 160, "o1", .85)]))
+    # 4 · звёздное скопление в шапке
+    B.append("".join([_go("oa", 1240, 30, 460, 200, "o1", 1), _stars(30, 7717, .8),
+                      _gbar(60, 180, 1320, 6, .4), _gdots(140, 34, 130, 56, .4),
+                      _go("oc", 560, 890, 520, 160, "o2", .7)]))
+    # 5 · точечные поля по верхним углам
+    B.append("".join([_go("oa", 720, 34, 580, 190, "o1", .9),
+                      _gdots(70, 26, 170, 104, .4), _gdots(1200, 26, 170, 104, .4),
+                      _gbar(500, 178, 440, 8, .5), _stars(12, 3331),
+                      _gdots(70, 800, 170, 90, .32), _gdots(1200, 800, 170, 90, .32)]))
+    # 6 · спокойный: мягкий свет
+    B.append("".join([_go("ob", 560, 20, 700, 180, "o4", .9), _go("oa", 1180, 60, 380, 150,
+                                                                 "o1", .6),
+                      _go("oa", 400, 890, 560, 150, "o1", .6), _stars(10, 6619)]))
+    # 7 · почти пусто
+    B.append("".join([_go("ob", 500, 10, 760, 160, "o4", .7),
+                      _go("oa", 900, 896, 620, 140, "o1", .5), _stars(8, 8821)]))
+    return B
+
+
+def _gvariants():
+    """Восемь тёмных сцен: разное сияние, орбы, звёзды и стеклянные пластины."""
+    V = []
+
+    # 0 · титульная: широкое сияние поперёк, пластины, листья с обеих сторон
+    V.append("".join([
+        _go("oa", 250, 110, 430, 300, "o1"), _go("ob", 1230, 770, 440, 310, "o4"),
+        _go("oc", 1190, 110, 340, 250, "o2"), _go("od", 250, 840, 380, 250, "o3"),
+        _aur(AUR_A), _stars(46, 7),
+        _gplate(110, 530, 330, 200, -12, .07), _gplate(970, 110, 320, 190, 9, .06),
+        _gplate(600, 650, 400, 180, -5, .05), _gplate(1050, 530, 280, 160, 14, .06),
+        _gdots(330, 160, 86, 60), _gdots(1080, 390, 74, 50),
+        _gl(-30, 120, 1.35, -26, .2), _gl(-58, 320, 1.75, 16, .15),
+        _gl(-14, 520, 1.15, -50, .18), _gl(1366, 100, 1.45, 196, .19),
+        _gl(1400, 290, 1.75, 164, .14), _gl(1358, 490, 1.2, 212, .17)]))
+
+    # 1 · сияние понизу, розовый орб сверху справа
+    V.append("".join([
+        _go("oc", 1180, 90, 420, 300, "o2"), _go("oa", 220, 400, 400, 300, "o1"),
+        _go("ob", 900, 820, 420, 280, "o4"),
+        _aur(AUR_B), _stars(38, 23),
+        _gplate(120, 110, 300, 170, 8, .06), _gplate(1010, 620, 300, 170, -10, .06),
+        _gdots(180, 700, 90, 58),
+        _gl(1374, 160, 1.5, 192, .18), _gl(1398, 380, 1.7, 158, .14),
+        _gl(1360, 620, 1.25, 206, .16)]))
+
+    # 2 · сияние поверху, лавандовая диагональ из точек
+    V.append("".join([
+        _go("od", 320, 820, 420, 300, "o3"), _go("oa", 1140, 420, 380, 280, "o1"),
+        _go("oc", 760, 140, 360, 250, "o2", .7),
+        _aur(AUR_C), _stars(42, 91),
+        '<g opacity=".5" transform="rotate(-18 720 450)">%s%s%s</g>'
+        % (_gdots(260, 300, 110, 46), _gdots(620, 380, 110, 46), _gdots(980, 460, 110, 46)),
+        _gplate(880, 690, 340, 180, 7, .05),
+        _gl(-34, 660, 1.45, 22, .17), _gl(-16, 820, 1.15, -12, .19)]))
+
+    # 3 · концентрические кольца справа
+    V.append("".join([
+        _go("ob", 1200, 450, 440, 340, "o4"), _go("oa", 240, 200, 380, 280, "o1"),
+        _go("od", 420, 820, 340, 240, "o3", .8),
+        _stars(34, 137),
+        _gring(1250, 450, 320), _gring(1250, 450, 240, 1.5, .17),
+        _gring(1250, 450, 160, 2, .12),
+        _gplate(130, 560, 320, 180, -9, .06), _gdots(200, 140, 88, 58),
+        _gl(-30, 440, 1.55, 10, .17), _gl(-16, 650, 1.15, -32, .18)]))
+
+    # 4 · плотное звёздное поле
+    V.append("".join([
+        _go("oa", 760, 180, 460, 300, "o1"), _go("ob", 1180, 780, 400, 280, "o4"),
+        _go("od", 180, 620, 360, 270, "o3"),
+        _aur(AUR_A), _stars(72, 311, .85),
+        _gplate(1020, 120, 300, 170, 11, .05),
+        _gl(1372, 540, 1.35, 204, .16), _gl(1392, 740, 1.5, 162, .13)]))
+
+    # 5 · стеклянные пластины по углам
+    V.append("".join([
+        _go("ob", 1120, 760, 440, 300, "o4"), _go("oc", 340, 140, 380, 280, "o2"),
+        _go("oa", 920, 400, 380, 270, "o1", .8),
+        _stars(30, 577),
+        _gplate(90, 110, 300, 170, -7, .07), _gplate(1060, 100, 300, 170, 9, .06),
+        _gplate(90, 660, 300, 170, 6, .06), _gplate(1060, 660, 300, 170, -11, .07),
+        _gdots(660, 820, 100, 52), _gl(1368, 380, 1.4, 200, .16)]))
+
+    # 6 · спокойный: мягкое сияние, редкие звёзды
+    V.append("".join([
+        _go("oa", 420, 280, 520, 380, "o1", .85), _go("ob", 1120, 680, 480, 340, "o4", .8),
+        _go("oc", 1200, 130, 300, 220, "o2", .55),
+        _stars(22, 823),
+        _gl(-22, 720, 1.2, -16, .13), _gl(1378, 200, 1.25, 198, .12)]))
+
+    # 7 · почти пусто: одно большое свечение
+    V.append("".join([
+        _go("ob", 760, 430, 620, 440, "o4", .9), _go("oa", 180, 830, 340, 240, "o1", .6),
+        _go("od", 1290, 120, 320, 240, "o3", .5),
+        _stars(16, 1297), _gl(1384, 580, 1.15, 190, .1)]))
+
+    bands = _gbands()
+    return [v + bands[i] for i, v in enumerate(V)]
+
+
+def pick_bg(markup, i):
+    """Плотным слайдам — спокойная сцена, титулу — самая нарядная."""
+    heavy = markup.count("<table") + markup.count('class="cli"')
+    if i == 0:
+        return 0
+    if heavy >= 2 or markup.count("<tr") > 9:
+        return 7
+    if heavy:
+        return 6
+    return 1 + (i % 5)
+
+
+def background():
+    """Тёмное полотно + набор сцен; активную переключает движок по data-bg слайда."""
+    layers = "".join('<g class="bgv">%s</g>' % v for v in _gvariants())
     return """<svg id="bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
   <linearGradient id="gsky" x1="0" y1="0" x2="1" y2="1">
@@ -427,17 +588,8 @@ def background():
   </g>
 </defs>
 <rect width="1440" height="900" fill="url(#gsky)"/>
-<ellipse class="orb oa" cx="250" cy="110" rx="430" ry="300" fill="url(#o1)"/>
-<ellipse class="orb ob" cx="1230" cy="770" rx="440" ry="310" fill="url(#o4)"/>
-<ellipse class="orb oc" cx="1190" cy="110" rx="340" ry="250" fill="url(#o2)"/>
-<ellipse class="orb od" cx="250" cy="840" rx="380" ry="250" fill="url(#o3)"/>
-<path d="M-60 300 C 240 180 520 420 820 300 C 1080 196 1300 330 1500 250 L1500 520 C 1300 600 1080 460 820 560
- C 520 676 240 440 -60 560 Z" fill="url(#gaur)" class="aur"/>
 %s
-%s
-%s
-%s
-</svg>""" % ("\n".join(stars), "\n".join(plates), "\n".join(dots), "\n".join(leaves))
+</svg>""" % layers
 
 
 # ======================================================================

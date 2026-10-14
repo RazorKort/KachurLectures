@@ -41,6 +41,11 @@ function paint(){
   elName.textContent=slides[cur].dataset.label||'';
   elProg.style.width=((cur+1)/slides.length*100)+'%';
 }
+var bgv=[].slice.call(document.querySelectorAll('#bg .bgv'));
+function paintBg(){
+  var k=parseInt(slides[cur].dataset.bg||'0',10);
+  bgv.forEach(function(g,j){g.classList.toggle('on',j===k);});
+}
 function show(i,openAll){
   stop(); clearScen();
   slides[cur].classList.remove('on');
@@ -48,7 +53,7 @@ function show(i,openAll){
   slides[cur].classList.add('on');
   var box=q(slides[cur],'.sc'); if(box)box.scrollTop=0;
   step=(openAll||reduce)?steps(cur).length:0;
-  paint(); runScen();
+  paintBg(); paint(); runScen();
   if(!reduce&&!openAll) run();
 }
 function run(){

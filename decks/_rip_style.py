@@ -22,6 +22,8 @@ body{font-family:var(--f);color:var(--ink);background:var(--bg);overflow:hidden;
 
 /* ---------- фон ---------- */
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#bg .bgv{opacity:0;transition:opacity .7s var(--ease)}
+#bg .bgv.on{opacity:1}
 
 /* ---------- каркас ---------- */
 #stage{position:fixed;inset:0;z-index:1}
