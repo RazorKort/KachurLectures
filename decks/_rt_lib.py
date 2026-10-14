@@ -195,8 +195,6 @@ code.c{font-family:var(--mono);font-size:.9em;color:var(--gold-2);background:rgb
 #deco .globe{position:absolute;right:-18vw;top:-40vh;width:78vw;height:78vw;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,rgba(40,110,90,.35),rgba(10,40,34,.2) 55%,rgba(6,26,22,0) 70%);
   box-shadow:inset 0 0 0 1px rgba(232,200,122,.10),0 0 80px rgba(232,200,122,.05)}
-#deco .sky{position:absolute;left:0;right:0;bottom:0;height:30vh;background-size:cover;background-position:center bottom;opacity:.5;
-  -webkit-mask-image:linear-gradient(to top,#000 35%,transparent);mask-image:linear-gradient(to top,#000 35%,transparent)}
 #deco svg{position:absolute;inset:0;width:100%;height:100%}
 #deco .th{fill:none;stroke-linecap:round}
 #deco .sweep{fill:none;stroke-linecap:round;stroke:#fff6d8;opacity:.55;stroke-dasharray:140 2400;animation:swp 14s linear infinite}
@@ -214,6 +212,18 @@ code.c{font-family:var(--mono);font-size:.9em;color:var(--gold-2);background:rgb
   -webkit-mask-image:radial-gradient(130% 95% at 50% 40%,#000 18%,transparent 72%);mask-image:radial-gradient(130% 95% at 50% 40%,#000 18%,transparent 72%)}
 #deco .vig{position:absolute;inset:0;background:radial-gradient(118% 88% at 50% 42%,rgba(0,0,0,0) 52%,rgba(2,12,10,.62) 100%)}
 #deco .lay{position:absolute;inset:0;width:100%;height:100%}
+#deco .leaves{display:none}
+#deco .leaves svg{width:100%;height:100%;display:block}
+#deco .lf{transform-box:fill-box;transform-origin:center;will-change:transform}
+#deco .lf path{fill:rgba(118,194,152,.55);stroke:rgba(178,236,200,.5);stroke-width:.8}
+#deco .lf.b path{fill:rgba(232,200,122,.42);stroke:rgba(245,227,176,.5)}
+#deco .lf .vn{fill:none;stroke:rgba(10,38,32,.5);stroke-width:.9}
+#deco .leaves svg>g{animation:fall var(--d,40s) linear var(--dl,0s) infinite}
+@keyframes fall{
+  from{transform:translate(var(--x),-240px) rotate(0deg) scale(var(--s))}
+  50%{transform:translate(calc(var(--x) + var(--sw)),540px) rotate(200deg) scale(var(--s))}
+  to{transform:translate(var(--x),1320px) rotate(420deg) scale(var(--s))}
+}
 #deco .mal,#deco .cont,#deco .rings,#deco .net,#deco .rays{display:none}
 #deco .net .nl line{stroke:rgba(232,200,122,.4);stroke-width:1.2}
 #deco .net .nd circle{fill:#f5e3b0;opacity:.75;animation:twk 7s ease-in-out infinite}
@@ -222,36 +232,35 @@ code.c{font-family:var(--mono);font-size:.9em;color:var(--gold-2);background:rgb
 #deco .rings .ry line{stroke:rgba(232,200,122,.24);stroke-width:1}
 #deco .rays{background:repeating-linear-gradient(104deg,rgba(232,200,122,.1) 0 2px,transparent 2px 13px,rgba(79,214,196,.07) 13px 15px,transparent 15px 54px);
   -webkit-mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%);mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%)}
-/* 1 — ночной город (титулы и ключевые слайды) */
+/* 1 — листопад */
+body[data-bg="1"] #deco .leaves{display:block}
+body[data-bg="1"] #deco .orna{opacity:.04}
+body[data-bg="1"] #deco .globe{opacity:.7}
 /* 2 — созвездие узлов */
 body[data-bg="2"] #deco .net{display:block}
-body[data-bg="2"] #deco .sky{opacity:.18}
-body[data-bg="2"] #deco .orna{opacity:.03}
+body[data-bg="2"] body[data-bg="2"] #deco .orna{opacity:.035}
 body[data-bg="2"] #deco .globe{opacity:.5;right:auto;left:-26vw;top:-30vh}
 /* 3 — изолинии, «карта» */
 body[data-bg="3"] #deco .cont{display:block;opacity:.75}
-body[data-bg="3"] #deco .sky{opacity:.22}
-body[data-bg="3"] #deco .orna{display:none}
+body[data-bg="3"] body[data-bg="3"] #deco .orna{display:none}
 body[data-bg="3"] #deco .globe{right:-16vw;top:auto;bottom:-56vh;opacity:.8}
 /* 4 — гильош */
 body[data-bg="4"] #deco .rings{display:block}
-body[data-bg="4"] #deco .sky{opacity:.2}
-body[data-bg="4"] #deco .globe{display:none}
+body[data-bg="4"] body[data-bg="4"] #deco .globe{display:none}
 body[data-bg="4"] #deco .orna{opacity:.04;background-image:repeating-linear-gradient(0deg,rgba(232,200,122,.6) 0 1px,transparent 1px 58px)}
 /* 5 — малахит */
 body[data-bg="5"] #deco .mal{display:block;opacity:.75}
-body[data-bg="5"] #deco .sky{opacity:.14}
-body[data-bg="5"] #deco .orna{display:none}
+body[data-bg="5"] body[data-bg="5"] #deco .orna{display:none}
 body[data-bg="5"] #deco .globe{opacity:.45;right:-34vw;top:10vh}
 body[data-bg="5"] #deco .aur i:nth-child(2){opacity:.3}
+body[data-bg="5"] #deco .leaves{display:block;opacity:.5}
 /* 6 — светлый изумруд с лучами */
 body[data-bg="6"]{background:radial-gradient(70% 60% at 68% 14%,#15503f 0%,rgba(21,80,63,0) 72%),radial-gradient(50% 50% at 10% 76%,#0f4336 0%,rgba(15,67,54,0) 70%),#08261f}
 body[data-bg="6"] #deco .rays{display:block}
-body[data-bg="6"] #deco .sky{opacity:.3}
-body[data-bg="6"] #deco .orna{opacity:.035}
+body[data-bg="6"] body[data-bg="6"] #deco .orna{opacity:.035}
 body[data-bg="6"] #deco .globe{opacity:.75;right:-10vw;top:-44vh}
 body[data-bg="6"] #deco .vig{background:radial-gradient(118% 88% at 50% 42%,rgba(0,0,0,0) 56%,rgba(2,12,10,.5) 100%)}
-@media (prefers-reduced-motion: reduce){#deco .aur i,#deco .spk,#deco .sweep{animation:none}}
+@media (prefers-reduced-motion: reduce){#deco .aur i,#deco .spk,#deco .sweep,#deco .leaves svg>g{animation:none}}
 #frame{position:fixed;inset:10px;z-index:20;pointer-events:none;border:1px solid rgba(232,200,122,.32);border-radius:4px}
 #frame i{position:absolute;width:76px;height:76px;border:2px solid var(--gold);filter:drop-shadow(0 0 5px rgba(232,200,122,.5))}
 #frame i:nth-child(1){left:-3px;top:-3px;border-right:0;border-bottom:0}
@@ -500,7 +509,7 @@ def _net_layer():
     import random
     rnd = random.Random(7)
     pts = []
-    for i in range(34):
+    for i in range(70):
         x = 40 + (i * 311) % 1840
         y = 40 + (i * 677) % 1000
         x += rnd.randint(-28, 28); y += rnd.randint(-26, 26)
@@ -556,7 +565,25 @@ def _mal_layer():
             f'<g fill="url(#mlg)">{"".join(bands)}</g></svg>')
 
 
-def deco(sky):
+def _leaf_layer():
+    """Летящие листья: лёгкий листопад поверх тёмно-зелёного фона."""
+    import random
+    rnd = random.Random(11)
+    out = []
+    for i in range(34):
+        x = rnd.randint(-80, 1900)
+        s = rnd.uniform(.65, 1.8)
+        dur = rnd.uniform(22, 46)
+        dl = -rnd.uniform(0, dur)
+        sw = rnd.uniform(60, 190)
+        hue = "a" if i % 3 else "b"
+        out.append(f'<g class="lf {hue}" style="--x:{x}px;--s:{s:.2f};--d:{dur:.1f}s;--dl:{dl:.1f}s;--sw:{sw:.0f}px">'
+                   '<path d="M0,-16 C9,-10 13,-2 11,7 C9,14 2,17 -3,14 C-10,10 -12,0 -8,-8 C-6,-12 -3,-14 0,-16 Z"/>'
+                   '<path class="vn" d="M0,-15 C-1,-6 -1,4 -2,13"/></g>')
+    return '<div class="lay leaves"><svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">' + "".join(out) + '</svg></div>'
+
+
+def deco():
     th = [
         ("M-50,820 C300,700 520,760 760,640 S1250,420 1700,520 S2050,300 2100,260", 2.2, .55),
         ("M-80,960 C260,820 700,900 980,760 S1500,640 2080,700", 1.4, .4),
@@ -570,8 +597,7 @@ def deco(sky):
                       f' style="animation-delay:-{i*0.8:.1f}s;transform-origin:{x*19.2:.0f}px {y*10.8:.0f}px"/>' for i, (x, y) in enumerate(sp))
     sweeps = "".join(f'<path class="sweep" d="{d}" stroke-width="{w*.9:.1f}" style="animation-delay:-{k*3.5:.1f}s"/>' for k, (d, w, o) in enumerate(th[:2]))
     return ('<div id="deco" aria-hidden="true"><div class="aur"><i></i><i></i><i></i></div><div class="orna"></div><div class="globe"></div>'
-            f'<div class="sky" style="background-image:url({sky})"></div>'
-            + _mal_layer() + _cont_layer() + _rings_layer() + _net_layer() +
+            + _leaf_layer() + _mal_layer() + _cont_layer() + _rings_layer() + _net_layer() +
             '<div class="rays"></div>'
             '<svg class="lay thr" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice"><defs>'
             '<linearGradient id="thg" x1="0" x2="1"><stop offset="0" stop-color="#e8c87a" stop-opacity="0"/><stop offset=".5" stop-color="#f5e3b0"/><stop offset="1" stop-color="#e8c87a" stop-opacity="0"/></linearGradient>'
@@ -895,15 +921,10 @@ def _auto_dl(body):
     return re.sub(r'<[a-z0-9]+ [^>]*data-s="1"[^>]*>', rep, body)
 
 def render(out_path, title, extra_js=""):
-    cache = HERE / "_rt_assets" / "sky.webp"
-    if cache.exists():
-        sky = "data:image/webp;base64," + base64.b64encode(cache.read_bytes()).decode()
-    else:
-        sky = pic("image2.jpeg", (0, 640, 1672, 941), w=1000, q=38)
     css = CSS.replace("__F_REG__", _font("PT_Serif-Web-Regular.ttf")).replace("__F_BOLD__", _font("PT_Serif-Web-Bold.ttf"))
     css = re.sub(r"\n\s*", "", css)
     out = ['<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
-           f'<title>{title}</title><style>' + css + '</style></head><body>' + deco(sky) + '<div id="prog"><i></i></div><main>']
+           f'<title>{title}</title><style>' + css + '</style></head><body>' + deco() + '<div id="prog"><i></i></div><main>']
     for label, body, cls, tl in S:
         t = f" data-tl='{html.escape(json.dumps(tl, ensure_ascii=False), quote=True)}'" if tl else ""
         out.append(f'<section class="slide {cls}" data-label="{html.escape(label)}"{t}><div class="sc"><div class="wrap">{body}</div></div></section>')
