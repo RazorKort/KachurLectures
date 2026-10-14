@@ -233,74 +233,56 @@ ICON = {
 # ======================================================================
 
 TONES = {
-    "p": ("#ffe3ef", "#ffc2da", "#ff8fbc", "#e23b80"),   # top, side, led, outline
-    "b": ("#e6f2fe", "#c3e0fb", "#86c3f6", "#2a7fd0"),
-    "g": ("#eef1f4", "#d9dfe6", "#b9c3cd", "#78858f"),
-    "y": ("#fff6d9", "#ffe9a8", "#ffd93d", "#b08c00"),
+    "p": ("#fde6f0", "#f6bfd7", "#ec6aa3", "#b9467c"),
+    "b": ("#e5f0fd", "#bcd9f6", "#4f97e6", "#3a72b0"),
+    "g": ("#f0f2f5", "#d6dce3", "#a9b3be", "#6f7b87"),
+    "y": ("#fff5d6", "#ffe39a", "#f2b705", "#a07a00"),
+    "v": ("#efe9fb", "#d5c8f6", "#9b7bf0", "#6b4fd0"),
 }
 
 
-def router(x, y, w=92, tone="p", face=True, label=None, cls="", gid=None):
-    """Кавайный роутер-шайба: эллипс сверху, боковина, антенны, светодиоды, мордочка."""
+def router(x, y, w=92, tone="p", face=False, label=None, cls="", gid=None):
+    """Маршрутизатор-шайба как на инфографиках: 4 антенны, эмблема сверху,
+    панель индикаторов и подпись на боковине. Без мордочек."""
     top, side, led, out = TONES[tone]
     rx = w / 2.0
-    ry = rx * 0.30
-    h = w * 0.34
-    sw = max(2.0, w * 0.030)
-    g_ = gid or uid("rt")
+    ry = rx * 0.32
+    h = w * 0.27
+    sw = max(1.6, w * 0.022)
     ant = []
-    for dx in (-rx * 0.62, rx * 0.62):
-        ant.append('<path d="M%.1f %.1f C %.1f %.1f %.1f %.1f %.1f %.1f" stroke="%s" '
-                   'stroke-width="%.1f" stroke-linecap="round" fill="none"/>'
-                   % (x + dx, y - ry * 0.5, x + dx * 1.18, y - ry - h * 0.9,
-                      x + dx * 1.3, y - ry - h * 1.5, x + dx * 1.42, y - ry - h * 2.0,
-                      out, sw * 1.5))
-    leds = []
-    lw, lh = w * 0.11, h * 0.26
-    for i in (-1, 0, 1):
-        leds.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s" opacity=".75"/>'
-                    % (x + i * lw * 1.9 - lw / 2, y + h * 0.42, lw, lh, lh / 2, led))
-    fc = ""
-    if face:
-        fr = w * 0.20
-        ex = fr * 0.46
-        fc = ('<g><ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#fff"/>'
-              '<circle cx="%.1f" cy="%.1f" r="%.1f" fill="#121212"/>'
-              '<circle cx="%.1f" cy="%.1f" r="%.1f" fill="#121212"/>'
-              '<path d="M%.1f %.1f q%.1f %.1f %.1f 0" stroke="#121212" stroke-width="%.1f" '
-              'fill="none" stroke-linecap="round"/>'
-              '<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#ff9dc3" opacity=".8"/>'
-              '<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#ff9dc3" opacity=".8"/>'
-              '<path d="M%.1f %.1f l%.1f %.1f l%.1f %.1f z" fill="#fff"/>'
-              '<path d="M%.1f %.1f l%.1f %.1f l%.1f %.1f z" fill="#fff"/></g>'
-              % (x, y + h * 0.10, fr * 1.5, fr,
-                 x - ex, y + h * 0.04, fr * 0.17,
-                 x + ex, y + h * 0.04, fr * 0.17,
-                 x - fr * 0.26, y + h * 0.20, fr * 0.26, fr * 0.30, fr * 0.52, sw * 0.8,
-                 x - fr * 1.06, y + h * 0.16, fr * 0.24, fr * 0.16,
-                 x + fr * 1.06, y + h * 0.16, fr * 0.24, fr * 0.16,
-                 x - fr * 1.1, y - fr * 0.55, fr * 0.38, -fr * 0.62, fr * 0.42, fr * 0.60,
-                 x + fr * 1.1, y - fr * 0.55, -fr * 0.38, -fr * 0.62, -fr * 0.42, fr * 0.60))
+    for (dx, dy, hh) in [(-0.80, -0.15, 0.46), (0.80, -0.15, 0.46), (-0.40, -0.55, 0.58), (0.40, -0.55, 0.58)]:
+        ax, ay = x + dx * rx, y + dy * ry
+        aw = w * 0.05
+        ant.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s" stroke="%s" stroke-width="%.1f"/>'
+                   % (ax - aw / 2, ay - w * hh, aw, w * hh, aw / 2, side, out, sw * .8))
+    er = rx * 0.24
+    emb = ('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" opacity=".9"/>'
+           '<path d="M%.1f %.1f h%.1f M%.1f %.1f v%.1f" stroke="#fff" stroke-width="%.1f" stroke-linecap="round"/>'
+           % (x, y, er, er * .55, led, x - er * .62, y, er * 1.24, x, y - er * .36, er * .72, sw * 1.2))
+    pw, ph = rx * 0.50, h * 0.40
+    px, py = x - rx * 0.66, y + h * 0.36
+    dots = "".join('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>'
+                   % (px + pw * (0.2 + i * 0.2), py + ph / 2, ph * 0.17, c)
+                   for i, c in enumerate(["#5ee08f", "#ffd93d", "#5ee08f", "#8fd3ff"]))
+    panel = ('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="#2a2f3d"/>%s'
+             % (px, py, pw, ph, ph * .3, dots))
     lab = ""
     if label:
-        lw2 = max(40, 16 + len(label) * 11)
-        ly = y + h + ry + 8
-        lab = ('<g class="rlab"><rect x="%.1f" y="%.1f" width="%d" height="25" rx="12.5" fill="%s"/>'
-               '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="14.5" font-weight="800" '
-               'fill="%s" font-family="inherit">%s</text></g>'
-               % (x - lw2 / 2, ly, lw2, out, x, ly + 17.5, "#fff", label))
+        fs = min(w * 0.17, w * 1.05 / max(1, len(label)))
+        lab = ('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="800" '
+               'fill="#1b1f2a">%s</text>' % (x + rx * 0.30, y + h * 0.82, fs, label))
     return """<g class="rtr %s" data-r="%s">
 %s
 <ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="%.1f"/>
 <path d="M%.1f %.1f V%.1f A%.1f %.1f 0 0 0 %.1f %.1f V%.1f Z" fill="%s" stroke="%s" stroke-width="%.1f"/>
 <ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="%.1f"/>
-%s%s</g>""" % (
+%s%s%s</g>""" % (
         cls, label or "",
         "".join(ant),
         x, y + h, rx, ry, side, out, sw,
         x - rx, y, y + h, rx, ry, x + rx, y + h, y, side, out, sw,
         x, y, rx, ry, top, out, sw,
-        "".join(leds), fc + lab)
+        emb, panel, lab)
 
 
 def cat(x, y, s=1.0, cls=""):
@@ -417,3 +399,166 @@ def ok(x, y, r=16, cls=""):
 def fig(view, body, cls="", extra_defs=""):
     return ('<div class="figwrap" style="display:flex;min-height:0"><svg class="fig %s" viewBox="%s">'
             '<defs>%s%s</defs>%s</svg></div>' % (cls, view, arrow_defs(), extra_defs, body))
+
+
+# ======================================================================
+#  ИЛЛЮСТРАЦИИ В СТИЛЕ ИНФОГРАФИК
+# ======================================================================
+
+import math as _m
+
+
+def blob(cx, cy, rx, ry, tone="p", label=None, seed=0, dash=True, lab_y=None, fs=17):
+    """Облачная область с пунктирным контуром и плашкой-названием."""
+    fill = {"p": "#fde7f0", "b": "#e3f0fd", "y": "#fef6dc", "g": "#e6f7ec", "v": "#efe9fb"}[tone]
+    edge = {"p": "#f29cc2", "b": "#8fbff0", "y": "#efcf6a", "g": "#86d3a8", "v": "#b9a4f2"}[tone]
+    labfill = {"p": "#ffd3e4", "b": "#c7e2fb", "y": "#ffe9a8", "g": "#c6efd6", "v": "#ddd2fa"}[tone]
+    n = 14
+    pts = []
+    for i in range(n):
+        t = 2 * _m.pi * i / n
+        k = 1 + 0.07 * _m.sin(3 * t + seed) + 0.05 * _m.sin(5 * t + seed * 1.7)
+        pts.append((cx + rx * k * _m.cos(t), cy + ry * k * _m.sin(t)))
+    d = "M%.1f %.1f" % pts[0]
+    for i in range(n):
+        p0, p1, p2, p3 = pts[i - 1], pts[i], pts[(i + 1) % n], pts[(i + 2) % n]
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        d += " C%.1f %.1f %.1f %.1f %.1f %.1f" % (c1 + c2 + p2)
+    da = ' stroke-dasharray="10 8"' if dash else ""
+    lab = ""
+    if label:
+        ly = lab_y if lab_y is not None else cy - ry * 0.80
+        lw = int(len(label) * fs * .62) + 30
+        lab = ('<rect x="%.1f" y="%.1f" width="%d" height="%.1f" rx="%.1f" fill="%s"/>'
+               '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="800" fill="#121212">%s</text>'
+               % (cx - lw / 2.0, ly - fs, lw, fs * 2, fs, labfill, cx, ly + fs * .36, fs, label))
+    return ('<g><path d="%s Z" fill="%s" stroke="%s" stroke-width="2.6"%s/>%s</g>' % (d, fill, edge, da, lab))
+
+
+def rack(x, y, w=70, h=120):
+    """Стойка серверов."""
+    out = ['<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="8" fill="#5b5f7a" stroke="#3a3d52" stroke-width="2"/>'
+           % (x, y, w, h)]
+    n = int(h // 22)
+    for i in range(n):
+        yy = y + 8 + i * 22
+        out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="15" rx="3" fill="#2c2f42"/>' % (x + 7, yy, w - 14))
+        out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="3" rx="1.5" fill="#7fd0ff"/>' % (x + 13, yy + 6, w * .35))
+        out.append('<circle cx="%.1f" cy="%.1f" r="2.4" fill="%s"/>' % (x + w - 16, yy + 7.5, "#5ee08f" if i % 2 else "#ff7ab0"))
+    return "".join(out)
+
+
+def cloud_icon(x, y, s=1.0, fill="#ffffff", edge="#c7dcf3"):
+    return ('<path transform="translate(%.1f %.1f) scale(%.2f)" d="M-40 14 h80 a20 20 0 0 0 -6 -39 '
+            'a28 28 0 0 0 -52 -6 a22 22 0 0 0 -22 45 z" fill="%s" stroke="%s" stroke-width="2.4"/>'
+            % (x, y, s, fill, edge))
+
+
+def laptop(x, y, w=110, tone="p"):
+    c = {"p": "#f6bfd7", "b": "#bcd9f6"}[tone]
+    h = w * .62
+    return ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="8" fill="#3a3f55"/>'
+            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="4" fill="%s"/>'
+            '<path d="M%.1f %.1f h%.1f l%.1f %.1f h%.1f z" fill="#d6dbe4" stroke="#9aa3b2" stroke-width="1.6"/></g>'
+            % (x - w / 2, y - h, w, h, x - w / 2 + 7, y - h + 7, w - 14, h - 14, c,
+               x - w / 2, y, w, w * .1, w * .12, -w * 1.2))
+
+
+def globe(x, y, r=26, col="#3b9eff"):
+    return ('<g fill="none" stroke="%s" stroke-width="3"><circle cx="%.1f" cy="%.1f" r="%.1f" fill="#fff"/>'
+            '<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f"/>'
+            '<path d="M%.1f %.1f h%.1f M%.1f %.1f h%.1f M%.1f %.1f h%.1f"/></g>'
+            % (col, x, y, r, x, y, r * .45, r, x - r, y, 2 * r,
+               x - r * .86, y - r * .5, r * 1.72, x - r * .86, y + r * .5, r * 1.72))
+
+
+def envelope(x, y, w=40, tone="p"):
+    c = {"p": "#f29cc2", "b": "#8fbff0", "y": "#efcf6a"}[tone]
+    h = w * .66
+    return ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="4" fill="#fff" stroke="%s" stroke-width="2.4"/>'
+            '<path d="M%.1f %.1f l%.1f %.1f l%.1f %.1f" fill="none" stroke="%s" stroke-width="2.4"/></g>'
+            % (x - w / 2, y - h / 2, w, h, c, x - w / 2, y - h / 2, w / 2, h * .55, w / 2, -h * .55, c))
+
+
+def legend(x, y, items, w=330, fs=14):
+    """Легенда: items = [(kind, color, text)], kind: line | dash | cross | arrow."""
+    rows = []
+    for i, (kind, col_, t) in enumerate(items):
+        yy = y + 26 + i * 34
+        if kind == "line":
+            sym = '<path d="M%.1f %.1f h40" stroke="%s" stroke-width="5" stroke-linecap="round"/>' % (x + 18, yy, col_)
+        elif kind == "dash":
+            sym = ('<path d="M%.1f %.1f h40" stroke="%s" stroke-width="5" stroke-dasharray="8 6" '
+                   'stroke-linecap="round"/>' % (x + 18, yy, col_))
+        elif kind == "arrow":
+            sym = ('<path d="M%.1f %.1f h34" stroke="%s" stroke-width="4" stroke-linecap="round"/>'
+                   '<path d="M%.1f %.1f l-9 -6 v12 z" fill="%s"/>' % (x + 18, yy, col_, x + 60, yy, col_))
+        else:
+            sym = ('<path d="M%.1f %.1f l16 16 M%.1f %.1f l-16 16" stroke="%s" stroke-width="5" stroke-linecap="round"/>'
+                   % (x + 30, yy - 8, x + 46, yy - 8, col_))
+        rows.append(sym + txt(x + 72, yy + 5, t, fs=fs, anchor="start", weight=600))
+    hh = 18 + len(items) * 34
+    return ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="16" fill="#fff" stroke="#e9eef3" '
+            'stroke-width="2"/>%s</g>' % (x, y, w, hh, "".join(rows)))
+
+
+def bubble(x, y, text, tone="p", fs=16, w=None):
+    """Выноска с хвостиком."""
+    fill = {"p": "#ff5c9e", "b": "#3b9eff", "y": "#ffd93d", "g": "#3fc47c"}[tone]
+    ink = "#121212" if tone == "y" else "#fff"
+    lines = text.split("|")
+    ww = w or int(max(len(l) for l in lines) * fs * .58) + 34
+    hh = 18 + len(lines) * (fs + 6)
+    tt = "".join('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="800" fill="%s">%s</text>'
+                 % (x, y + 12 + i * (fs + 6) + fs * .8, fs, ink, l) for i, l in enumerate(lines))
+    return ('<g><rect x="%.1f" y="%.1f" width="%d" height="%d" rx="14" fill="%s"/>'
+            '<path d="M%.1f %.1f l10 14 l8 -14 z" fill="%s"/>%s</g>'
+            % (x - ww / 2, y, ww, hh, fill, x - 22, y + hh - 1, fill, tt))
+
+
+def sparkle(x, y, col="#ff5c9e", n=3, rot=-25):
+    return "".join('<path d="M%d %d l22 -30" stroke="%s" stroke-width="7" stroke-linecap="round" '
+                   'transform="rotate(%d %d %d)"/>' % (x + i * 17, y + i * 12, col, rot, x, y) for i in range(n))
+
+
+# ======================================================================
+#  БЛОКИ ВЁРСТКИ В СТИЛЕ ИНФОГРАФИК
+# ======================================================================
+
+ICO_BG = {"p": "#ffd3e4", "b": "#c7e2fb", "y": "#ffe9a8", "g": "#c6efd6", "v": "#ddd2fa"}
+
+
+def rowc(icon, title, text, tone="p", extra=""):
+    """Горизонтальная карточка: круглый значок слева, заголовок и текст справа."""
+    return ('<div class="rowc %s"><span class="ico">%s</span><div><h3>%s</h3><p>%s</p>%s</div></div>'
+            % (tone, ICON[icon], title, text, extra))
+
+
+def nrow(n, title, icon_svg, text, tone="p"):
+    """Нумерованная строка-этап как на инфографике «Принцип работы Link State»."""
+    return ('<div class="nrow %s"><span class="nn">%s</span><h3>%s</h3>'
+            '<span class="nill">%s</span><p>%s</p></div>' % (tone, n, title, icon_svg, text))
+
+
+def tile(icon, title, text, tone="p"):
+    """Плитка: значок сверху, крупный заголовок, текст."""
+    return ('<div class="tile %s"><span class="ico">%s</span><span class="dash"></span>'
+            '<h3>%s</h3><p>%s</p></div>' % (tone, ICON[icon], title, text))
+
+
+def split(left, right, ratio="44fr 56fr"):
+    return ('<div class="split" style="grid-template-columns:minmax(0,%s) minmax(0,%s)">'
+            '<div class="lcol">%s</div><div class="rcol">%s</div></div>'
+            % (ratio.split()[0], ratio.split()[1], left, right))
+
+
+def ill(view, body, extra_defs=""):
+    """Иллюстрация на мягкой подложке, растягивается на доступную площадь."""
+    return ('<div class="ill"><svg viewBox="%s" preserveAspectRatio="xMidYMid meet"><defs>%s%s</defs>%s</svg></div>'
+            % (view, arrow_defs(), extra_defs, body))
+
+
+def mini(view, body):
+    """Маленькая SVG-картинка внутри строки."""
+    return '<svg class="mini" viewBox="%s"><defs>%s</defs>%s</svg>' % (view, arrow_defs(), body)

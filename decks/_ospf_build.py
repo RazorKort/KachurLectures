@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Сборка decks/ospf.html — лекция «Протокол OSPF» в кавайном розово-голубом стиле."""
+import base64
 import io
 import os
 import sys
@@ -27,7 +28,25 @@ HUD = """
 <div id="toc"><h2>Содержание</h2><div id="tocg"></div></div>
 """
 
-MODULES = ["_ospf_s1", "_ospf_s2", "_ospf_s3", "_ospf_s4", "_ospf_s5"]
+FONTDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_ospf_assets", "fonts")
+CYR = "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+LAT = "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+
+
+def fonts_css():
+    """Встроенные шрифты: Oswald (заголовки) и Golos Text (текст), base64 — работают офлайн."""
+    out = []
+    for fam, base, wght in (("OspfHead", "oswald", "700"), ("OspfText", "golos", "400 900")):
+        for part, rng in (("cyr", CYR), ("lat", LAT)):
+            with open(os.path.join(FONTDIR, "%s-%s.woff2" % (base, part)), "rb") as fh:
+                data = base64.b64encode(fh.read()).decode()
+            out.append("@font-face{font-family:%s;font-style:normal;font-weight:%s;font-display:swap;"
+                       "src:url(data:font/woff2;base64,%s) format('woff2');unicode-range:%s}"
+                       % (fam, wght, data, rng))
+    return "\n".join(out)
+
+
+MODULES = ["_ospf_intro", "_ospf_s1", "_ospf_s2", "_ospf_s3", "_ospf_s4", "_ospf_s5"]
 
 
 def main():
@@ -44,7 +63,7 @@ def main():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>Протокол OSPF — лекция</title>\n'
-        "<style>%s</style>\n</head>\n<body>\n" % CSS
+        "<style>%s\n%s</style>\n</head>\n<body>\n" % (fonts_css(), CSS)
         + background()
         + '\n<div id="stage">\n' + "\n".join(SL) + "\n</div>\n"
         + HUD
