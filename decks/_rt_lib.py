@@ -232,34 +232,37 @@ code.c{font-family:var(--mono);font-size:.9em;color:var(--gold-2);background:rgb
 #deco .rings .ry line{stroke:rgba(232,200,122,.24);stroke-width:1}
 #deco .rays{background:repeating-linear-gradient(104deg,rgba(232,200,122,.1) 0 2px,transparent 2px 13px,rgba(79,214,196,.07) 13px 15px,transparent 15px 54px);
   -webkit-mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%);mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%)}
-/* 1 — листопад */
+#deco .ph{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s var(--ez)}
+/* 1 — чистое зелёное полотно с листопадом */
+body[data-bg="1"] #deco .ph.pclean{opacity:1}
 body[data-bg="1"] #deco .leaves{display:block}
-body[data-bg="1"] #deco .orna{opacity:.04}
-body[data-bg="1"] #deco .globe{opacity:.7}
-/* 2 — созвездие узлов */
-body[data-bg="2"] #deco .net{display:block}
-body[data-bg="2"] body[data-bg="2"] #deco .orna{opacity:.035}
-body[data-bg="2"] #deco .globe{opacity:.5;right:auto;left:-26vw;top:-30vh}
-/* 3 — изолинии, «карта» */
-body[data-bg="3"] #deco .cont{display:block;opacity:.75}
-body[data-bg="3"] body[data-bg="3"] #deco .orna{display:none}
-body[data-bg="3"] #deco .globe{right:-16vw;top:auto;bottom:-56vh;opacity:.8}
-/* 4 — гильош */
-body[data-bg="4"] #deco .rings{display:block}
-body[data-bg="4"] body[data-bg="4"] #deco .globe{display:none}
-body[data-bg="4"] #deco .orna{opacity:.04;background-image:repeating-linear-gradient(0deg,rgba(232,200,122,.6) 0 1px,transparent 1px 58px)}
-/* 5 — малахит */
-body[data-bg="5"] #deco .mal{display:block;opacity:.75}
-body[data-bg="5"] body[data-bg="5"] #deco .orna{display:none}
-body[data-bg="5"] #deco .globe{opacity:.45;right:-34vw;top:10vh}
-body[data-bg="5"] #deco .aur i:nth-child(2){opacity:.3}
-body[data-bg="5"] #deco .leaves{display:block;opacity:.5}
-/* 6 — светлый изумруд с лучами */
-body[data-bg="6"]{background:radial-gradient(70% 60% at 68% 14%,#15503f 0%,rgba(21,80,63,0) 72%),radial-gradient(50% 50% at 10% 76%,#0f4336 0%,rgba(15,67,54,0) 70%),#08261f}
-body[data-bg="6"] #deco .rays{display:block}
-body[data-bg="6"] body[data-bg="6"] #deco .orna{opacity:.035}
-body[data-bg="6"] #deco .globe{opacity:.75;right:-10vw;top:-44vh}
-body[data-bg="6"] #deco .vig{background:radial-gradient(118% 88% at 50% 42%,rgba(0,0,0,0) 56%,rgba(2,12,10,.5) 100%)}
+body[data-bg="1"] #deco .globe{opacity:.35}
+body[data-bg="1"] #deco .orna{opacity:.03}
+/* 2 — звёздное небо с сетью и городами */
+body[data-bg="2"] #deco .ph.psky{opacity:1}
+body[data-bg="2"] #deco .globe,body[data-bg="2"] #deco .orna,body[data-bg="2"] #deco .aur{display:none}
+/* 3 — чистое полотно с изолиниями */
+body[data-bg="3"] #deco .ph.pclean{opacity:1}
+body[data-bg="3"] #deco .cont{display:block;opacity:.6}
+body[data-bg="3"] #deco .globe{opacity:.4;right:-16vw;top:auto;bottom:-56vh}
+body[data-bg="3"] #deco .orna{display:none}
+/* 4 — чистое полотно с гильошем */
+body[data-bg="4"] #deco .ph.pclean{opacity:1}
+body[data-bg="4"] #deco .rings{display:block;opacity:.8}
+body[data-bg="4"] #deco .globe{display:none}
+body[data-bg="4"] #deco .orna{opacity:.035;background-image:repeating-linear-gradient(0deg,rgba(232,200,122,.6) 0 1px,transparent 1px 58px)}
+/* 5 — глобус и золотые потоки */
+body[data-bg="5"] #deco .ph.pglobe{opacity:1}
+body[data-bg="5"] #deco .globe,body[data-bg="5"] #deco .orna,body[data-bg="5"] #deco .aur{display:none}
+/* 6 — малахитовые волны на чистом полотне */
+body[data-bg="6"] #deco .ph.pclean{opacity:1}
+body[data-bg="6"] #deco .mal{display:block;opacity:.6}
+body[data-bg="6"] #deco .leaves{display:block;opacity:.45}
+body[data-bg="6"] #deco .globe{opacity:.3;right:-34vw;top:10vh}
+body[data-bg="6"] #deco .orna{display:none}
+/* на фотоподложках приглушаем нарисованные нити и виньетку */
+body[data-bg="2"] #deco .thr,body[data-bg="5"] #deco .thr{opacity:.35}
+body[data-bg="2"] #deco .vig,body[data-bg="5"] #deco .vig{background:radial-gradient(120% 92% at 50% 42%,rgba(0,0,0,0) 40%,rgba(2,14,11,.72) 100%)}
 @media (prefers-reduced-motion: reduce){#deco .aur i,#deco .spk,#deco .sweep,#deco .leaves svg>g{animation:none}}
 #frame{position:fixed;inset:10px;z-index:20;pointer-events:none;border:1px solid rgba(232,200,122,.32);border-radius:4px}
 #frame i{position:absolute;width:76px;height:76px;border:2px solid var(--gold);filter:drop-shadow(0 0 5px rgba(232,200,122,.5))}
@@ -565,6 +568,11 @@ def _mal_layer():
             f'<g fill="url(#mlg)">{"".join(bands)}</g></svg>')
 
 
+def _asset_b64(name):
+    f = HERE / "_rt_assets" / name
+    return "data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode()
+
+
 def _leaf_layer():
     """Летящие листья: лёгкий листопад поверх тёмно-зелёного фона."""
     import random
@@ -596,7 +604,9 @@ def deco():
     sparks = "".join(f'<circle class="spk" cx="{x*19.2:.0f}" cy="{y*10.8:.0f}" r="{3 + (i % 3)}" fill="url(#spk)" opacity="{.5 + (i % 3) * .2:.1f}"'
                       f' style="animation-delay:-{i*0.8:.1f}s;transform-origin:{x*19.2:.0f}px {y*10.8:.0f}px"/>' for i, (x, y) in enumerate(sp))
     sweeps = "".join(f'<path class="sweep" d="{d}" stroke-width="{w*.9:.1f}" style="animation-delay:-{k*3.5:.1f}s"/>' for k, (d, w, o) in enumerate(th[:2]))
-    return ('<div id="deco" aria-hidden="true"><div class="aur"><i></i><i></i><i></i></div><div class="orna"></div><div class="globe"></div>'
+    ph = "".join(f'<div class="ph p{k}" style="background-image:url({_asset_b64(f"bg_{k}.webp")})"></div>'
+                 for k in ("clean", "sky", "globe"))
+    return ('<div id="deco" aria-hidden="true">' + ph + '<div class="aur"><i></i><i></i><i></i></div><div class="orna"></div><div class="globe"></div>'
             + _leaf_layer() + _mal_layer() + _cont_layer() + _rings_layer() + _net_layer() +
             '<div class="rays"></div>'
             '<svg class="lay thr" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice"><defs>'
@@ -804,6 +814,11 @@ function stepGo(d){ var sl=slides[cur], st=sl._steps; if(!st) return;
   var k=sl._step==null?st.length-1:sl._step; runStep(sl,k+d); }
 /* ================= движок слайдов ================= */
 var slides=$$('.slide'), N=slides.length, cur=0, tm=null;
+var BG={}; (function(){
+  var hero=/^(В этой главе|Маршрутизация между VLAN|Три метода: сравнение|Задачи для самостоятельного решения|Задача 1: лучший маршрут|Тест по главе|Проверь себя: 1)$/;
+  slides.forEach(function(s,i){ if(hero.test(s.dataset.label)) BG[i]=(i%2?2:5); });
+  BG[0]=5; BG[N-1]=2;
+})();
 slides.forEach(function(sl){ sl._snap=$$('.scn',sl).map(function(s){return s.innerHTML}); if(sl.dataset.tl){ try{ sl._tl=JSON.parse(sl.dataset.tl); sl._steps=mkSteps(sl._tl); }catch(e){ sl._tl=null; } } });
 function reset(sl){ $$('.scn',sl).forEach(function(s,i){ s.innerHTML=sl._snap[i]; }); }
 function show(sl){
@@ -819,7 +834,7 @@ function go(i){
   slides.forEach(function(s){s.classList.remove('on')}); cur=i; var sl=slides[cur]; sl.classList.add('on');
   var sc=$('.sc',sl); if(sc) sc.scrollTop=0;
   fit(sl); play();
-  document.body.dataset.bg=(cur===0||cur===N-1)?1:(1+(Math.floor((cur-1)/8)%6));
+  document.body.dataset.bg=BG[cur]||([1,3,4,6][Math.floor((cur-1)/7)%4]);
   try{ history.replaceState(null,'','#'+(cur+1)); }catch(e){}
   $('#ind').textContent=(cur+1)+' / '+N; $('#prog i').style.width=((cur+1)/N*100)+'%';
   $('#b-prev').disabled=cur===0; $('#b-next').disabled=cur===N-1;
