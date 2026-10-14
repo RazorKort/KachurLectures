@@ -185,7 +185,7 @@ CSS = r"""
   --ez:cubic-bezier(.22,.7,.3,1);color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
-html{font-size:clamp(15px,min(1.1vw,2vh),30px)}
+html{font-size:clamp(15px,min(1.28vw,2.35vh),34px)}
 html,body{height:100%;overflow:hidden;color:var(--ink);font-family:var(--f)}
 body{background:radial-gradient(60% 55% at 72% 18%,#0f3a30 0%,rgba(15,58,48,0) 70%),radial-gradient(45% 45% at 12% 70%,#0b3029 0%,rgba(11,48,41,0) 70%),var(--emerald-2)}
 b{font-weight:700}.gd{color:var(--gold)}.tl{color:var(--teal)}.wh{color:#fff}
@@ -233,8 +233,8 @@ body[data-bg="4"] #deco .orna{opacity:.045}
 main{position:fixed;inset:0;z-index:2}
 .slide{position:absolute;inset:0;visibility:hidden;opacity:0;transition:opacity .45s var(--ez),visibility 0s .45s}
 .slide.on{visibility:visible;opacity:1;transition:opacity .45s var(--ez)}
-.sc{position:absolute;inset:0;overflow:auto;padding:2.4rem 3.6rem 5.2rem;scrollbar-width:thin;scrollbar-color:var(--gold-dim) transparent}
-.wrap{max-width:1560px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:1.15rem}
+.sc{position:absolute;inset:0;overflow:auto;padding:1.4rem 2rem 4.4rem;scrollbar-width:thin;scrollbar-color:var(--gold-dim) transparent}
+.wrap{max-width:min(2240px,99%);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:.85rem}
 [data-s]{opacity:0;transform:translateY(9px);transition:opacity .3s var(--ez),transform .3s var(--ez);transition-delay:var(--dl,0ms)}
 .slide.ni [data-s]{transition:none}
 [data-s].in{opacity:1;transform:none}
@@ -253,20 +253,20 @@ main{position:fixed;inset:0;z-index:2}
 .sub{margin-top:.6rem;color:var(--dim);font-size:1.15rem;font-style:normal}
 .orn.bot{width:min(40rem,60%);margin-top:.4rem}
 /* ---- текст ---- */
-.p{font-size:1.08rem;line-height:1.5;color:var(--ink);text-align:left;hyphens:auto}
+.p{font-size:1.15rem;line-height:1.5;color:var(--ink);text-align:left;hyphens:auto}
 .p+.p{margin-top:.55rem}
-.pn .p{font-size:1.02rem}
+.pn .p{font-size:1.1rem}
 .bl{list-style:none;display:grid;gap:.5rem}
-.bl li{position:relative;padding-left:1.5rem;font-size:1.05rem;line-height:1.45}
+.bl li{position:relative;padding-left:1.5rem;font-size:1.12rem;line-height:1.45}
 .bl li::before{content:"";position:absolute;left:.2rem;top:.55em;width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg);background:rgba(232,200,122,.35)}
 .ol{list-style:none;display:grid;gap:.65rem}
-.ol li{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:start;font-size:1.04rem;line-height:1.45}
+.ol li{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:start;font-size:1.12rem;line-height:1.45}
 /* ---- панели ---- */
-.pn{position:relative;background:linear-gradient(180deg,rgba(11,46,39,.82),rgba(6,28,24,.82));border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;
+.pn{position:relative;background:linear-gradient(180deg,rgba(11,46,39,.82),rgba(6,28,24,.82));border:1px solid var(--line);border-radius:12px;padding:.8rem 1.05rem;
   box-shadow:0 0 16px rgba(232,200,122,.10),inset 0 0 24px rgba(232,200,122,.06)}
 .pn::before{content:"";position:absolute;inset:4px;border:1px solid rgba(232,200,122,.12);border-radius:9px;pointer-events:none}
 .pn h3{font-size:1.28rem;color:var(--gold);margin-bottom:.35rem;line-height:1.2}
-.pn p{font-size:1.02rem;line-height:1.45}
+.pn p{font-size:1.08rem;line-height:1.45}
 .ph{display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem}.ph h3{margin:0}
 .pn.teal{border-color:rgba(79,214,196,.7);box-shadow:0 0 16px rgba(79,214,196,.14),inset 0 0 24px rgba(79,214,196,.07)}
 .pn.teal::before{border-color:rgba(79,214,196,.14)}.pn.teal h3{color:var(--teal)}
@@ -279,8 +279,8 @@ main{position:fixed;inset:0;z-index:2}
 .ico.big{width:4.2rem;height:4.2rem}
 .ic{width:56%;height:56%;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 .ik{display:flex;gap:1.1rem;align-items:center}
-.gr{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));align-items:stretch}
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:1.4rem;align-items:center}
+.gr{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(18.5rem,1fr));align-items:stretch}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:1.1rem;align-items:center}
 .two.eq{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .two.wide{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
 .two.top{align-items:start}
@@ -294,7 +294,7 @@ main{position:fixed;inset:0;z-index:2}
 /* ---- таблица ---- */
 .tw{background:linear-gradient(180deg,rgba(11,46,39,.85),rgba(6,28,24,.85));border:1px solid var(--line);border-radius:14px;padding:.7rem .8rem .9rem;
   box-shadow:0 0 18px rgba(232,200,122,.12),inset 0 0 24px rgba(232,200,122,.05);overflow-x:auto}
-.rt{width:100%;border-collapse:collapse;font-size:1.08rem}
+.rt{width:100%;border-collapse:collapse;font-size:1.14rem}
 .rt caption{font-size:1.55rem;font-weight:700;padding:.2rem 0 .6rem;
   background:linear-gradient(180deg,#fff8e4 10%,#f5e3b0 40%,#e8c87a 72%,#a8853e 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rt th,.rt td{border:1px solid rgba(232,200,122,.55);padding:.5rem .7rem;text-align:center;vertical-align:middle;line-height:1.25}
@@ -595,6 +595,7 @@ function buildTopo(el){
   (sp.pk||[]).forEach(function(k){ o.push('<g class="pkt" id="'+uid+'-'+k+'"><g transform="scale(1.25)"><polygon points="0,-9 9,-4.5 0,0 -9,-4.5" fill="#fff3c8"/><polygon points="-9,-4.5 0,0 0,10 -9,5.5" fill="#e8c87a"/><polygon points="9,-4.5 0,0 0,10 9,5.5" fill="#b08a3a"/>'+
     '<path d="M0,-9 9,-4.5 9,5.5 0,10 -9,5.5 -9,-4.5 Z M0,0 V10 M0,0 9,-4.5 M0,0 -9,-4.5" fill="none" stroke="#fff8e0" stroke-width=".6"/></g></g>'); });
   o.push('</svg>'); el.innerHTML=o.join('');
+  var sv=el.querySelector('svg'); if(sv&&sp.vb&&sp.vb[1]){ sv.style.maxWidth='calc(42vh * '+(sp.vb[0]/sp.vb[1]).toFixed(3)+')'; sv.style.margin='0 auto'; }
   if(el.querySelector('.clk')&&!sp.nohint){ var hn=document.createElement('p'); hn.className='hint'; hn.textContent='Нажмите на устройство: откроются его порты, MAC и IP-адреса, ARP-таблица, таблица коммутации или маршрутизации'; el.appendChild(hn); }
 }
 $$('[data-topo]').forEach(buildTopo);
@@ -694,10 +695,21 @@ function go(i){
   $('#b-prev').disabled=cur===0; $('#b-next').disabled=cur===N-1;
 }
 function fit(sl){
-  var w=$('.wrap',sl), sc=$('.sc',sl); if(!w||!sc) return; w.style.zoom='';
+  var w=$('.wrap',sl), sc=$('.sc',sl); if(!w||!sc) return;
+  w.style.zoom=''; w.style.width=''; w.style.minHeight='';
   if(window.innerWidth<900) return;
-  var cs=getComputedStyle(sc), P=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom), C=sc.scrollHeight-P, H=sc.clientHeight-P;
-  if(C>H+2) w.style.zoom=Math.max(.78,H/C*.99).toFixed(3);
+  var cs=getComputedStyle(sc), P=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom), H=sc.clientHeight-P, z=1;
+  for(var i=0;i<4;i++){
+    w.style.minHeight='0';
+    var C=w.scrollHeight;
+    w.style.minHeight='';
+    if(C<40) break;
+    var z2=Math.max(.72,Math.min(1.3,H/C*.98));
+    if(Math.abs(z2-z)<.012) break;
+    z=z2;
+    w.style.width=z>1?(100/z).toFixed(2)+'%':'';
+    w.style.zoom=z.toFixed(3);
+  }
 }
 var rzT=null; window.addEventListener('resize',function(){ clearTimeout(rzT); rzT=setTimeout(function(){ fit(slides[cur]); },120); });
 function next(){ if(cur<N-1) go(cur+1); } function prev(){ if(cur>0) go(cur-1); }
