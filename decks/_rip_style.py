@@ -32,7 +32,9 @@ body{font-family:var(--f);color:var(--ink);background:var(--bg);overflow:hidden;
  scrollbar-color:#bfe5cf transparent;display:flex;flex-direction:column;gap:14px}
 .slide>.sc::-webkit-scrollbar{width:8px}
 .slide>.sc::-webkit-scrollbar-thumb{background:#bfe5cf;border-radius:8px}
-.slide>.sc>.g{flex:0 0 auto}
+.slide>.sc>.g{flex:1 1 auto;align-content:stretch}
+.slide>.sc>.g.fix{flex:0 0 auto}
+.slide>.sc>.step{flex:0 0 auto}
 .slide>.sc>.grow{flex:1 1 auto}
 .g>.step{display:flex;flex-direction:column;min-height:0}
 .g>.step>.c{flex:1 1 auto}

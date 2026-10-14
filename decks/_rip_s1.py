@@ -567,31 +567,34 @@ def _i(name):
 def _chain3(hops):
     """Схема R1—R2—R3 с четырьмя сетями; hops задаёт глубину распространения."""
     nets = ["192.168.10.0/24", "192.168.20.0/24", "192.168.30.0/24", "192.168.40.0/24"]
+    Y = 146          # ось схемы
     parts = [
-        cloud(95, 110, 170, 86, nets[0], None, "blue"),
-        router(300, 102, 38, "R1"),
-        cloud(480, 110, 170, 86, nets[1], None, "green"),
-        router(665, 102, 38, "R2"),
-        cloud(845, 110, 170, 86, nets[2], None, "pink"),
-        router(1030, 102, 38, "R3"),
-        cloud(1190, 110, 150, 86, nets[3], None, "lav"),
-        link(180, 110, 262, 110, 5, "#bfe5cf"),
-        link(338, 110, 400, 110, 5, "#bfe5cf"),
-        link(560, 110, 627, 110, 5, "#bfe5cf"),
-        link(703, 110, 765, 110, 5, "#bfe5cf"),
-        link(925, 110, 992, 110, 5, "#bfe5cf"),
-        link(1068, 110, 1120, 110, 5, "#bfe5cf"),
-        axis_label(300, 172, "gi1/0/2 · gi1/0/1", 11.5),
-        axis_label(665, 172, "gi1/0/1 · gi1/0/2", 11.5),
-        axis_label(1030, 172, "gi1/0/2 · gi1/0/1", 11.5),
+        cloud(95, Y, 170, 86, nets[0], None, "blue"),
+        router(300, Y - 8, 38, "R1"),
+        cloud(480, Y, 170, 86, nets[1], None, "green"),
+        router(665, Y - 8, 38, "R2"),
+        cloud(845, Y, 170, 86, nets[2], None, "pink"),
+        router(1030, Y - 8, 38, "R3"),
+        cloud(1190, Y, 150, 86, nets[3], None, "lav"),
+        link(180, Y, 262, Y, 5, "#bfe5cf"),
+        link(338, Y, 400, Y, 5, "#bfe5cf"),
+        link(560, Y, 627, Y, 5, "#bfe5cf"),
+        link(703, Y, 765, Y, 5, "#bfe5cf"),
+        link(925, Y, 992, Y, 5, "#bfe5cf"),
+        link(1068, Y, 1120, Y, 5, "#bfe5cf"),
     ]
+    # подписи интерфейсов — сбоку от маршрутизаторов, над линией связи
+    for (x, left, right) in ((300, "gi1/0/2", "gi1/0/1"), (665, "gi1/0/1", "gi1/0/2"),
+                             (1030, "gi1/0/2", "gi1/0/1")):
+        parts.append(axis_label(x - 46, Y - 12, left, 11.5, anchor="end"))
+        parts.append(axis_label(x + 46, Y - 12, right, 11.5, anchor="start"))
     if hops >= 1:
         parts += [
             '<g data-at="300" class="fade">%s%s</g>' % (
-                arrow(330, 42, 635, 42, "g", w=5), arrow(635, 70, 330, 70, "g", w=5)),
+                arrow(330, 52, 635, 52, "g", w=5), arrow(635, 80, 330, 80, "g", w=5)),
             '<g data-at="300" class="fade">%s</g>' % callout(482, 2, "Обновление", "g", tail=False),
             '<g data-at="700" class="fade">%s%s</g>' % (
-                arrow(695, 42, 1000, 42, "g", w=5), arrow(1000, 70, 695, 70, "g", w=5)),
+                arrow(695, 52, 1000, 52, "g", w=5), arrow(1000, 80, 695, 80, "g", w=5)),
             '<g data-at="700" class="fade">%s</g>' % callout(847, 2, "Обновление", "g", tail=False),
         ]
     # таблицы под схемой
@@ -612,18 +615,22 @@ def _chain3(hops):
             [("192.168.30.0/24", "0", "gi1/0/2"), ("192.168.40.0/24", "0", "gi1/0/1"),
              ("192.168.20.0/24", "1", "gi1/0/2"), ("192.168.10.0/24", "2", "gi1/0/2")]],
     }[hops]
+    T0 = 236          # верх таблиц
     xs = [40, 480, 920]
     for (x, tb) in zip(xs, rows):
-        parts.append('<rect x="%d" y="205" width="400" height="%d" rx="16" fill="#fff" '
-                     'stroke="#bfe5cf" stroke-width="2"/>' % (x, 34 + len(tb) * 26))
-        parts.append(axis_label(x + 14, 226, "Сеть", 11.5, "#1b6b47", anchor="start", weight=800))
-        parts.append(axis_label(x + 250, 226, "Интерфейс", 11.5, "#1b6b47", anchor="start", weight=800))
-        parts.append(axis_label(x + 370, 226, "Переход", 11.5, "#1b6b47", anchor="end", weight=800))
+        parts.append('<rect x="%d" y="%d" width="400" height="%d" rx="16" fill="#fff" '
+                     'stroke="#bfe5cf" stroke-width="2"/>' % (x, T0, 36 + len(tb) * 26))
+        parts.append(axis_label(x + 14, T0 + 22, "Сеть", 11.5, "#1b6b47", anchor="start", weight=800))
+        parts.append(axis_label(x + 250, T0 + 22, "Интерфейс", 11.5, "#1b6b47", anchor="start",
+                                weight=800))
+        parts.append(axis_label(x + 386, T0 + 22, "Переход", 11.5, "#1b6b47", anchor="end",
+                                weight=800))
         for i, (net, hop, iface) in enumerate(tb):
             fresh = hop != "0" and (int(hop) >= hops)
             col = "#c9517f" if fresh else "#2a3b33"
-            y = 250 + i * 26
+            y = T0 + 46 + i * 26
             parts.append(axis_label(x + 14, y, net, 12.5, col, anchor="start", weight=700))
             parts.append(axis_label(x + 250, y, iface, 12.5, col, anchor="start"))
-            parts.append(axis_label(x + 370, y, hop, 12.5, col, anchor="end", weight=800))
-    return fig("0 0 1340 %d" % (250 + max(len(t) for t in rows) * 26), "".join(parts))
+            parts.append(axis_label(x + 386, y, hop, 12.5, col, anchor="end", weight=800))
+    H = T0 + 48 + max(len(t) for t in rows) * 26
+    return fig("0 0 1340 %d" % H, "".join(parts))
