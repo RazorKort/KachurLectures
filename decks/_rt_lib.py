@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Библиотека деки «Маршрутизация»: изумрудно-золотой стиль, компоненты, генератор топологий, исполнитель сценариев.
-import base64, io, json, pathlib, re, html, zipfile
+import base64, io, json, math, pathlib, re, html, zipfile
 from PIL import Image
 
 HERE = pathlib.Path(__file__).parent
@@ -213,13 +213,44 @@ code.c{font-family:var(--mono);font-size:.9em;color:var(--gold-2);background:rgb
   background-image:repeating-linear-gradient(45deg,rgba(232,200,122,.8) 0 1px,transparent 1px 46px),repeating-linear-gradient(-45deg,rgba(232,200,122,.55) 0 1px,transparent 1px 46px);
   -webkit-mask-image:radial-gradient(130% 95% at 50% 40%,#000 18%,transparent 72%);mask-image:radial-gradient(130% 95% at 50% 40%,#000 18%,transparent 72%)}
 #deco .vig{position:absolute;inset:0;background:radial-gradient(118% 88% at 50% 42%,rgba(0,0,0,0) 52%,rgba(2,12,10,.62) 100%)}
-body[data-bg="2"] #deco .globe{right:auto;left:-24vw;top:-32vh}
-body[data-bg="2"] #deco .orna{background-image:repeating-linear-gradient(0deg,rgba(232,200,122,.6) 0 1px,transparent 1px 54px),repeating-linear-gradient(90deg,rgba(232,200,122,.45) 0 1px,transparent 1px 54px);opacity:.055}
-body[data-bg="3"] #deco .globe{right:-12vw;top:auto;bottom:-52vh}
-body[data-bg="3"] #deco .orna{opacity:.05;background-image:repeating-radial-gradient(circle at 50% 50%,rgba(232,200,122,.6) 0 1px,transparent 1px 58px)}
-body[data-bg="4"] #deco .globe{opacity:.65;right:-30vw;top:16vh}
-body[data-bg="4"] #deco .orna{opacity:.045}
-.title #deco,.slide.title~#deco{opacity:1}
+#deco .lay{position:absolute;inset:0;width:100%;height:100%}
+#deco .mal,#deco .cont,#deco .rings,#deco .net,#deco .rays{display:none}
+#deco .net .nl line{stroke:rgba(232,200,122,.4);stroke-width:1.2}
+#deco .net .nd circle{fill:#f5e3b0;opacity:.75;animation:twk 7s ease-in-out infinite}
+#deco .cont polyline{fill:none;stroke:rgba(149,226,196,.8);stroke-width:1.7}
+#deco .rings .rg circle{fill:none;stroke:rgba(232,200,122,.62);stroke-width:1.1}
+#deco .rings .ry line{stroke:rgba(232,200,122,.24);stroke-width:1}
+#deco .rays{background:repeating-linear-gradient(104deg,rgba(232,200,122,.1) 0 2px,transparent 2px 13px,rgba(79,214,196,.07) 13px 15px,transparent 15px 54px);
+  -webkit-mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%);mask-image:radial-gradient(120% 100% at 80% 0%,#000 10%,transparent 78%)}
+/* 1 — ночной город (титулы и ключевые слайды) */
+/* 2 — созвездие узлов */
+body[data-bg="2"] #deco .net{display:block}
+body[data-bg="2"] #deco .sky{opacity:.18}
+body[data-bg="2"] #deco .orna{opacity:.03}
+body[data-bg="2"] #deco .globe{opacity:.5;right:auto;left:-26vw;top:-30vh}
+/* 3 — изолинии, «карта» */
+body[data-bg="3"] #deco .cont{display:block;opacity:.75}
+body[data-bg="3"] #deco .sky{opacity:.22}
+body[data-bg="3"] #deco .orna{display:none}
+body[data-bg="3"] #deco .globe{right:-16vw;top:auto;bottom:-56vh;opacity:.8}
+/* 4 — гильош */
+body[data-bg="4"] #deco .rings{display:block}
+body[data-bg="4"] #deco .sky{opacity:.2}
+body[data-bg="4"] #deco .globe{display:none}
+body[data-bg="4"] #deco .orna{opacity:.04;background-image:repeating-linear-gradient(0deg,rgba(232,200,122,.6) 0 1px,transparent 1px 58px)}
+/* 5 — малахит */
+body[data-bg="5"] #deco .mal{display:block;opacity:.75}
+body[data-bg="5"] #deco .sky{opacity:.14}
+body[data-bg="5"] #deco .orna{display:none}
+body[data-bg="5"] #deco .globe{opacity:.45;right:-34vw;top:10vh}
+body[data-bg="5"] #deco .aur i:nth-child(2){opacity:.3}
+/* 6 — светлый изумруд с лучами */
+body[data-bg="6"]{background:radial-gradient(70% 60% at 68% 14%,#15503f 0%,rgba(21,80,63,0) 72%),radial-gradient(50% 50% at 10% 76%,#0f4336 0%,rgba(15,67,54,0) 70%),#08261f}
+body[data-bg="6"] #deco .rays{display:block}
+body[data-bg="6"] #deco .sky{opacity:.3}
+body[data-bg="6"] #deco .orna{opacity:.035}
+body[data-bg="6"] #deco .globe{opacity:.75;right:-10vw;top:-44vh}
+body[data-bg="6"] #deco .vig{background:radial-gradient(118% 88% at 50% 42%,rgba(0,0,0,0) 56%,rgba(2,12,10,.5) 100%)}
 @media (prefers-reduced-motion: reduce){#deco .aur i,#deco .spk,#deco .sweep{animation:none}}
 #frame{position:fixed;inset:10px;z-index:20;pointer-events:none;border:1px solid rgba(232,200,122,.32);border-radius:4px}
 #frame i{position:absolute;width:76px;height:76px;border:2px solid var(--gold);filter:drop-shadow(0 0 5px rgba(232,200,122,.5))}
@@ -297,7 +328,7 @@ main{position:fixed;inset:0;z-index:2}
 .rt{width:100%;border-collapse:collapse;font-size:1.14rem}
 .rt caption{font-size:1.55rem;font-weight:700;padding:.2rem 0 .6rem;
   background:linear-gradient(180deg,#fff8e4 10%,#f5e3b0 40%,#e8c87a 72%,#a8853e 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.rt th,.rt td{border:1px solid rgba(232,200,122,.55);padding:.5rem .7rem;text-align:center;vertical-align:middle;line-height:1.25}
+.rt th,.rt td{border:1px solid rgba(232,200,122,.55);padding:.45rem .55rem;text-align:center;vertical-align:middle;line-height:1.25;overflow-wrap:anywhere}
 .rt th{font-weight:400;color:var(--ink);background:rgba(232,200,122,.05)}
 .rt td{color:var(--ink);transition:background .35s var(--ez),color .35s var(--ez),box-shadow .35s var(--ez),opacity .35s var(--ez)}
 .rt tr.hl td{color:#fff;background:linear-gradient(90deg,rgba(232,200,122,.16),rgba(232,200,122,.42) 50%,rgba(232,200,122,.16));box-shadow:inset 0 0 18px rgba(232,200,122,.30)}
@@ -464,6 +495,67 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 """
 
+def _net_layer():
+    """Созвездие узлов: редкая сеть точек и связей — мотив главы."""
+    import random
+    rnd = random.Random(7)
+    pts = []
+    for i in range(34):
+        x = 40 + (i * 311) % 1840
+        y = 40 + (i * 677) % 1000
+        x += rnd.randint(-28, 28); y += rnd.randint(-26, 26)
+        pts.append((x, y))
+    lines = []
+    for i, (x1, y1) in enumerate(pts):
+        for x2, y2 in pts[i + 1:]:
+            d = math.hypot(x1 - x2, y1 - y2)
+            if d < 290:
+                lines.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}"/>')
+    dots = "".join(f'<circle cx="{x}" cy="{y}" r="{2.2 + (i % 3) * .9:.1f}"'
+                   f' style="animation-delay:-{i * .7:.1f}s;transform-origin:{x}px {y}px"/>' for i, (x, y) in enumerate(pts))
+    return ('<svg class="lay net" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">'
+            f'<g class="nl">{"".join(lines)}</g><g class="nd">{dots}</g></svg>')
+
+
+def _cont_layer():
+    """Топографические изолинии: спокойный «карточный» фон."""
+    out = []
+    for k in range(11):
+        pts = []
+        for i in range(0, 41):
+            x = i * 48
+            y = 150 + k * 86 + 58 * math.sin(i / 5.2 + k * .72) + 26 * math.sin(i / 2.1 + k)
+            pts.append(f'{x},{y:.0f}')
+        out.append(f'<polyline points="{" ".join(pts)}" opacity="{.5 - abs(k - 5) * .055:.2f}"/>')
+    return ('<svg class="lay cont" viewBox="0 0 1920 1080" preserveAspectRatio="none">'
+            f'<g>{"".join(out)}</g></svg>')
+
+
+def _rings_layer():
+    """Гильош: концентрические окружности и радиальные лучи, как на гравюре."""
+    cx, cy = 1430, 420
+    rings = "".join(f'<circle cx="{cx}" cy="{cy}" r="{70 + k * 46}" opacity="{.42 - k * .022:.2f}"/>' for k in range(16))
+    rays = "".join('<line x1="{:.0f}" y1="{:.0f}" x2="{:.0f}" y2="{:.0f}"/>'.format(
+        cx + 80 * math.cos(a), cy + 80 * math.sin(a), cx + 820 * math.cos(a), cy + 820 * math.sin(a))
+        for a in [i * math.pi / 14 for i in range(28)])
+    return ('<svg class="lay rings" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">'
+            f'<g class="rg">{rings}</g><g class="ry">{rays}</g></svg>')
+
+
+def _mal_layer():
+    """Малахитовые волны: мягкие зелёные полосы разной плотности."""
+    bands = []
+    for k in range(7):
+        top = -120 + k * 185
+        pts = [f'{i * 64},{top + 70 * math.sin(i / 4.6 + k * 1.1):.0f}' for i in range(0, 31)]
+        low = [f'{i * 64},{top + 108 + 70 * math.sin(i / 4.6 + k * 1.1):.0f}' for i in range(30, -1, -1)]
+        bands.append(f'<polygon points="{" ".join(pts + low)}" opacity="{.5 if k % 2 else .32:.2f}"/>')
+    return ('<svg class="lay mal" viewBox="0 0 1920 1080" preserveAspectRatio="none">'
+            '<defs><linearGradient id="mlg" x1="0" x2="1"><stop offset="0" stop-color="#0d4034"/>'
+            '<stop offset=".5" stop-color="#17614f"/><stop offset="1" stop-color="#0b3429"/></linearGradient></defs>'
+            f'<g fill="url(#mlg)">{"".join(bands)}</g></svg>')
+
+
 def deco(sky):
     th = [
         ("M-50,820 C300,700 520,760 760,640 S1250,420 1700,520 S2050,300 2100,260", 2.2, .55),
@@ -479,11 +571,14 @@ def deco(sky):
     sweeps = "".join(f'<path class="sweep" d="{d}" stroke-width="{w*.9:.1f}" style="animation-delay:-{k*3.5:.1f}s"/>' for k, (d, w, o) in enumerate(th[:2]))
     return ('<div id="deco" aria-hidden="true"><div class="aur"><i></i><i></i><i></i></div><div class="orna"></div><div class="globe"></div>'
             f'<div class="sky" style="background-image:url({sky})"></div>'
-            '<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice"><defs>'
+            + _mal_layer() + _cont_layer() + _rings_layer() + _net_layer() +
+            '<div class="rays"></div>'
+            '<svg class="lay thr" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice"><defs>'
             '<linearGradient id="thg" x1="0" x2="1"><stop offset="0" stop-color="#e8c87a" stop-opacity="0"/><stop offset=".5" stop-color="#f5e3b0"/><stop offset="1" stop-color="#e8c87a" stop-opacity="0"/></linearGradient>'
             '<radialGradient id="spk"><stop offset="0" stop-color="#fff6d8"/><stop offset=".4" stop-color="#e8c87a" stop-opacity=".8"/><stop offset="1" stop-color="#e8c87a" stop-opacity="0"/></radialGradient>'
             '<filter id="thb"><feGaussianBlur stdDeviation="5"/></filter></defs>'
             f'{paths}{sweeps}{sparks}</svg><div class="vig"></div></div><div id="frame" aria-hidden="true"><i></i><i></i></div>')
+
 
 JS = r"""
 (function(){
@@ -686,7 +781,7 @@ var slides=$$('.slide'), N=slides.length, cur=0, tm=null;
 slides.forEach(function(sl){ sl._snap=$$('.scn',sl).map(function(s){return s.innerHTML}); if(sl.dataset.tl){ try{ sl._tl=JSON.parse(sl.dataset.tl); sl._steps=mkSteps(sl._tl); }catch(e){ sl._tl=null; } } });
 function reset(sl){ $$('.scn',sl).forEach(function(s,i){ s.innerHTML=sl._snap[i]; }); }
 function show(sl){
-  stopAll(); reset(sl); var els=$$('[data-s]',sl); els.forEach(function(e,i){ if(!e.style.getPropertyValue('--dl')) e.style.setProperty('--dl',Math.min((i+1)*60,720)+'ms'); });
+  stopAll(); reset(sl); conFit(sl); var els=$$('[data-s]',sl); els.forEach(function(e,i){ if(!e.style.getPropertyValue('--dl')) e.style.setProperty('--dl',Math.min((i+1)*60,720)+'ms'); });
   els.forEach(function(e){e.classList.remove('in')}); sl.classList.add('ni'); void sl.offsetWidth; sl.classList.remove('ni');
   sl._step=null;
   tm=setTimeout(function(){ els.forEach(function(e){e.classList.add('in')}); later(function(){ var st=sl._steps; if(st&&st.length>1){ sl._step=0; st[0].forEach(function(a){ later(function(){ act(sl,a); }, a[0]); }); updSteps(); } else runTL(sl); }, 420); if(sl._init) sl._init(sl); },40);
@@ -698,16 +793,28 @@ function go(i){
   slides.forEach(function(s){s.classList.remove('on')}); cur=i; var sl=slides[cur]; sl.classList.add('on');
   var sc=$('.sc',sl); if(sc) sc.scrollTop=0;
   fit(sl); play();
-  document.body.dataset.bg=((cur%4)+1);
+  document.body.dataset.bg=(cur===0||cur===N-1)?1:(1+(Math.floor((cur-1)/8)%6));
   try{ history.replaceState(null,'','#'+(cur+1)); }catch(e){}
   $('#ind').textContent=(cur+1)+' / '+N; $('#prog i').style.width=((cur+1)/N*100)+'%';
   $('#b-prev').disabled=cur===0; $('#b-next').disabled=cur===N-1;
+}
+function conFit(sl){
+  $$('.con pre',sl).forEach(function(pr){
+    pr.style.fontSize='';
+    var fs=parseFloat(getComputedStyle(pr).fontSize);
+    for(var k=0;k<7;k++){
+      if(pr.scrollWidth<=pr.clientWidth+2||fs<9) break;
+      fs=Math.max(9,fs*Math.max(.75,pr.clientWidth/pr.scrollWidth)*.99);
+      pr.style.fontSize=fs.toFixed(2)+'px';
+    }
+  });
 }
 function fit(sl){
   var w=$('.wrap',sl), sc=$('.sc',sl); if(!w||!sc) return;
   w.style.zoom=''; w.style.width=''; w.style.minHeight=''; w.style.removeProperty('--tcap');
   if(window.innerWidth<900) return;
   var cs=getComputedStyle(sc), P=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom), H=sc.clientHeight-P, z=1;
+  conFit(sl);
   function nat(){ w.style.minHeight='0'; var C=w.scrollHeight; w.style.minHeight=''; return C; }
   function apply(v){ z=v; w.style.width=v>1?(100/v).toFixed(2)+'%':''; w.style.zoom=v.toFixed(3); }
   function solve(){
