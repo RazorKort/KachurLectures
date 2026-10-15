@@ -14,6 +14,33 @@ def uid(pref="u"):
 #  ФОН: блобы, ботанические листья, точечные сетки, чёрточки
 # ======================================================================
 
+# Спрайт из атласа SVG (decks/svg-atlas.html): один символ на весь документ,
+# каждая схема ссылается на него через <use href="#rp-router">.
+SPRITE = (
+    '<svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;'
+    'overflow:hidden"><defs>'
+    '<symbol id="rp-router" viewBox="0 -127 1278 1278" overflow="visible">'
+    '<path d="M186.97049 390.020858c249.283591-143.926213 654.058848-143.926213 903.342438 0 '
+    '249.283591 143.921015 249.283591 377.621133 0 521.542148-249.283591 143.926213-654.058848 '
+    '143.926213-903.342438 0-249.288789-143.921015-249.288789-377.621133 0-521.542148z" '
+    'fill="#247b70"/>'
+    '<path d="M0.005198 368.719633h1277.273022v282.072299H0.005198z" fill="#247b70"/>'
+    '<path d="M186.97049 107.948559c249.283591-143.926213 654.058848-143.926213 903.342438 0 '
+    '249.283591 143.921015 249.283591 377.621133 0 521.542148-249.283591 143.926213-654.058848 '
+    '143.926213-903.342438 0-249.288789-143.921015-249.288789-377.621133 0-521.542148z" '
+    'fill="#2b9f8f"/>'
+    '<path d="M436.243685 524.263279l57.323062 33.095388-164.5621-6.819719-11.814955-95.008246 '
+    '57.323063 33.095388 148.037797-85.475194 61.73093 35.642386-148.037797 85.469997zM846.320857 '
+    '216.221989l-57.323063-33.09019 164.562101 6.819719 11.814954 95.008246-57.323062-33.095388'
+    '-148.037797 85.469996-61.73093-35.637188 148.037797-85.475195zM445.418078 199.744468l57.323062'
+    '-33.09019-164.5621 6.819718-11.814955 95.008246 57.323063-33.095388 148.042995 85.469997 '
+    '61.730929-35.637189L445.418078 199.744468zM865.501316 513.560686l-57.323063 33.095388 164.5621'
+    '-6.819718 11.814955-95.008246-57.323062 33.095388-148.037797-85.469997-61.73093 35.637189 '
+    '148.037797 85.469996z" fill="#d3dedc"/>'
+    '</symbol></defs></svg>'
+)
+
+
 LEAF_PATH = ("M0 0 C 26 -34 74 -34 100 0 C 74 34 26 34 0 0 Z")
 
 def _lf(x, y, sc, rot, op):
@@ -335,46 +362,20 @@ ICON = {
 
 
 def router(x, y, r=34, label=None, tone="teal", gid=None):
-    """Цилиндр-маршрутизатор с белым крестом стрелок и подписью в плашке под ним."""
-    g = gid or uid("rg")
-    ry = r * .42
-    sw = max(2.6, r * .115)
-    a = r * .62          # вылет стрелки
-    hw = r * .20         # полуширина наконечника
-    top = "#8adcb9" if tone == "teal" else "#8adcb9"
-    arrows = []
-    for (dx, dy) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-        ex, ey = x + dx * a, y + dy * a * .78
-        arrows.append('<path d="M%.1f %.1f L%.1f %.1f" stroke="#fff" stroke-width="%.1f" '
-                      'stroke-linecap="round"/>' % (x, y, ex, ey, sw))
-        # наконечник
-        if dx:
-            arrows.append('<path d="M%.1f %.1f l%.1f %.1f M%.1f %.1f l%.1f %.1f" stroke="#fff" '
-                          'stroke-width="%.1f" stroke-linecap="round" fill="none"/>'
-                          % (ex, ey, -dx * hw * 1.4, -hw, ex, ey, -dx * hw * 1.4, hw, sw * .85))
-        else:
-            arrows.append('<path d="M%.1f %.1f l%.1f %.1f M%.1f %.1f l%.1f %.1f" stroke="#fff" '
-                          'stroke-width="%.1f" stroke-linecap="round" fill="none"/>'
-                          % (ex, ey, -hw, -dy * hw * 1.4, ex, ey, hw, -dy * hw * 1.4, sw * .85))
+    """Маршрутизатор из атласа SVG (символ rp-router) и подпись в плашке под ним."""
+    w = r * 2.15                      # видимая ширина корпуса
+    art = ('<use href="#rp-router" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
+           % (x - w / 2, y - w / 2, w, w))
     lab = ""
     if label:
         lw = max(40, 15 + len(label) * 11)
-        ly = y + r * .62 + ry + 10
-        lab = ('<g class="rlab"><rect x="%.1f" y="%.1f" width="%d" height="26" rx="10" fill="#dff3e8"/>'
+        ly = y + r * .78
+        lab = ('<g class="rlab"><rect x="%.1f" y="%.1f" width="%d" height="26" rx="10" '
+               'fill="#dff3e8"/>'
                '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="15" font-weight="800" '
                'fill="#1d7a4f" font-family="inherit">%s</text></g>'
                % (x - lw / 2, ly, lw, x, ly + 18, label))
-    return """<g class="rtr" data-r="%s">
-<defs><linearGradient id="%s" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0" stop-color="#7fd0b0"/><stop offset="1" stop-color="#2e8f6c"/></linearGradient></defs>
-<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#2e8f6c"/>
-<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="url(#%s)"/>
-<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s"/>
-%s%s</g>""" % (label or "", g,
-               x, y + r * .62, r, ry,
-               x - r, y - r * .62, r * 2, r * 1.24, g,
-               x, y - r * .62, r, ry, top,
-               "".join(arrows), lab)
+    return '<g class="rtr" data-r="%s">%s%s</g>' % (label or "", art, lab)
 
 
 def cloud(x, y, w, h, label, sub=None, tone="blue"):

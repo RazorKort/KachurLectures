@@ -45,7 +45,7 @@ def main():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>RIP — стеклянная дека</title>\n'
-        '<style>' + CSS + '</style>\n</head>\n<body>\n'
+        '<style>' + CSS + '</style>\n</head>\n<body>\n' + _rip_lib.SPRITE + '\n'
         + background() + '\n<div id="stage">\n'
         + tint("\n".join(_rip_lib.with_bg(_rip_lib.SL, pick_bg))) + '\n</div>\n'
         + HUD + '\n<script>' + JS + '</script>\n</body>\n</html>\n'

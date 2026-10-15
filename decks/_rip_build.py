@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from _rip_style import CSS
 from _rip_engine import JS
-from _rip_lib import SL, background, with_bg, pick_bg
+from _rip_lib import SL, background, with_bg, pick_bg, SPRITE
 import _rip_s1
 import _rip_s2
 import _rip_s3
@@ -40,7 +40,7 @@ def main():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>Динамическая маршрутизация: протокол RIP</title>\n'
-        '<style>' + CSS + '</style>\n</head>\n<body>\n'
+        '<style>' + CSS + '</style>\n</head>\n<body>\n' + SPRITE + '\n'
         + background() + '\n<div id="stage">\n' + "\n".join(with_bg(SL, pick_bg)) + '\n</div>\n'
         + HUD + '\n<script>' + JS + '</script>\n</body>\n</html>\n'
     )
