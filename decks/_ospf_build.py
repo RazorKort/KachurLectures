@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from _ospf_style import CSS
 from _ospf_engine import JS
-from _ospf_lib import SL, background
+from _ospf_lib import SL, background, bg_css
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ospf.html")
 
@@ -46,7 +46,7 @@ def fonts_css():
     return "\n".join(out)
 
 
-MODULES = ["_ospf_intro", "_ospf_s1", "_ospf_s2", "_ospf_s3", "_ospf_s4", "_ospf_s5"]
+MODULES = ["_ospf_intro", "_ospf_dij", "_ospf_work", "_ospf_nbr", "_ospf_areas", "_ospf_cfg", "_ospf_s5"]
 
 
 def main():
@@ -63,8 +63,7 @@ def main():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>Протокол OSPF — лекция</title>\n'
-        "<style>%s\n%s</style>\n</head>\n<body>\n" % (fonts_css(), CSS)
-        + background()
+        "<style>%s\n%s</style>\n</head>\n<body>\n" % (fonts_css(), CSS + bg_css())
         + '\n<div id="stage">\n' + "\n".join(SL) + "\n</div>\n"
         + HUD
         + "\n<script>%s</script>\n</body>\n</html>\n" % JS

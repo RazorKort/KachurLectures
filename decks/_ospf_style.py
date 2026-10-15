@@ -333,3 +333,93 @@ button:focus-visible,.btn:focus-visible{outline:3px solid var(--violet);outline-
 }
 @media print{#hud,#prog,#toc{display:none}}
 """
+CSS += r"""
+.panel{background:#fff;border-radius:24px;padding:clamp(10px,.8vw,16px);display:flex;flex-direction:column;
+ gap:clamp(8px,.7vw,14px);min-height:0;min-width:0;box-shadow:0 3px 14px rgba(40,60,90,.06);border:2px solid var(--pink-bg)}
+.panel.b{border-color:var(--blue-bg)} .panel.y{border-color:var(--yellow-bg)} .panel.g{border-color:var(--green-bg)}
+.panel.v{border-color:var(--violet-bg)}
+.panel .ph{display:flex;align-items:center;gap:14px;background:var(--pink-bg);border-radius:18px;padding:8px 14px}
+.panel.b .ph{background:var(--blue-bg)} .panel.y .ph{background:var(--yellow-bg)} .panel.g .ph{background:var(--green-bg)}
+.panel.v .ph{background:var(--violet-bg)}
+.panel .ph .ico{flex:none;width:clamp(42px,3.4vw,64px);height:clamp(42px,3.4vw,64px);border-radius:50%;
+ background:#ffd3e4;display:grid;place-items:center}
+.panel.b .ph .ico{background:#c7e2fb} .panel.y .ph .ico{background:#ffe9a8} .panel.g .ph .ico{background:#c6efd6}
+.panel.v .ph .ico{background:#ddd2fa}
+.panel .ph .ico svg{width:54%;height:54%;fill:none;stroke:#121212;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.panel .ph h3{font:800 clamp(18px,1.6vw,32px)/1.12 var(--f)}
+.panel .pb{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:clamp(8px,.7vw,14px)}
+.panel .pb>p{font-size:clamp(15px,1.2vw,23px);line-height:1.35}
+.panel .pb .ill{min-height:100px}
+.panel .tw{flex:none}
+
+.vcard{display:flex;flex-direction:column;gap:6px;background:var(--pink-bg);border-radius:22px;
+ padding:clamp(10px,.8vw,16px);min-height:0;min-width:0}
+.vcard.b{background:var(--blue-bg)} .vcard.y{background:var(--yellow-bg)} .vcard.g{background:var(--green-bg)}
+.vcard.v{background:var(--violet-bg)} .vcard.w{background:#fff;border:2px solid var(--line)}
+.vcard .vh{display:flex;align-items:center;gap:10px}
+.vcard .nn{flex:none;width:clamp(32px,2.6vw,50px);height:clamp(32px,2.6vw,50px);border-radius:50%;background:var(--pink);
+ color:#fff;display:grid;place-items:center;font:700 clamp(17px,1.5vw,28px)/1 var(--fd)}
+.vcard.b .nn{background:var(--blue)} .vcard.y .nn{background:var(--yellow);color:#121212}
+.vcard.g .nn{background:var(--green)} .vcard.v .nn{background:var(--violet)}
+.vcard h3{font:700 clamp(18px,1.55vw,32px)/1.02 var(--fd)}
+.vcard .vb{align-self:flex-start;font:700 clamp(15px,1.3vw,26px)/1 var(--fd);padding:6px 16px;border-radius:999px;
+ background:#ffd3e4}
+.vcard.b .vb{background:#c7e2fb} .vcard.y .vb{background:#ffe9a8} .vcard.g .vb{background:#c6efd6} .vcard.v .vb{background:#ddd2fa}
+.vcard .va{flex:1 1 auto;min-height:60px;display:flex;align-items:center;justify-content:center}
+.vcard .va svg{width:100%;height:100%;max-height:100%}
+.vcard p{font-size:clamp(13.5px,1.05vw,20px);line-height:1.3;text-align:center}
+.vcard.go-f{transition:opacity .4s var(--ease),transform .4s var(--ease);transform:translateY(12px)}
+.vcard.go-f.go{transform:none}
+
+.chain{display:flex;align-items:center;justify-content:center;gap:clamp(6px,.8vw,16px);flex-wrap:wrap;
+ background:var(--pink-bg);border-radius:22px;padding:clamp(10px,.8vw,16px)}
+.cpill{font:700 clamp(18px,1.8vw,36px)/1 var(--fd);padding:clamp(8px,.7vw,14px) clamp(18px,1.8vw,36px);border-radius:999px;background:#ffd3e4}
+.cpill.b{background:#c7e2fb} .cpill.y{background:#ffe9a8} .cpill.g{background:#c6efd6} .cpill.v{background:#ddd2fa}
+.carr{font-size:clamp(20px,1.8vw,34px);color:var(--pink)}
+
+.row7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,.6vw,12px);flex:1 1 0;min-height:0}
+.row5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(8px,.8vw,14px);flex:1 1 0;min-height:0}
+.row4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,.8vw,14px);min-height:0}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,.8vw,14px);min-height:0}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1vw,18px);min-height:0}
+.fill{flex:1 1 0;min-height:0}
+.row7>.step,.row5>.step,.row4>.step,.row3>.step,.row2>.step{display:flex;flex-direction:column;min-height:0}
+.row7>.step>*,.row5>.step>*,.row4>.step>*,.row3>.step>*,.row2>.step>*{flex:1 1 auto}
+.calc{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:8px 14px;
+ font-size:clamp(16px,1.35vw,27px);font-weight:700}
+.calc b{font-weight:900}
+.calc .r{margin-left:auto;font:700 clamp(20px,1.8vw,36px)/1 var(--fd);color:var(--pink-ink)}
+.calc.keep .r{color:var(--dim)}
+.calc .ar{width:34px;height:34px;flex:none;border-radius:50%;background:var(--yellow);display:grid;place-items:center;font-weight:900}
+.big{font:700 clamp(26px,2.6vw,52px)/1 var(--fd)}
+@media (max-width:1199px){.row7{grid-template-columns:repeat(4,1fr)}.row5{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:699px){.row7,.row5,.row4,.row3,.row2{grid-template-columns:1fr 1fr}}
+"""
+CSS += r"""
+.rcol>.panel,.lcol>.panel,.rcol>.step>.panel{flex:none}
+.panel .tw table{font-size:clamp(13px,.98vw,19px)}
+.panel .tw td,.panel .tw th{padding:6px 11px}
+.panel .calc{padding:6px 12px}
+"""
+CSS += r"""
+.slide{background-color:#fff;background-size:cover;background-position:center;background-repeat:no-repeat}
+.ill{background:linear-gradient(135deg,rgba(255,243,248,.72) 0%,rgba(246,249,255,.66) 55%,rgba(238,246,255,.72) 100%);
+ backdrop-filter:blur(2px)}
+.head h1.t,.head p.sub{text-shadow:0 0 18px rgba(255,255,255,.9)}
+"""
+CSS += r"""
+.stack{display:flex;flex-direction:column;gap:clamp(10px,.9vw,16px);flex:1 1 0;min-height:0}
+.stack>.step{flex:1 1 0;display:flex;flex-direction:column;min-height:0;max-height:240px}
+.stack>.step>*{flex:1 1 auto}
+.stack>.rowc,.stack>.nrow{max-height:240px}
+.panel .cli{flex:1 1 auto}
+.panel .cli pre{font-size:clamp(14px,1.18vw,23px);line-height:1.6}
+#costsim .rw,#dijsim .rw{font-size:clamp(15px,1.3vw,26px);padding:12px 16px}
+#costsim .note,#dijsim .note,#areasim .note{font-size:clamp(15px,1.25vw,24px)}
+.q .qt{font-size:clamp(16px,1.35vw,27px)}
+.vbtn{font-size:clamp(14px,1.15vw,22px);padding:14px 10px}
+.q .ex{font-size:clamp(14px,1.1vw,21px)}
+"""
+CSS += r"""
+.lcol>.panel:only-child,.rcol>.panel:only-child{flex:1 1 auto}
+"""

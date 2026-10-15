@@ -83,10 +83,25 @@ def background():
 #  КАРКАС СЛАЙДА
 # ======================================================================
 
-def slide(label, body, scen=None, cover=False):
+BG_CYCLE = [1, 8, 3, 5, 7, 4, 1, 8, 5, 7, 3, 2]
+
+
+def slide(label, body, scen=None, cover=False, bg=None):
+    """bg — номер подложки 1…8 из _ospf_assets/bg; по умолчанию по кругу, у титульных — город в облаках."""
     at = ' data-scen="%s"' % scen if scen else ""
     cl = " cover-slide" if cover else ""
-    SL.append('<section class="slide%s" data-label="%s"%s>%s</section>' % (cl, label, at, body))
+    if bg is None:
+        bg = 6 if cover else BG_CYCLE[len(SL) % len(BG_CYCLE)]
+    SL.append('<section class="slide bg%d%s" data-label="%s"%s>%s</section>' % (bg, cl, label, at, body))
+
+
+def bg_css():
+    out = []
+    for i in range(1, 9):
+        with open(os.path.join(ASSETS, "bg", "bg%d.webp" % i), "rb") as fh:
+            out.append(".slide.bg%d{background-image:url(data:image/webp;base64,%s)}"
+                       % (i, base64.b64encode(fh.read()).decode()))
+    return "\n".join(out)
 
 
 SPARKS = ('<svg class="sparks" viewBox="0 0 74 46" aria-hidden="true">'
@@ -505,7 +520,7 @@ def legend(x, y, items, w=330, fs=14):
 
 def bubble(x, y, text, tone="p", fs=16, w=None):
     """Выноска с хвостиком."""
-    fill = {"p": "#ff5c9e", "b": "#3b9eff", "y": "#ffd93d", "g": "#3fc47c"}[tone]
+    fill = {"p": "#ff5c9e", "b": "#3b9eff", "y": "#ffd93d", "g": "#3fc47c", "v": "#9b7bf0"}[tone]
     ink = "#121212" if tone == "y" else "#fff"
     lines = text.split("|")
     ww = w or int(max(len(l) for l in lines) * fs * .58) + 34
@@ -547,7 +562,16 @@ def tile(icon, title, text, tone="p"):
             '<h3>%s</h3><p>%s</p></div>' % (tone, ICON[icon], title, text))
 
 
+def _stack(part):
+    """Колонка только из строк — растягиваем строки на всю высоту."""
+    import re as _re
+    if 'class="ill' in part or 'class="panel' in part or 'class="g ' in part or _re.search(r'class="row\d', part):
+        return part
+    return '<div class="stack">%s</div>' % part
+
+
 def split(left, right, ratio="44fr 56fr"):
+    left, right = _stack(left), _stack(right)
     return ('<div class="split" style="grid-template-columns:minmax(0,%s) minmax(0,%s)">'
             '<div class="lcol">%s</div><div class="rcol">%s</div></div>'
             % (ratio.split()[0], ratio.split()[1], left, right))
@@ -562,3 +586,50 @@ def ill(view, body, extra_defs=""):
 def mini(view, body):
     """Маленькая SVG-картинка внутри строки."""
     return '<svg class="mini" viewBox="%s"><defs>%s</defs>%s</svg>' % (view, arrow_defs(), body)
+
+
+TONES["gr"] = ("#e9f8ef", "#bfe9cf", "#3fc47c", "#2b8f58")
+
+
+def panel(icon, title, body, tone="p", cls=""):
+    """Панель с пастельной шапкой: значок в кружке + заголовок, ниже содержимое."""
+    return ('<div class="panel %s %s"><div class="ph"><span class="ico">%s</span><h3>%s</h3></div>'
+            '<div class="pb">%s</div></div>' % (tone, cls, ICON[icon], title, body))
+
+
+def vcard(num, title, art, text, tone="p", badge=None, cls=""):
+    """Вертикальная карточка-этап: номер + заголовок, пилюля, картинка, подпись."""
+    b = '<span class="vb">%s</span>' % badge if badge else ""
+    return ('<div class="vcard %s %s"><div class="vh"><span class="nn">%s</span><h3>%s</h3></div>%s'
+            '<div class="va">%s</div><p>%s</p></div>' % (tone, cls, num, title, b, art, text))
+
+
+def chain(items):
+    """Цепочка пилюль со стрелками: items = [(text, tone)]."""
+    out = []
+    for i, (t, tone) in enumerate(items):
+        if i:
+            out.append('<span class="carr">&#10140;</span>')
+        out.append('<span class="cpill %s">%s</span>' % (tone, t))
+    return '<div class="chain">%s</div>' % "".join(out)
+
+
+def switch(x, y, w=150, tone="b"):
+    top, side, led, out = TONES[tone]
+    h = w * .26
+    ports = "".join('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="2" fill="#2a2f3d"/>'
+                    % (x - w * .40 + i * w * .105, y + h * .32, w * .07, h * .36) for i in range(8))
+    return ('<g><path d="M%.1f %.1f l%.1f %.1f h%.1f l%.1f %.1f z" fill="%s" stroke="%s" stroke-width="2.4"/>'
+            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="8" fill="%s" stroke="%s" stroke-width="2.4"/>%s</g>'
+            % (x - w / 2, y, w * .08, -h * .7, w * .84, w * .08, h * .7, top, out,
+               x - w / 2, y, w, h, side, out, ports))
+
+
+def mark(x, y, value, status, tone="p"):
+    """Метка вершины над роутером: крупное число и статус (как на слайдах Дейкстры)."""
+    fill = {"p": "#ffd3e4", "b": "#c7e2fb", "y": "#ffe9a8", "g": "#c6efd6", "w": "#ffffff"}[tone]
+    ink = {"p": "#d8276f", "b": "#1f6fc4", "y": "#8a6a00", "g": "#1d8a51", "w": "#121212"}[tone]
+    return ('<g><rect x="%.1f" y="%.1f" width="120" height="58" rx="14" fill="%s"/>'
+            '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="27" font-weight="900" fill="%s">%s</text>'
+            '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="13" font-weight="700" fill="#121212">%s</text></g>'
+            % (x - 60, y - 29, fill, x, y + 2, ink, value, x, y + 21, status))
