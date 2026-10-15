@@ -331,7 +331,10 @@ def arrow_defs():
     mk = "".join('<marker id="m_%s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" '
                  'markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="%s"/></marker>'
                  % (m, c) for (c, m) in ACOL.values())
-    gr = ('<linearGradient id="dev1" x1="0" y1="0" x2="0" y2="1">'
+    gr = ('<linearGradient id="esrBody" x1="0" y1="0" x2="0" y2="1">'
+          '<stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f1effa"/>'
+          '<stop offset="1" stop-color="#dcd8ec"/></linearGradient>'
+          '<linearGradient id="dev1" x1="0" y1="0" x2="0" y2="1">'
           '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e2ddf7"/></linearGradient>'
           '<linearGradient id="dev2" x1="0" y1="0" x2="0" y2="1">'
           '<stop offset="0" stop-color="#8a63ff"/><stop offset="1" stop-color="#5b36e0"/></linearGradient>'

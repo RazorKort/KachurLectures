@@ -99,7 +99,7 @@ p.sub b{color:var(--vio-ink);font-weight:800}
 .kv{font-family:var(--m);font-weight:700}
 .c svg.fig{width:100%;height:auto;max-height:50vh;display:block;margin:2px auto 0}
 .figwrap{display:flex;flex:1 1 auto;min-height:0;min-width:0;align-items:center;justify-content:center;width:100%}
-svg.fig{width:100%;height:auto;max-height:min(100%,50vh);display:block}
+svg.fig{width:100%;height:auto;max-height:50vh;display:block}
 .g>*{min-width:0;min-height:0}
 
 /* ================= НОМЕРА / ПИЛЮЛИ ================= */
@@ -298,6 +298,30 @@ input.fld{font:800 clamp(12px,.88vw,16px)/1 var(--m);padding:10px 13px;border-ra
 .tocit i{flex:none;width:25px;height:25px;border-radius:8px;background:linear-gradient(145deg,var(--vio),#8a63ff);
  color:#fff;display:grid;place-items:center;font:800 11.5px/1 var(--f);font-style:normal}
 
+
+.flowl{stroke-dasharray:7 23;animation:flowl 1.4s linear infinite}
+@keyframes flowl{to{stroke-dashoffset:-60}}
+
+/* ================= ПЛИТКИ С ИКОНКАМИ (как на плакатах) ================= */
+.it{display:flex;align-items:center;gap:clamp(10px,1vw,18px);background:var(--glass);border:1px solid rgba(255,255,255,.85);
+ border-radius:18px;padding:clamp(10px,1.1vh,16px) clamp(12px,1vw,18px);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+ box-shadow:0 10px 26px rgba(60,40,140,.10),inset 0 1px 0 #fff;min-width:0}
+.it .hx{flex:none;width:clamp(42px,3.4vw,64px);height:clamp(42px,3.4vw,64px);border-radius:16px;display:grid;place-items:center;
+ background:linear-gradient(145deg,#8a6bff,#5b36e0);box-shadow:0 8px 18px rgba(91,54,224,.32),inset 0 1px 0 rgba(255,255,255,.4)}
+.it.c2 .hx{background:linear-gradient(145deg,#4fd0f5,#1593c9)} .it.m .hx{background:linear-gradient(145deg,#ec82f7,#b02cc6)}
+.it.g .hx{background:linear-gradient(145deg,#3fd894,#119a5c)} .it.a .hx{background:linear-gradient(145deg,#ffcb5c,#e08b00)}
+.it.r .hx{background:linear-gradient(145deg,#ff8aa3,#d9334f)}
+.it .hx svg{width:56%;height:56%;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.it p{font-size:clamp(13px,1vw,19px);line-height:1.36;font-weight:600}
+.it p b{font-weight:800}
+.osi{display:flex;flex-direction:column;gap:10px}
+.osi .lv{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.85);
+ font:800 clamp(13px,1vw,19px)/1.2 var(--f)}
+.osi .lv i{font:800 clamp(20px,1.8vw,34px)/1 var(--fd);font-style:normal;color:var(--vio);width:1.2em;text-align:center}
+.osi .lv.on{background:linear-gradient(120deg,var(--vio),#8a63ff);color:#fff;box-shadow:0 10px 24px rgba(109,74,255,.35)}
+.osi .lv.on i{color:#fff}
+.scene{flex:1 1 auto;min-height:0;display:flex}
+.scene svg{width:100%;height:auto;max-height:46vh;display:block;margin:auto}
 
 /* ================= ТИТУЛ СЕРИИ ================= */
 .cov{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(16px,2vw,40px);
