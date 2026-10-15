@@ -11,6 +11,35 @@ var elCount=document.getElementById('count'), elName=document.getElementById('sn
     elProg=document.getElementById('prog'), toc=document.getElementById('toc');
 
 function qa(root,sel){return [].slice.call(root.querySelectorAll(sel));}
+
+/* обёртка .wrap внутри каждого .sc — нужна для автоподгонки масштаба */
+[].slice.call(document.querySelectorAll('.slide>.sc')).forEach(function(sc){
+  var w=document.createElement('div'); w.className='wrap';
+  while(sc.firstChild)w.appendChild(sc.firstChild);
+  sc.appendChild(w);
+});
+/* автоподгонка: контент растягивается на всю высоту слайда (0.7…1.7) */
+function fit(s){
+  var sc=s.querySelector('.sc'), w=sc&&sc.querySelector('.wrap'); if(!w)return;
+  w.style.zoom=''; w.style.width='';
+  if(window.innerWidth<900||s.classList.contains('cover-slide'))return;
+  var H=sc.clientHeight, z=1;
+  function nat(){var m=w.style.minHeight;w.style.minHeight='0';w.style.flex='none';
+    var C=w.scrollHeight;w.style.minHeight=m;w.style.flex='';return C;}
+  function apply(v){z=v;w.style.zoom=v.toFixed(3);}
+  for(var i=0;i<6;i++){
+    var C=nat(); if(C<40)return;
+    var z2=Math.max(.7,Math.min(1.7,H/C*.985));
+    if(Math.abs(z2-z)<.01)break;
+    apply(z2);
+  }
+  for(var j=0;j<3;j++){
+    var C3=nat(); if(C3*z<=H+4||z<=.701)break;
+    apply(Math.max(.7,z*(H/(C3*z))*.99));
+  }
+}
+window.addEventListener('resize',function(){clearTimeout(window.__rz);
+  window.__rz=setTimeout(function(){fit(slides[cur]);},120);});
 function q(root,sel){return root.querySelector(sel);}
 function stepsOf(i){return qa(slides[i],'.step');}
 
@@ -47,6 +76,7 @@ function show(i,openAll){
   cur=Math.max(0,Math.min(slides.length-1,i));
   slides[cur].classList.add('on');
   var box=q(slides[cur],'.sc'); if(box)box.scrollTop=0;
+  fit(slides[cur]);
   step=(openAll||reduce)?stepsOf(cur).length:0;
   paint(); runScen();
   if(!reduce&&!openAll) run();
@@ -109,6 +139,12 @@ window.addEventListener('touchend',function(e){
   if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
 },{passive:true});
 
+qa(document,'[data-go]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.dataset.go;
+    for(var i=0;i<slides.length;i++){if(slides[i].dataset.label===k){show(i);return;}}
+  });
+});
 document.getElementById('bprev').onclick=prev;
 document.getElementById('bnext').onclick=next;
 document.getElementById('btoc').onclick=function(){toc.classList.toggle('on');};

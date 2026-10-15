@@ -49,11 +49,12 @@ body{font-family:var(--f);color:var(--ink);background:#f3f1ff;overflow:hidden;
  display:none;overflow:hidden;flex-direction:column}
 .slide.on{display:flex}
 .slide>.sc{flex:1;min-height:0;overflow:auto;padding-right:6px;scrollbar-width:thin;
- scrollbar-color:var(--vio-soft) transparent;display:flex;flex-direction:column;gap:12px}
+ scrollbar-color:var(--vio-soft) transparent;display:flex;flex-direction:column}
+.sc>.wrap{display:flex;flex-direction:column;gap:12px;min-height:100%;flex:1 0 auto}
 .slide>.sc::-webkit-scrollbar{width:8px}
 .slide>.sc::-webkit-scrollbar-thumb{background:var(--vio-soft);border-radius:8px}
-.slide>.sc>.g{flex:0 0 auto}
-.slide>.sc>.grow{flex:1 1 auto;min-height:0}
+.wrap>.g{flex:0 0 auto}
+.wrap>.grow,.wrap>.g.grow{flex:1 1 auto;min-height:0}
 .g>.step{display:flex;flex-direction:column;min-height:0}
 .g>.step>.c{flex:1 1 auto}
 .g>.c{height:100%}
@@ -96,9 +97,9 @@ p.sub b{color:var(--vio-ink);font-weight:800}
 .c h4{font-size:clamp(12.5px,.88vw,16.5px);font-weight:800;margin-bottom:5px}
 .hr{height:1px;background:rgba(109,74,255,.16);margin:9px 0 8px}
 .kv{font-family:var(--m);font-weight:700}
-.c svg.fig{width:100%;height:auto;max-height:100%;display:block;margin:2px auto 0}
+.c svg.fig{width:100%;height:auto;max-height:50vh;display:block;margin:2px auto 0}
 .figwrap{display:flex;flex:1 1 auto;min-height:0;min-width:0;align-items:center;justify-content:center;width:100%}
-svg.fig{width:100%;height:auto;max-height:100%;display:block}
+svg.fig{width:100%;height:auto;max-height:min(100%,50vh);display:block}
 .g>*{min-width:0;min-height:0}
 
 /* ================= НОМЕРА / ПИЛЮЛИ ================= */
@@ -219,7 +220,7 @@ svg.fig{width:100%;height:auto;max-height:100%;display:block}
 @keyframes pul{0%,100%{opacity:.35}50%{opacity:1}}
 
 /* ================= ТИТУЛ ================= */
-.cover-slide{justify-content:center;align-items:flex-start}
+.cover-slide .wrap{justify-content:center}
 .cover h1{font-family:var(--fd);font-weight:800;line-height:.9;
  font-size:clamp(40px,7vw,138px);letter-spacing:-.025em;
  background:linear-gradient(100deg,#2a1b7a,#6d4aff 42%,#d64ae8 72%,#1fb6e8);
@@ -296,6 +297,58 @@ input.fld{font:800 clamp(12px,.88vw,16px)/1 var(--m);padding:10px 13px;border-ra
 .tocit:hover{transform:translateY(-2px);background:var(--vio-bg)}
 .tocit i{flex:none;width:25px;height:25px;border-radius:8px;background:linear-gradient(145deg,var(--vio),#8a63ff);
  color:#fff;display:grid;place-items:center;font:800 11.5px/1 var(--f);font-style:normal}
+
+
+/* ================= ТИТУЛ СЕРИИ ================= */
+.cov{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(16px,2vw,40px);
+ align-items:center;flex:1 1 auto;min-height:0}
+.cov-l{display:flex;flex-direction:column;gap:clamp(10px,1.2vh,18px)}
+.kick{font:800 clamp(12px,1vw,19px)/1.2 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--vio-ink)}
+.cov-h{font-family:var(--fd);font-weight:800;line-height:.9;font-size:clamp(44px,6.1vw,126px);letter-spacing:-.03em;
+ background:linear-gradient(100deg,#2a1b7a,#6d4aff 42%,#d64ae8 72%,#1fb6e8);
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding-bottom:.06em}
+.orn{display:flex;align-items:center;gap:.7rem;width:min(30rem,88%)}
+.orn i{flex:1;height:2px;background:linear-gradient(90deg,rgba(109,74,255,0),var(--vio) 85%)}
+.orn i:last-child{background:linear-gradient(270deg,rgba(214,74,232,0),var(--mag) 85%)}
+.orn b{width:11px;height:11px;border:2px solid var(--vio);transform:rotate(45deg);box-shadow:0 0 10px rgba(109,74,255,.5)}
+.cov-sub{font-size:clamp(15px,1.45vw,29px);font-weight:700;line-height:1.3;color:var(--ink);max-width:40rem}
+.au{display:flex;flex-direction:column;gap:6px;margin-top:clamp(8px,2vh,30px);padding-left:14px;
+ border-left:4px solid;border-image:linear-gradient(var(--vio),var(--mag),var(--cya)) 1}
+.au span{font:800 clamp(14px,1.15vw,22px)/1.25 var(--f);color:var(--ink)}
+.cov-r{min-height:0;display:flex;align-items:center;justify-content:center}
+.cov-scene{width:100%;height:auto;max-height:80vh;display:block}
+
+/* ================= ПЛАН ГЛАВЫ: ШИРОКИЕ ПОЛОСЫ ================= */
+.agenda{display:flex;flex-direction:column;gap:clamp(8px,1.1vh,14px)}
+.ag-row{flex:1 1 auto;min-height:64px;display:grid;align-items:center;text-align:left;cursor:pointer;
+ grid-template-columns:auto auto minmax(0,1.5fr) minmax(0,1fr) auto;gap:clamp(12px,1.4vw,28px);
+ padding:clamp(10px,1.3vh,20px) clamp(16px,1.6vw,32px);border-radius:22px;border:1px solid rgba(255,255,255,.8);
+ background:var(--glass);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);font-family:var(--f);color:var(--ink);
+ box-shadow:0 10px 30px rgba(60,40,140,.10),inset 0 1px 0 rgba(255,255,255,.9);position:relative;overflow:hidden;
+ transition:transform .2s var(--ease),box-shadow .2s var(--ease),opacity .3s var(--ease)}
+.ag-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--ac)}
+.ag-row::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,var(--acbg),transparent 55%);opacity:.9;z-index:-1}
+.ag-row.step.vis:hover{transform:translateX(6px);box-shadow:0 14px 36px rgba(60,40,140,.18)}
+.ag-row.vio{--ac:var(--vio);--acbg:rgba(236,232,255,.95)}
+.ag-row.cya{--ac:var(--cya);--acbg:rgba(224,245,253,.95)}
+.ag-row.mag{--ac:var(--mag);--acbg:rgba(251,232,255,.95)}
+.ag-row.grn{--ac:var(--grn);--acbg:rgba(225,247,238,.95)}
+.ag-row.amb{--ac:var(--amb);--acbg:rgba(255,243,218,.95)}
+.ag-n{font:800 clamp(30px,3.2vw,62px)/1 var(--fd);color:var(--ac);opacity:.9;min-width:2ch}
+.ag-ic{width:clamp(44px,3.6vw,66px);height:clamp(44px,3.6vw,66px);border-radius:18px;background:var(--ac);
+ display:grid;place-items:center;box-shadow:0 8px 20px rgba(60,40,140,.22)}
+.ag-ic svg{width:55%;height:55%;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ag-t{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ag-t b{font:800 clamp(17px,1.55vw,30px)/1.1 var(--fd)}
+.ag-t span{font-size:clamp(13px,1vw,19px);line-height:1.38;color:var(--dim);font-weight:600}
+.ag-c{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.ag-c .tag{font-size:clamp(11.5px,.85vw,16px)}
+.ag-go{font:800 clamp(18px,1.6vw,30px)/1 var(--f);color:var(--ac)}
+@media (max-width:899px){
+  .cov{grid-template-columns:1fr}
+  .ag-row{grid-template-columns:auto minmax(0,1fr) auto}
+  .ag-ic,.ag-c{display:none}
+}
 
 /* ================= АДАПТИВ ================= */
 @media (max-width:1199px){

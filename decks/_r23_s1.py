@@ -5,45 +5,12 @@ from _r23_lib import (slide, head, sc, g, col, card, step, steps, irow, foot, ta
                       table, cli, imgcard, figimg, fig, arrow, link, pill, txt, circ_num,
                       router, switch, pc, server, cloudfig, laptop, globefig, packet,
                       netlabel, okmark, ban, shieldfig, esc)
+from _r23_cover import build_cover, build_agenda
 
 
 def build():
-    # ------------------------------------------------------------------ 1
-    slide("Титул", sc(
-        '<div class="cover">'
-        '<h1>Маршрутиза&shy;торы</h1>'
-        '<p class="lead">Глава 2.3 · Типы интерфейсов ESR, базовая настройка, проверка соединения, '
-        'ICMP-диагностика и система AAA</p>'
-        '<div class="who">'
-        + tag("Лекция + практикум", "sol") + tag("130 слайдов", "w")
-        + tag("6 тренажёров", "c2") + tag("Тест в конце", "m")
-        + '</div>'
-        '<div class="who" style="margin-top:14px">'
-        + tag("Ананко А. · Качур Д.", "w") + tag("VK · Telegram", "w")
-        + '</div></div>'
-    ), cover=True)
-
-    # ------------------------------------------------------------------ 2
-    slide("О чём глава", sc(
-        head("В этой главе <em>разберём</em>",
-             "Всё — от первого включения «из коробки» до настройки учётных записей и диагностики сети."),
-        g("g5",
-          step(card("Интерфейсы ESR", "<p>Какие бывают порты и логические интерфейсы, как читается "
-                    "имя <span class='kv'>gi1/0/1.20.420</span> и что такое loopback.</p>",
-                    num="01", tone="vio")),
-          step(card("Проверка соединения", "<p>Команды <span class='kv'>show</span>, утилиты "
-                    "<span class='kv'>ping</span> и <span class='kv'>traceroute</span>, "
-                    "сообщения протокола ICMP.</p>", num="02", tone="cya")),
-          step(card("Аутентификация", "<p>Локальная база, RADIUS, TACACS+, LDAP — чем отличаются "
-                    "и когда какой способ применяют.</p>", num="03", tone="mag")),
-          step(card("Базовая настройка", "<p>Имя устройства, баннеры, пароли, IP-адресация, "
-                    "удалённое управление, дата и время.</p>", num="04", tone="grn")),
-          step(card("Учётные записи", "<p>Создание пользователей и уровни привилегий 1–15: "
-                    "кому какие команды разрешены.</p>", num="05", tone="amb")),
-          ),
-        step(foot("Каждый блок заканчивается тренажёром, а вся глава — практикумом из пяти задач и "
-                  "тестом из десяти вопросов.", "note")),
-    ))
+    build_cover()
+    build_agenda()
 
     # ------------------------------------------------------------------ 3
     slide("Маршрутизатор — определение", sc(
