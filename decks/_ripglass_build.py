@@ -34,6 +34,15 @@ HUD = """
 """
 
 
+def sprite_dark():
+    """Спрайт из атласа, подкрашенный под тёмную сцену: корпуса светлее."""
+    s = _rip_lib.SPRITE
+    for a, b in (("#247b70", "#1f8a75"), ("#2b9f8f", "#3fc3a4"),
+                 ("#267c71", "#2a9583"), ("#d3dedc", "#eafff8")):
+        s = s.replace(a, b)
+    return s
+
+
 def main():
     del _rip_lib.SL[:]
     _rip_s1.build()
@@ -45,7 +54,7 @@ def main():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>RIP — стеклянная дека</title>\n'
-        '<style>' + CSS + '</style>\n</head>\n<body>\n' + _rip_lib.SPRITE + '\n'
+        '<style>' + CSS + '</style>\n</head>\n<body>\n' + sprite_dark() + '\n'
         + background() + '\n<div id="stage">\n'
         + tint("\n".join(_rip_lib.with_bg(_rip_lib.SL, pick_bg))) + '\n</div>\n'
         + HUD + '\n<script>' + JS + '</script>\n</body>\n</html>\n'

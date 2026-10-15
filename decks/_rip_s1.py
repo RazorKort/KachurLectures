@@ -201,16 +201,17 @@ def build():
         head("15 — предел, 16 — недоступна",
              "Метрика растёт на каждом переходе. Как только она достигает 16, маршрут считается "
              "несуществующим и удаляется из таблицы."),
-        step('<div class="c">%s</div>' % fig("0 0 1200 230", "".join([
+        step('<div class="c">%s</div>' % fig("0 0 1200 250", "".join([
             "".join(['<g class="hopcell" data-i="%d"><rect x="%.1f" y="60" width="56" height="56" rx="16" '
                      'fill="#eef7f2" stroke="#bfe5cf" stroke-width="2"/>'
                      '<text x="%.1f" y="97" text-anchor="middle" font-size="19" font-weight="900" '
                      'fill="#1b6b47">%d</text></g>'
                      % (i, 40 + i * 70, 68 + i * 70, i + 1) for i in range(16)]),
-            '<g id="badge16" class="fade">%s</g>' % callout(1115, 134, "16 = сеть|недоступна", "p"),
             '<g id="deadnet" class="fade">%s</g>' % (
-                cloud(1115, 32, 150, 52, "сеть выключена", None, "pink")),
-            axis_label(360, 150, "допустимые значения метрики: с 1 по 15", 13.5),
+                cloud(1080, 168, 150, 54, "сеть выключена", None, "pink")),
+            '<g id="badge16" class="fade">%s</g>' % callout(300, 160, "16 = сеть недоступна", "p",
+                                                           tail=False),
+            axis_label(300, 146, "допустимые значения метрики: с 1 по 15", 13.5),
         ])), ),
         '<div class="g g2">%s%s</div>' % (
             step(card("Почему именно 15", "<p>Небольшой предел — это не каприз, а защита. "

@@ -194,13 +194,13 @@ def build():
                 cli([("ESR#", "config"),
                      ("ESR(config)#", "router rip"),
                      ("ESR(config-rip)#", "passive-interface gigabitethernet 1/0/1")]),
-                fig("0 0 560 210", "".join([
+                fig("0 0 560 240", "".join([
                     router(150, 100, 40, "R1"),
-                    cloud(420, 100, 170, 86, "LAN", "рабочие станции", "blue"),
+                    cloud(420, 96, 150, 78, "LAN", "рабочие станции", "blue"),
                     link(190, 108, 335, 108, 6, "#bfe5cf"),
                     arrow(200, 56, 330, 56, "p", w=5),
                     ban(265, 56, 18),
-                    axis_label(265, 170, "анонсы RIP в LAN выключены", 12.5),
+                    axis_label(200, 196, "анонсы RIP в LAN выключены", 12.5, anchor="middle"),
                 ])))),
         ),
     ))
