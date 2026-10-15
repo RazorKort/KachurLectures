@@ -28,20 +28,10 @@ def b64(name):
 # ======================================================================
 
 def background():
-    arcs = []
-    for (x1, y1, x2, y2, c, op) in [
-        (90, 700, 520, 620, "#dd3326", .45), (520, 620, 980, 660, "#dd3326", .35),
-        (980, 660, 1380, 600, "#dd3326", .42), (200, 760, 760, 700, "#5ec6d8", .22),
-        (760, 700, 1300, 740, "#5ec6d8", .20)]:
-        mx, my = (x1 + x2) / 2, min(y1, y2) - 150
-        arcs.append('<path d="M%d %d Q%d %d %d %d" fill="none" stroke="%s" stroke-width="2.2" '
-                    'opacity="%.2f"/>' % (x1, y1, mx, my, x2, y2, c, op))
-        arcs.append('<circle cx="%d" cy="%d" r="4" fill="%s" opacity="%.2f"/>' % (x1, y1, c, op))
-        arcs.append('<circle cx="%d" cy="%d" r="4" fill="%s" opacity="%.2f"/>' % (x2, y2, c, op))
-    return ('<div id="bg"><div class="glow"></div>'
-            '<div class="city" style="background-image:url(%s)"></div>'
-            '<svg class="arcs" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">%s</svg>'
-            '<div class="grain"></div></div>' % (b64("city.webp"), "".join(arcs)))
+    """Фон страницы: бирюзовая текстура с силуэтом города + красное свечение."""
+    from _sd_pkit import image_defs
+    return ('<div id="bg"><div class="tex" style="background-image:url(%s)"></div><div class="glow"></div>'
+            '<div class="grain"></div></div>' % b64("bg4.webp")) + image_defs()
 
 
 # ======================================================================
@@ -52,6 +42,15 @@ def slide(label, body, scen=None, cover=False):
     at = ' data-scen="%s"' % scen if scen else ""
     cl = " cover-slide" if cover else ""
     SL.append('<section class="slide%s" data-label="%s"%s>%s</section>' % (cl, label, at, body))
+
+
+def poster_slide(label, name):
+    """Слайд-плакат во весь кадр, нарисованный нативно (SVG) по фото-референсу."""
+    import _sd_posters_a
+    import _sd_posters_b
+    mod = _sd_posters_a if hasattr(_sd_posters_a, name) else _sd_posters_b
+    SL.append('<section class="slide pslide" data-label="%s"><div class="pwrap">%s</div></section>'
+              % (label, getattr(mod, name)()))
 
 
 def head(title, sub=None):
@@ -98,7 +97,7 @@ def tag(text, tone="", mono=False):
 
 
 def ul(items, cls="ck"):
-    return '<ul class="%s">%s</ul>' % (cls, "".join("<li>%s</li>" % i for i in items))
+    return '<ul class="%s">%s</ul>' % (cls, "".join("<li><span>%s</span></li>" % i for i in items))
 
 
 def table(headers, rows, cls=""):
@@ -139,6 +138,7 @@ def shot(name, cls=""):
 # ======================================================================
 
 INK = "#101b1a"
+TK = 1.32   # масштаб подписей в сценах и схемах
 RED = "#dd3326"
 CYAN = "#5ec6d8"
 AMBER = "#e8a63c"
@@ -241,6 +241,10 @@ def cloudnet(x, y, w, h, label, sub=None):
 
 def chip(x, y, text, tone="cream", fs=14.5, w=None, h=28, mono=True):
     """Прямоугольная подпись-плашка."""
+    fs *= TK
+    h = max(h, fs * 1.75)
+    if w:
+        w = max(w, len(text) * fs * (.6 if mono else .52) + 18)
     fill = {"cream": CREAM, "red": RED, "cyan": "#bfe9f1", "amber": "#f6dfae", "dark": "#15302e"}[tone]
     ink = "#fff" if tone in ("red", "dark") else INK
     ww = w or max(46, int(len(text) * fs * (.56 if mono else .5)) + 20)
@@ -295,9 +299,10 @@ def okmark(x, y, r=17):
 
 def note(x, y, text, w=None, fs=13.5, tone="cream"):
     """Многострочная выноска: строки разделяются «|»."""
+    fs *= TK
     lines = text.split("|")
     fill = {"cream": CREAM, "cyan": "#bfe9f1", "amber": "#f6dfae", "red": "#f7cfca"}[tone]
-    ww = w or max(100, int(max(len(l) for l in lines) * fs * .52) + 24)
+    ww = max(w or 0, max(100, int(max(len(l) for l in lines) * fs * .52) + 24))
     hh = 12 + len(lines) * (fs + 5)
     tt = "".join('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="600" '
                  'fill="%s">%s</text>' % (x, y + 10 + i * (fs + 5) + fs * .6, fs, INK, l)
@@ -307,6 +312,7 @@ def note(x, y, text, w=None, fs=13.5, tone="cream"):
 
 
 def txt(x, y, text, fs=14, color=CREAM, anchor="middle", weight=700, mono=False):
+    fs *= TK if fs < 20 else 1.12
     fam = ' font-family="JetBrains Mono,Consolas,monospace"' if mono else ""
     return ('<text x="%.1f" y="%.1f" text-anchor="%s" font-size="%.1f" font-weight="%d" fill="%s"%s>%s</text>'
             % (x, y, anchor, fs, weight, color, fam, text))

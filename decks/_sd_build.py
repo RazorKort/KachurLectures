@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from _sd_style import CSS
 from _sd_engine import JS
-from _sd_lib import SL, background
+from _sd_lib import SL, background, b64
 import _sd_s1
 import _sd_s2
 import _sd_s3
@@ -47,7 +47,7 @@ def main():
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>Статическая и динамическая маршрутизация</title>\n'
         + FONTS + '\n'
-        '<style>' + CSS + '</style>\n</head>\n<body>\n'
+        '<style>' + CSS + ':root{--scenebg:url(' + b64("bg5.webp") + ')}</style>\n</head>\n<body>\n'
         + background() + '\n<div id="stage">\n' + "\n".join(SL) + '\n</div>\n'
         + HUD + '\n<script>' + JS + '</script>\n</body>\n</html>\n'
     )

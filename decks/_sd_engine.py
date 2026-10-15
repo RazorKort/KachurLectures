@@ -182,6 +182,7 @@ document.getElementById('bspeed').onclick=function(){
   this.textContent=speed+'×';
 };
 
-show(0);
+show(Math.max(0,(parseInt((location.hash||'').slice(1),10)||1)-1));
+window.addEventListener('hashchange',function(){var n=parseInt(location.hash.slice(1),10);if(n>=1)show(n-1);});
 })();
 """
