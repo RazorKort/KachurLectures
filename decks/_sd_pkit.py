@@ -33,7 +33,9 @@ POSTER_BG = (1, 2, 3, 5)   # фото-задники, доступные пла�
 
 def image_defs():
     """Скрытый svg с картинками-задниками: одна копия на весь документ."""
-    imgs = "".join('<image id="sdbg%d" href="%s" width="1600" height="900" preserveAspectRatio="none"/>'
+    with open(_os.path.join(_ASSETS, "sym", "devices.svgsym"), encoding="utf-8") as f:
+        syms = f.read()
+    imgs = syms + "".join('<image id="sdbg%d" href="%s" width="1600" height="900" preserveAspectRatio="none"/>'
                    % (n, asset_uri("bg%d.webp" % n)) for n in POSTER_BG)
     return ('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>%s</defs></svg>'
             % imgs)
@@ -259,82 +261,35 @@ def terminal(x, y, w, hh, lines, fs=22):
 #  УСТРОЙСТВА
 # ======================================================================
 
-def wrouter(x, y, w=150, lab=None, leds=5, ants=2, labfs=22):
-    """Чёрный маршрутизатор с антеннами, вид в три четверти."""
-    hh = w * .26
-    dep = w * .16
-    out = []
-    ax = [x - w * .3, x + w * .3] if ants == 2 else [x - w * .36, x - w * .12, x + w * .12, x + w * .36]
-    for i, a in enumerate(ax):
-        x2 = a + (i - (len(ax) - 1) / 2) * 3
-        y2 = y - hh * .2 - w * .38
-        out.append('<path d="M%.1f %.1f L%.1f %.1f" stroke="#000" stroke-width="%.1f" stroke-linecap="round"/>'
-                   % (a, y - hh * .2, x2, y2, w * .035 + 5))
-        out.append('<path d="M%.1f %.1f L%.1f %.1f" stroke="#3d5352" stroke-width="%.1f" stroke-linecap="round"/>'
-                   % (a, y - hh * .2, x2, y2, w * .035))
-    # верх
-    out.append('<path d="M%.1f %.1f L%.1f %.1f L%.1f %.1f L%.1f %.1f Z" fill="#2b3a39" stroke="%s" stroke-width="3"/>'
-               % (x - w / 2, y - hh * .25, x - w / 2 + dep, y - hh * .25 - dep * .7,
-                  x + w / 2 + dep * .2, y - hh * .25 - dep * .7, x + w / 2, y - hh * .25, INK))
-    # лицевая
-    out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="4" fill="#161f1f" stroke="%s" stroke-width="3"/>'
-               % (x - w / 2, y - hh * .25, w, hh, INK))
-    for i in range(leds):
-        lx = x - w * .17 + i * w * .085
-        out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="1.5" fill="%s"/>'
-                   % (lx, y + hh * .2, w * .045, hh * .2, RED))
-        out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" opacity=".35"/>'
-                   % (lx - 3, y + hh * .2 - 3, w * .045 + 6, hh * .2 + 6, RED))
+def _halo(x, y, rx, col):
+    return ('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" opacity=".22"/>'
+            % (x, y, rx, rx * .42, col))
+
+
+def dev(x, y, size, sym, lab=None, labfs=20, halo="#ffffff"):
+    """Изометрическая иконка из атласа SVG (decks/svg-atlas.html) с подписью снизу."""
+    out = [_halo(x, y + size * .2, size * .55, halo),
+           '<use href="#%s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
+           % (sym, x - size / 2, y - size / 2, size, size)]
     if lab:
-        out.append(label(x, y + hh * .75 + 24, lab, labfs, CREAM, INK, hh=labfs * 1.6))
+        out.append(label(x, y + size * .44 + labfs * .9, lab, labfs, CREAM, INK, hh=labfs * 1.6))
     return "<g>%s</g>" % "".join(out)
+
+
+def wrouter(x, y, w=150, lab=None, leds=5, ants=2, labfs=22):
+    """Маршрутизатор: ярко-красный цилиндр со стрелками (иконка атласа)."""
+    return dev(x, y, w * .78, "sd-router", lab, labfs, "#ffb0a8")
 
 
 def puck(x, y, r=46, lab=None, tone="dark", labfs=20):
-    """Цилиндр-маршрутизатор с белым крестом стрелок."""
-    body = {"dark": ("#1c2827", "#2f3e3d"), "blue": ("#1f5a7a", "#3b86ad"),
-            "red": ("#9c2219", "#d64236")}[tone]
-    ry = r * .36
-    hh = r * .55
-    sw = max(2.5, r * .09)
-    a = r * .55
-    hw = r * .16
-    ar = []
-    for (dx, dy) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-        ex, ey = x + dx * a, y - hh / 2 + dy * a * .36
-        sx, sy = x + dx * a * .25, y - hh / 2 + dy * a * .09
-        ar.append('<path d="M%.1f %.1f L%.1f %.1f" stroke="#fff" stroke-width="%.1f" stroke-linecap="round"/>'
-                  % (sx, sy, ex, ey, sw))
-        if dx:
-            ar.append('<path d="M%.1f %.1f l%.1f %.1f l%.1f %.1f z" fill="#fff"/>'
-                      % (ex + dx * hw, ey, -dx * hw * 1.4, -hw * .55, 0, hw * 1.1))
-        else:
-            ar.append('<path d="M%.1f %.1f l%.1f %.1f l%.1f %.1f z" fill="#fff"/>'
-                      % (ex, ey + dy * hw * .45, -hw * .7, -dy * hw * .6, hw * 1.4, 0))
-    out = ['<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="3"/>'
-           % (x, y + hh / 2, r, ry, body[0], INK),
-           '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>' % (x - r, y - hh / 2, r * 2, hh, body[0]),
-           '<path d="M%.1f %.1f V%.1f M%.1f %.1f V%.1f" stroke="%s" stroke-width="3"/>'
-           % (x - r, y - hh / 2, y + hh / 2, x + r, y - hh / 2, y + hh / 2, INK),
-           '<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="3"/>'
-           % (x, y - hh / 2, r, ry, body[1], INK)]
-    out += ar
-    for i in range(3):
-        out.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (x - r * .2 + i * r * .2, y + hh * .3, r * .05, RED))
-    if lab:
-        out.append(label(x, y + hh / 2 + ry + 22, lab, labfs, CREAM, INK, hh=labfs * 1.6))
-    return "<g>%s</g>" % "".join(out)
+    """Маршрутизатор-цилиндр (иконка атласа): красный, для RIP — синий."""
+    sym = "sd-router-blue" if tone == "blue" else "sd-router"
+    return dev(x, y, r * 2.3, sym, lab, labfs, "#a8d4ff" if tone == "blue" else "#ffb0a8")
 
 
-def switch(x, y, w=110):
-    hh = w * .2
-    ports = "".join('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#0b1414"/>'
-                    % (x - w * .38 + i * w * .13, y - hh * .15, w * .08, hh * .35) for i in range(6))
-    return ('<g><path d="M%.1f %.1f l%.1f %.1f h%.1f l%.1f %.1f z" fill="#2b3a39" stroke="%s" stroke-width="3"/>'
-            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="3" fill="#1b2626" stroke="%s" stroke-width="3"/>'
-            '%s<circle cx="%.1f" cy="%.1f" r="3" fill="%s"/></g>'
-            % (x - w / 2, y - hh / 2, w * .1, -hh * .5, w * .85, w * .05, hh * .5, INK,
-               x - w / 2, y - hh / 2, w, hh, INK, ports, x + w * .4, y, RED))
+def switch(x, y, w=110, lab=None, labfs=18):
+    """Коммутатор: ярко-голубая плоская коробка со стрелками (иконка атласа)."""
+    return dev(x, y, w * .95, "sd-switch", lab, labfs, "#b8f2fa")
 
 
 def monitor(x, y, s=1.0):

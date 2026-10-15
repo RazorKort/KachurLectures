@@ -170,57 +170,38 @@ ICON = {
 
 
 def router(x, y, w=92, label=None, cls="", tone="dark"):
-    """Чёрный маршрутизатор с антеннами и красными светодиодами (как на плакатах)."""
-    h = w * .30
-    ant = w * .40
-    leds = "".join('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="1.5" fill="%s"/>'
-                   % (x - w * .22 + i * w * .11, y - h * .06, w * .055, h * .17, RED)
-                   for i in range(5))
+    """Маршрутизатор из атласа SVG: ярко-красный цилиндр со стрелками."""
+    size = w * .8
     lab = ""
     if label:
-        lw = max(44, 17 + len(label) * 11)
-        lab = ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="23" fill="%s" stroke="%s" stroke-width="2.5"/>'
-               '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="14.5" font-weight="700" '
+        lw = max(44, 17 + len(label) * 11) * TK
+        lab = ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" stroke="%s" stroke-width="2.5"/>'
+               '<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="700" '
                'fill="%s">%s</text></g>'
-               % (x - lw / 2, y + h / 2 + 7, lw, CREAM, INK, x, y + h / 2 + 23, INK, label))
-    body = "#1a2726" if tone == "dark" else "#2d3b39"
-    return ('<g class="%s">'
-            '<path d="M%.1f %.1f l-%.1f -%.1f M%.1f %.1f l%.1f -%.1f" stroke="%s" stroke-width="5" '
-            'stroke-linecap="round"/>'
-            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s" stroke="%s" stroke-width="3"/>'
-            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="#2b3a38"/>'
-            '%s%s</g>'
-            % (cls,
-               x - w * .30, y - h / 2, w * .10, ant, x + w * .30, y - h / 2, w * .10, ant, "#1a2726",
-               x - w / 2, y - h / 2, w, h, h * .22, body, INK,
-               x - w / 2 + 4, y - h / 2 + 3.5, w - 8, h * .30, 2,
-               leds, lab))
+               % (x - lw / 2, y + size * .42, lw, 23 * TK, CREAM, INK, x, y + size * .42 + 17 * TK,
+                  14.5 * TK, INK, label))
+    return ('<g class="%s"><ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="#ffb0a8" opacity=".2"/>'
+            '<use href="#sd-router" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>%s</g>'
+            % (cls, x, y + size * .2, size * .55, size * .23, x - size / 2, y - size / 2, size, size, lab))
+
+
+def _icon_lab(x, y, label, s):
+    return ('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="700" fill="%s">%s</text>'
+            % (x, y, 13 * s * TK, CREAM, label)) if label else ""
 
 
 def pc(x, y, s=1.0, label=None):
-    w, h = 54 * s, 38 * s
-    lab = ('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="700" fill="%s">%s</text>'
-           % (x, y + h / 2 + 20 * s, 13 * s, CREAM, label)) if label else ""
-    return ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="3" fill="#13302e" stroke="%s" '
-            'stroke-width="3"/><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#2b6f7d"/>'
-            '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>%s</g>'
-            % (x - w / 2, y - h / 2, w, h, INK,
-               x - w / 2 + 5 * s, y - h / 2 + 5 * s, w - 10 * s, h - 10 * s,
-               x - 9 * s, y + h / 2, 18 * s, 5 * s, INK, lab))
+    """Компьютер из атласа SVG."""
+    z = 74 * s
+    return ('<g><use href="#sd-pc" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>%s</g>'
+            % (x - z / 2, y - z / 2, z, z, _icon_lab(x, y + z * .5 + 14 * s, label, s)))
 
 
 def server(x, y, s=1.0, label=None):
-    w, h = 40 * s, 62 * s
-    rows = "".join('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#2b3a38"/>'
-                   '<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>'
-                   % (x - w / 2 + 4 * s, y - h / 2 + (7 + i * 14) * s, w - 8 * s, 9 * s,
-                      x + w / 2 - 9 * s, y - h / 2 + (11.5 + i * 14) * s, 2.2 * s, RED)
-                   for i in range(4))
-    lab = ('<text x="%.1f" y="%.1f" text-anchor="middle" font-size="%.1f" font-weight="700" fill="%s">%s</text>'
-           % (x, y + h / 2 + 18 * s, 13 * s, CREAM, label)) if label else ""
-    return ('<g><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="3" fill="#13302e" stroke="%s" '
-            'stroke-width="3"/>%s%s</g>'
-            % (x - w / 2, y - h / 2, w, h, INK, rows, lab))
+    """Сервер из атласа SVG."""
+    z = 80 * s
+    return ('<g><use href="#sd-server" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>%s</g>'
+            % (x - z / 2, y - z / 2, z, z, _icon_lab(x, y + z * .5 + 14 * s, label, s)))
 
 
 def cloudnet(x, y, w, h, label, sub=None):
