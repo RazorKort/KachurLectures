@@ -226,9 +226,9 @@ def _scene_time_history():
         x = 20 + i * 236
         c = S.TONE[tone]
         o.append('<g data-ph="%d">' % (i + 1))
-        o.append('<rect x="%d" y="30" width="220" height="44" rx="22" fill="%s" filter="url(#gl)"/>' % (x, c))
-        o.append('<circle cx="%d" cy="52" r="16" fill="#0b1630"/>' % (x + 22) + S.txt(x + 22, 58, str(i + 1), 16, "#fff", 900))
-        o.append(S.txt(x + 46, 59, t, 17, "#0b1630", 900, "start"))
+        o.append('<rect x="%d" y="30" width="220" height="44" rx="22" fill="url(#pg)" stroke="%s" stroke-width="2.2" filter="url(#gl)"/>' % (x, c))
+        o.append('<circle cx="%d" cy="52" r="16" fill="%s"/>' % (x + 22, c) + S.txt(x + 22, 58, str(i + 1), 16, "#0b1630", 900))
+        o.append(S.txt(x + 46, 59, t, 17, c, 900, "start"))
         o.append(S.box(x, 90, 220, 230, c, "rgba(5,18,46,.92)", 12, 1.5))
         o.append(_clock_icon(x + 110, 175, i, c))
         o.append(S.txt(x + 110, 270, a, 13.5, S.SOFT, 700) + S.txt(x + 110, 292, b, 13.5, S.SOFT, 700))

@@ -176,11 +176,11 @@ def _scene_dora_big():
         y = 40 + i * 112
         c = S.TONE[t]
         o.append('<g data-ph="%d">' % (i + 1))
-        o.append('<rect x="250" y="%d" width="700" height="44" rx="22" fill="%s" filter="url(#gl)"/>' % (y, c))
-        o.append('<circle cx="274" cy="%d" r="17" fill="#0b1630"/>' % (y + 22))
-        o.append(S.txt(274, y + 29, str(i + 1), 18, "#fff", 900))
-        o.append(S.txt(302, y + 30, nm, 22, "#0b1630", 900, "start"))
-        o.append(S.txt(935, y + 28, d, 15, "#0b1630", 700, "end"))
+        o.append('<rect x="250" y="%d" width="700" height="44" rx="22" fill="url(#pg)" stroke="%s" stroke-width="2.2" filter="url(#gl)"/>' % (y, c))
+        o.append('<circle cx="274" cy="%d" r="17" fill="%s"/>' % (y + 22, c))
+        o.append(S.txt(274, y + 29, str(i + 1), 18, "#0b1630", 900))
+        o.append(S.txt(302, y + 30, nm, 22, c, 900, "start"))
+        o.append(S.txt(935, y + 28, d, 15, "#dfeaff", 700, "end"))
         if right:
             o.append('<path d="M955 %dh35" stroke="%s" stroke-width="5" marker-end="url(#mk%s)"/>' % (y + 22, c, t))
         else:

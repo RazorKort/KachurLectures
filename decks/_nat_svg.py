@@ -16,6 +16,7 @@ TONE = {"y": YE, "o": OR, "v": VI, "g": GR, "c": CY, "r": RD, "b": BL}
 def defs():
     extra = (
         '<defs>'
+        '<linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16306a"/><stop offset="1" stop-color="#070f2a"/></linearGradient>'
         '<linearGradient id="gcl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fc8ff"/>'
         '<stop offset="1" stop-color="#1f6fd0"/></linearGradient>'
         '<radialGradient id="glb" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#2a7fd8"/>'
@@ -202,10 +203,10 @@ def chip(x, y, n, text, tone="y", w=300, ph=None, only=False):
     """Плашка этапа внутри сцены (как «① Перехват пакета»)."""
     c = TONE.get(tone, YE)
     o = ['<g%s>' % _ph(ph, only)]
-    o.append('<rect x="%g" y="%g" width="%g" height="38" rx="19" fill="%s" filter="url(#gl)"/>' % (x, y, w, c))
-    o.append('<circle cx="%g" cy="%g" r="15" fill="#0b1630"/>' % (x + 20, y + 19))
-    o.append(txt(x + 20, y + 25, str(n), 16, "#fff", 800))
-    o.append(txt(x + 44, y + 25, text, 15.5, "#0b1630", 800, "start"))
+    o.append('<rect x="%g" y="%g" width="%g" height="38" rx="19" fill="url(#pg)" stroke="%s" stroke-width="2.2" filter="url(#gl)"/>' % (x, y, w, c))
+    o.append('<circle cx="%g" cy="%g" r="15" fill="%s"/>' % (x + 20, y + 19, c))
+    o.append(txt(x + 20, y + 25, str(n), 16, "#0b1630", 900))
+    o.append(txt(x + 44, y + 25, text, 15.5, c, 800, "start"))
     o.append('</g>')
     return "".join(o)
 

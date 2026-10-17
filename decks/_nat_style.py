@@ -61,18 +61,19 @@ pre.cli{font-size:clamp(13px,.95vw,17.5px)}
 svg.fig text{paint-order:stroke;stroke:rgba(2,8,24,.55);stroke-width:3px}
 
 /* глянцевые плашки этапов */
-.pill{display:flex;align-items:center;gap:14px;border-radius:999px;padding:7px 22px 7px 7px;
- color:#0b1630;box-shadow:0 0 22px rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.45),inset 0 -6px 14px rgba(0,0,0,.12)}
-.pill .pn{flex:none;width:46px;height:46px;border-radius:50%;background:#0b1630;color:#fff;display:grid;place-items:center;
- font:900 22px/1 var(--fd)}
-.pill .ph{font:900 clamp(17px,1.5vw,28px)/1.05 var(--fd);letter-spacing:-.01em}
-.pill .pt{margin-left:auto;font:700 clamp(13px,1vw,18px)/1.25 var(--f);text-align:right;opacity:.9}
-.pill.y{background:linear-gradient(180deg,#ffe57a,#ffc21f);box-shadow:0 0 26px rgba(255,200,40,.5)}
-.pill.o{background:linear-gradient(180deg,#ffb37a,#ff7a2b);box-shadow:0 0 26px rgba(255,130,50,.5)}
-.pill.v{background:linear-gradient(180deg,#d2adff,#9c5cff);box-shadow:0 0 26px rgba(170,110,255,.5)}
-.pill.g{background:linear-gradient(180deg,#b9ff9a,#57e06a);box-shadow:0 0 26px rgba(100,230,110,.5)}
-.pill.cy{background:linear-gradient(180deg,#9fefff,#2ad4ff);box-shadow:0 0 26px rgba(42,212,255,.5)}
-.pill.r{background:linear-gradient(180deg,#ff9aa5,#ff4d5e);box-shadow:0 0 26px rgba(255,77,94,.5)}
+.pill{--t:#2ad4ff;--t2:#7df3ff;position:relative;display:flex;align-items:center;gap:16px;border-radius:18px;
+ padding:9px 24px 9px 9px;overflow:hidden;color:#fff;
+ background:linear-gradient(90deg,color-mix(in srgb,var(--t) 26%,transparent),rgba(8,20,52,.88) 38%,rgba(6,14,38,.92));
+ border:1.5px solid color-mix(in srgb,var(--t) 70%,transparent);
+ box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 0 24px color-mix(in srgb,var(--t) 35%,transparent),0 10px 26px rgba(0,0,0,.35)}
+.pill::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--t2),var(--t));box-shadow:0 0 16px var(--t)}
+.pill::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,var(--t2),transparent 70%)}
+.pill .pn{flex:none;width:48px;height:48px;border-radius:14px;margin-left:8px;color:#071028;display:grid;place-items:center;
+ font:900 22px/1 var(--fd);background:linear-gradient(150deg,var(--t2),var(--t));box-shadow:0 0 18px color-mix(in srgb,var(--t) 70%,transparent)}
+.pill .ph{font:900 clamp(17px,1.5vw,28px)/1.05 var(--fd);letter-spacing:-.01em;color:var(--t2);text-shadow:0 0 18px color-mix(in srgb,var(--t) 60%,transparent)}
+.pill .pt{margin-left:auto;font:600 clamp(13px,1vw,18px)/1.3 var(--f);text-align:right;color:#cfe0ff}
+.pill.y{--t:#ffc21f;--t2:#ffe27a}.pill.o{--t:#ff7a2b;--t2:#ffb27a}.pill.v{--t:#9c5cff;--t2:#d0abff}
+.pill.g{--t:#3fd96a;--t2:#a8ff9a}.pill.cy{--t:#2ad4ff;--t2:#9fefff}.pill.r{--t:#ff4d5e;--t2:#ff9aa5}
 
 /* пакеты Источник/Назначение */
 .kvs{display:flex;flex-direction:column;gap:7px}

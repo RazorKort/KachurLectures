@@ -271,8 +271,8 @@ def _scene_fields():
     for j, (nm, t) in enumerate(cols):
         x = 360 + j * 210
         o.append('<g data-ph="%d">' % (j + 1))
-        o.append('<rect x="%d" y="30" width="196" height="44" rx="22" fill="%s" filter="url(#gl)"/>' % (x, S.TONE[t]))
-        o.append(S.txt(x + 98, 59, nm, 18, "#0b1630", 900))
+        o.append('<rect x="%d" y="30" width="196" height="44" rx="22" fill="url(#pg)" stroke="%s" stroke-width="2.2" filter="url(#gl)"/>' % (x, S.TONE[t]))
+        o.append(S.txt(x + 98, 59, nm, 18, S.TONE[t], 900))
         for i in range(len(fields)):
             y = 100 + i * 66
             o.append(S.box(x, y, 196, 52, S.TONE[t], "rgba(5,18,46,.92)", 9, 1.3))
