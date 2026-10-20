@@ -12,7 +12,7 @@ CSS = """<style>
   font-family:Oswald,sans-serif;font-weight:700;font-size:34px;line-height:1.02;color:#fff;letter-spacing:.5px}
 .vt-it{position:absolute;border-radius:12px;border:2px solid var(--c);background:rgba(10,30,80,.6);box-shadow:0 0 10px var(--g)}
 .vt-h{position:absolute;font-family:Oswald,sans-serif;font-weight:600;font-size:27px;color:#fff;line-height:1}
-.vt-tx{position:absolute;font-size:19px;line-height:1.25;color:#dfe9ff}
+.vt-tx{position:absolute;font-size:18px;line-height:1.18;color:#dfe9ff}
 </style>"""
 
 COLS = [  # x, w, цвет, свечение

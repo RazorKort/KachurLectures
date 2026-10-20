@@ -11,7 +11,7 @@ CSS = """<style>
 .pip-h{position:absolute;font-family:Oswald,sans-serif;font-weight:700;font-size:26px;color:#2ad4ff;letter-spacing:.4px}
 .pip-c{position:absolute;font-family:Oswald,sans-serif;font-size:15px;color:#cfe0ff}
 .pip-f{position:absolute;border:1.5px solid #2ad4ff;border-radius:5px;background:rgba(8,40,80,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-family:Oswald,sans-serif;font-size:15px;line-height:1.2;color:#fff;text-align:center}
+  font-family:Oswald,sans-serif;font-weight:500;font-size:15px;line-height:1.2;color:#fff;text-align:center}
 .pip-f.t{background:linear-gradient(180deg,#1a8fb0,#0d5a80);color:#fff}
 .pip-f.t b{font-weight:500;font-size:17px;color:#bff6ff}
 .pip-f.p{border-color:#9b6bff;background:linear-gradient(180deg,#3a1a9a,#22106a);box-shadow:0 0 12px rgba(155,107,255,.7)}
@@ -41,10 +41,10 @@ def _frame(x, y, cells):
 
 HTML = CSS + f"""
 <div class="step">
-  {img("rep/phys_ip_sw.png", "left:680px;top:240px;width:970px", "ab")}
+  {img("rep/phys_ip_sw.png", "left:680px;top:240px;width:970px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 96%,transparent),linear-gradient(0deg,transparent,#000 12%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 96%,transparent),linear-gradient(0deg,transparent,#000 12%);mask-composite:intersect", "ab")}
   <div class="pip-port" style="left:968px;top:342px;width:56px;height:52px"></div>
   <div class="pip-tag" style="left:920px;top:234px;width:254px;height:62px;padding:4px 18px;font-size:19px;line-height:1.3;font-weight:500">IP: <span style="font-family:'JetBrains Mono',monospace;font-size:18px">192.168.1.1/24</span><br>MAC: <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:400">00:1A:2B:3C:4D:5E</span></div>
-  <div class="pip-tag" style="left:892px;top:438px;width:248px;height:36px;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:500">ФИЗИЧЕСКИЙ L3-ПОРТ</div>
+  <div class="pip-tag" style="left:886px;top:436px;width:258px;height:36px;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:500">ФИЗИЧЕСКИЙ L3-ПОРТ</div>
 </div>
 
 <div class="step">
