@@ -88,8 +88,11 @@ p.b.dim{color:var(--dim)}
 .badge.o{background:linear-gradient(170deg,#fff,#efeafd);color:var(--blue);box-shadow:var(--sh2)}
 .ico{display:grid;place-items:center;width:80px;height:80px;flex:none;border-radius:28px;
   background:linear-gradient(165deg,#ffffff,#eee9fc);border:none;color:var(--blue);box-shadow:var(--sh2)}
-.ico svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ico.sm{width:60px;height:60px;border-radius:22px}.ico.sm svg{width:30px;height:30px}
+.ico svg{width:54px;height:54px;fill:rgba(90,125,240,.20);stroke:var(--blue2);stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 3px 4px rgba(64,89,216,.30))}
+.ico{color:var(--blue2);background:linear-gradient(160deg,#ffffff 0%,#eef2ff 55%,#dfe6ff 100%);
+  box-shadow:inset 0 2px 0 #fff,inset 0 -4px 10px rgba(90,125,240,.16),0 10px 22px rgba(80,95,200,.22)}
+.ico.sm{width:64px;height:64px;border-radius:22px}.ico.sm svg{width:40px;height:40px}
 .ico.hex{border:none;background:none;position:relative}
 .ico.hex::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.92);border:1.5px solid var(--line);
   clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);border-radius:6px}

@@ -32,3 +32,5 @@ _imgs.json
 __pycache__/
 *.zip
 github-glava8-kit/
+decks/_el2ref/
+decks/_el2cmp/

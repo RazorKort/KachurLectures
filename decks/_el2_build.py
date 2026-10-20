@@ -15,7 +15,11 @@ except Exception:
 mods = sorted(os.path.basename(p)[:-3] for p in glob.glob(str(HERE / "_el2" / "s*.py")))
 found = {}
 for name in mods:
-    m = importlib.import_module(name)
+    try:
+        m = importlib.import_module(name)
+    except Exception as e:  # чужой модуль в процессе правки не должен валить сборку
+        print("ОШИБКА в", name, e)
+        continue
     for ref, label, html in m.SLIDES:
         if ref in found:
             print("дубль:", ref, "в", name)
@@ -59,20 +63,16 @@ def bump(html):
 
 SKIP = {"p037"}  # заменён титулом
 order = [r for r in ORDER if r in found] + sorted(r for r in found if r not in ORDER and r not in SKIP)
-# фон по блокам лекции (блоки — комментарии в order.py)
-BLOCK = {}
-_blk = -1
-for _ln in (HERE / "_el2" / "order.py").read_text(encoding="utf-8").splitlines():
-    if _ln.strip().startswith("#"):
-        _blk += 1
-    for _r in re.findall(r'"(p\d+\w?)"', _ln):
-        BLOCK[_r] = max(_blk, 0)
+# фон по блокам лекции (номера слайдов pptx, с которых начинается блок)
+from pptxmap import PPTX
+_STARTS = [1, 7, 19, 35, 54, 65]
+BLOCK = {r: sum(n >= s for s in _STARTS) - 1 for r, n in PPTX}
 ICE = ["ice1.jpg", "ice3.jpg", "ice4.jpg", "ice5.jpg", "ice6.jpg", "ice2.jpg"]
 slides = []
 for r in order:
     label, html = found[r]
     slides.append((label, bump(html), "0" if r in MANUAL else "1", BLOCK.get(r, 0) % len(ICE)))
-n, size = build(slides, str(HERE / "eltex-devices-2.html"),
+n, size = build(slides, os.environ.get("EL2_OUT", str(HERE / "eltex-devices-2.html")),
                 assets_dir=str(HERE / "_el2assets"), bg="bg.jpg", ftl="aura_tl.png", fbr="aura_br.png", ice=ICE)
 print(f"{n} слайдов, {size/1024/1024:.1f} МБ")
 print("нет в ORDER:", [r for r in found if r not in ORDER])

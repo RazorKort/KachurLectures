@@ -5,6 +5,8 @@ from _el2_lib import ico, arrow_svg
 
 SLIDES = []   # (ref, label, html)
 NAVY = "#12245e"
+FADE = ("-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(transparent,#000 9%,#000 91%,transparent);"
+        "-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(transparent,#000 9%,#000 91%,transparent);mask-composite:intersect;")
 SVG_OPEN = '<svg class="ab" style="left:0;top:0;width:1920px;height:1080px;overflow:visible" viewBox="0 0 1920 1080">'
 
 
@@ -149,15 +151,15 @@ def p029():
     o.append("".join(sv))
 
     def big(l, w, icn, title, col, body, s, extra=""):
-        return box(l, 470, w, 270, f'<div style="display:flex;gap:26px;align-items:flex-start">{icoS(icn, "hex", 124, 62)}<div>'
+        return box(l, 470, w, 270, f'<div style="display:flex;gap:26px;align-items:flex-start"><img src="assets/{icn}" alt="" style="width:136px;flex:none;margin:-14px 0 0 -10px"><div>'
                    f'<div style="font-size:36px;font-weight:800;color:{col};text-transform:uppercase;line-height:1.1">{title}</div>'
-                   f'<p class="b" style="font-size:24px;margin-top:10px;line-height:1.35">{body}</p></div></div>{extra}', "card solid", s, "padding:30px 32px;border-radius:26px")
+                   f'<p class="b" style="font-size:22px;margin-top:10px;line-height:1.35">{body}</p></div></div>{extra}', "card solid", s, "padding:30px 32px;border-radius:26px")
     play = ('<div style="position:absolute;left:30px;bottom:18px;right:30px;border-top:1.5px solid var(--line);padding-top:12px;font-size:21px;'
             'display:flex;gap:14px;align-items:center"><span style="width:34px;height:34px;border-radius:50%;background:#dbe6ff;color:var(--blue);display:grid;place-items:center;font-size:14px">&#9654;</span>'
             'Выполнение — нажатием <b>Enter</b></div>')
-    o.append(big(47, 597, "term", "Команда", PUR, "Зарезервированное слово или аббревиатура, вводимая после запроса командной строки.", 5, play))
-    o.append(big(661, 593, "gear", "Ключевые слова", "#14867a", "Дополнительные настройки в виде зарезервированных слов, уточняющие выполнение команды.", 6))
-    o.append(big(1273, 598, "doc", "Параметры", BLU, "Значения или переменные, заданные администратором: адреса, имена и числа.", 7))
+    o.append(big(47, 597, "p029_ico_cmd.png", "Команда", PUR, "Зарезервированное слово или аббревиатура, вводимая после запроса командной строки.", 5, play))
+    o.append(big(661, 593, "p029_ico_gear.png", "Ключевые слова", "#14867a", "Дополнительные настройки в виде зарезервированных слов, уточняющие выполнение команды.", 6))
+    o.append(big(1273, 598, "p029_ico_doc.png", "Параметры", BLU, "Значения или переменные, заданные администратором: адреса, имена и числа.", 7))
 
     o.append(txt(75, 790, 900, "Условные обозначения", 38, 800, NAVY, 8, "text-transform:uppercase"))
 
@@ -168,13 +170,13 @@ def p029():
                    f'<p class="b" style="font-size:20px;margin-top:6px;line-height:1.3">{body}</p></div></div>', "card solid", s, "padding:0;border-radius:24px")
 
     def sym(t):
-        return f'<span class="ico hex" style="width:96px;height:96px"><span class="mono" style="position:relative;font-size:46px;font-weight:700;color:var(--blue)">{t}</span></span>'
-    o.append(small(36, 600, sym("{ }"), "Обязательный выбор", "Фигурные скобки — обязательные элементы. Вертикальная линия — выбрать один вариант.",
+        return f'<img src="assets/{t}" alt="" style="width:100px;flex:none">'
+    o.append(small(36, 600, sym("p029_ico_brace.png"), "Обязательный выбор", "Фигурные скобки — обязательные элементы. Вертикальная линия — выбрать один вариант.",
                    f'<span class="mono" style="font-size:25px;font-weight:700;color:{NAVY}">{{ <span style="color:{BLU}">&lt;ADDR&gt;</span> | <span style="color:{BLU}">&lt;HOSTNAME&gt;</span> }}</span>', 8))
-    o.append(small(657, 629, sym("[ ]"), "Необязательные элементы", "Квадратные скобки — дополнительные параметры или ключевые слова.",
+    o.append(small(657, 629, sym("p029_ico_brack.png"), "Необязательные элементы", "Квадратные скобки — дополнительные параметры или ключевые слова.",
                    f'<span class="mono" style="font-size:20px;font-weight:700;color:{NAVY}">[ <span style="color:{GRN}">packets</span> <span style="color:{BLU}">&lt;NUM&gt;</span> ] [ <span style="color:{GRN}">size</span> <span style="color:{BLU}">&lt;NUM&gt;</span> ] [ <span style="color:{GRN}">detailed</span> ]</span>', 8))
     o.append(box(1297, 835, 584, 205, f'<div style="position:absolute;left:26px;top:34px;display:flex;gap:24px;align-items:flex-start">'
-                 f'<span class="ico hex" style="width:96px;height:96px"><span style="position:relative;font-size:42px;font-weight:600;color:{NAVY}">Aa</span></span>'
+                 f'<img src="assets/p029_ico_aa.png" alt="" style="width:100px;flex:none">'
                  f'<div><div style="font-size:26px;font-weight:800;color:{NAVY}">Начертание текста</div>'
                  '<p class="b" style="font-size:20px;margin-top:12px;line-height:1.35"><b>Жирный</b> — команды и ключевые слова<br><i>Обычный или курсив</i> — значения параметров</p></div></div>',
                  "card solid", 8, "padding:0;border-radius:24px"))
@@ -196,13 +198,13 @@ def p030():
     o = ['<h1 class="t ab ctr-x" style="top:44px;width:1700px;font-size:70px">Файлы конфигурации <span class="lt">MES</span></h1>']
     TITLE_C = "#1c3f9e"
 
-    def file_card(l, w, name, bullets, cmd, s):
+    def file_card(l, w, name, bullets, cmd, s, doc="p030_doc1.png"):
         out = [box(l, 192, w, 490, "", "card", s)]
-        out.append(f'<div data-s="{s}" style="{A(l + 70, 255, 170, 200)}">{DOC}</div>')
+        out.append(f'<img data-s="{s}" src="assets/{doc}" alt="" style="{A(l + 66, 250, 184, None, FADE)}">')
         out.append(txt(l + 290, 232, w - 300, name, 52, 800, TITLE_C, s))
         for k, b in enumerate(bullets):
-            out.append(f'<div data-s="{s + 1}" style="{A(l + 290, 335 + k * 54, w - 310, None, f"display:flex;gap:14px;align-items:flex-start;font-size:22px;line-height:1.2;--dl:{k * 80}ms")}">'
-                       f'<i style="width:17px;height:17px;border-radius:50%;background:var(--blue);margin-top:5px;flex:none"></i><span>{b}</span></div>')
+            out.append(f'<div data-s="{s + 1}" style="{A(l + 290, 330 + k * 52, w - 300, None, f"display:flex;gap:18px;align-items:flex-start;font-size:26px;line-height:1.2;--dl:{k * 80}ms")}">'
+                       f'<i style="width:17px;height:17px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none;width:22px;height:22px;background:radial-gradient(circle at 35% 35%,#8fb0ff,#2f5fe0)"></i><span>{b}</span></div>')
         out.append(f'<div class="mono" data-s="{s + 1}" style="{A(l + 90, 572, w - 180, 78, "background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:16px;padding:0 34px;display:flex;align-items:center;font-size:28px;font-weight:500;color:" + NAVY + ";--dl:300ms")}">{cmd}</div>')
         return "".join(out)
     o.append(file_card(26, 917, "running-config", ["Текущая активная конфигурация", "Коммутатор работает по ней сейчас",
@@ -210,12 +212,12 @@ def p030():
                        "console# show running-config", 1))
     o.append(file_card(977, 913, "startup-config", ["Начальная сохранённая конфигурация", "Хранится в виде файла",
                                                     "Загружается после включения или перезагрузки", "Изменения сохраняются только после команды копирования"],
-                       "console# show startup-config", 3))
+                       "console# show startup-config", 3, "p030_doc2.png"))
 
     o.append(box(36, 708, 984, 316, "", "card", 5))
 
     def blk(l, w, text, bg, s, col=TITLE_C):
-        return (f'<div class="mono" data-s="{s}" style="{A(l, 790, w, 70, f"background:{bg};border:1.5px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:29px;font-weight:700;color:{col}")}">{text}</div>')
+        return (f'<div data-s="{s}" style="{A(l, 772, w, 96, f"background:{bg};border:1.5px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:35px;font-weight:800;letter-spacing:-.5px;color:{col}")}">{text}</div>')
     o.append(blk(70, 276, "running-config", "rgba(225,236,255,.95)", 5))
     o.append(blk(414, 214, "copy", "rgba(214,205,250,.95)", 5))
     o.append(blk(702, 276, "startup-config", "rgba(225,236,255,.95)", 5))
@@ -223,7 +225,7 @@ def p030():
     o.append(f'<div class="mono" data-s="6" style="{A(124, 896, 830, 76, "background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:16px;padding:0 30px;display:flex;align-items:center;font-size:27px;color:" + NAVY)}">console# copy running-config startup-config</div>')
 
     o.append(box(1045, 708, 836, 316, "", "card cream", 7, "background:rgba(253,240,222,.9)"))
-    o.append(f'<div data-s="7" style="{A(1090, 738, 90, 80)}"><svg viewBox="0 0 64 60" style="width:84px;height:78px"><path d="M32 4L60 54H4z" fill="#f59a1c" stroke="#f59a1c" stroke-width="6" stroke-linejoin="round"/><path d="M32 22v16M32 45v2" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg></div>')
+    o.append(f'<div data-s="7" style="{A(1090, 738, 90, 80)}"><img src="assets/p030_warn.png" alt="" style="width:110px"></div>')
     o.append(txt(1196, 752, 640, "Очистка конфигурации", 38, 800, NAVY, 7, "text-transform:uppercase"))
 
     def cb(l, w, text, s):
@@ -241,33 +243,33 @@ SLIDES.append(("p030", "Файлы конфигурации MES", p030()))
 # =========================================================== p031
 def p031():
     o = ['<h1 class="t ab ctr-x" style="top:30px;width:1700px;font-size:66px">Обзор коммутаторов MES</h1>']
-    leg = [("net", "Доступ"), ("layers", "Агрегация"), ("db", "ЦОД"), ("gear", "Промышленные")]
-    xs = [366, 676, 972, 1215]
+    leg = [("p031_i1.png", "Доступ"), ("p031_i2.png", "Агрегация"), ("p031_i3.png", "ЦОД"), ("p031_i4.png", "Промышленные")]
+    xs = [402, 666, 980, 1206]
     o.append(box(341, 117, 1248, 80, "", "card solid", None, "border-radius:22px"))
     for x, (ic, t) in zip(xs, leg):
-        o.append(f'<div style="{A(x, 128, None, 56, "display:flex;gap:14px;align-items:center")}">'
-                 f'{ico(ic, "sm")}'
-                 f'<span style="font-size:22px;font-weight:700;color:{NAVY};letter-spacing:.5px;text-transform:uppercase">{t}</span></div>')
+        o.append(f'<div style="{A(x, 128, None, 56, "display:flex;gap:16px;align-items:center")}">'
+                 f'<img src="assets/{ic}" alt="" style="height:58px">'
+                 f'<span style="font-size:25px;font-weight:700;color:{NAVY};letter-spacing:.5px;text-transform:uppercase">{t}</span></div>')
 
     def card(l, t, w, h, tag, img, iw, ih, il, it, name, s):
         out = [box(l, t, w, h, "", "card", s)]
-        out.append(f'<div data-s="{s}" style="{A(l + 14, t - 6, None, None, "background:linear-gradient(90deg,#2f6df0,#4f86f7);color:#fff;font-weight:800;font-size:21px;border-radius:18px;padding:6px 22px;letter-spacing:.5px;box-shadow:0 6px 14px rgba(42,107,242,.3)")}">{tag}</div>')
-        out.append(f'<img data-s="{s}" src="assets/{img}" alt="{name}" class="cut" style="{A(il, it, iw, ih, "display:block")}">')
+        out.append(f'<div data-s="{s}" style="{A(l + 18, t + 18, None, None, "background:linear-gradient(90deg,#2f6df0,#4f86f7);color:#fff;font-weight:800;font-size:25px;border-radius:24px;padding:8px 34px;letter-spacing:.5px;box-shadow:0 6px 14px rgba(42,107,242,.3)")}">{tag}</div>')
+        out.append(f'<img data-s="{s}" src="assets/{img}" alt="{name}" style="{A(il, it, iw, ih, "display:block;filter:drop-shadow(0 10px 14px rgba(30,60,130,.25))")}">')
         return "".join(out)
 
-    def lab(cx, y, name, cap, s):
-        return (f'<div data-s="{s}" style="{A(cx - 330, y, 660, None, "text-align:center")}"><div style="font-size:42px;font-weight:800;color:{NAVY};line-height:1.1">{name}</div>'
-                f'<div style="font-size:21px;color:var(--ink);margin-top:6px">{cap}</div></div>')
-    o.append(card(38, 213, 598, 384, "АГРЕГАЦИЯ", "p031_mes5324.jpg", 520, 162, 77, 290, "MES5324", 1))
-    o.append(lab(337, 466, "MES5324", "Коммутатор агрегации 10G/40G", 1))
-    o.append(card(657, 213, 619, 384, "ДОСТУП", "p031_mes2300.jpg", 570, 160, 681, 292, "MES2300-24", 2))
-    o.append(lab(966, 466, "MES2300-24", "Коммутатор доступа", 2))
-    o.append(card(1286, 213, 595, 384, "ДОСТУП PoE", "p031_mes2308p.jpg", 540, 152, 1313, 294, "MES2308P", 3))
-    o.append(lab(1583, 466, "MES2308P", "Коммутатор доступа с поддержкой PoE", 3))
-    o.append(card(96, 614, 843, 431, "ПРОМЫШЛЕННЫЙ", "p031_mes3510s.jpg", 168, 288, 340, 640, "MES3510S-08P", 4))
-    o.append(lab(517, 945, "MES3510S-08P", "Промышленный коммутатор", 4))
-    o.append(card(964, 614, 834, 431, "ЦОД", "p031_mes5320.jpg", 780, 169, 992, 720, "MES5320-24", 5))
-    o.append(lab(1381, 945, "MES5320-24", "Коммутатор для центра обработки данных", 5))
+    def lab(cx, y, name, cap, s, cc="var(--ink)"):
+        return (f'<div data-s="{s}" style="{A(cx - 330, y, 660, None, "text-align:center")}"><div style="font-size:52px;font-weight:800;color:{NAVY};line-height:1.1">{name}</div>'
+                f'<div style="font-size:26px;color:{cc};margin-top:4px">{cap}</div></div>')
+    o.append(card(38, 218, 598, 380, "АГРЕГАЦИЯ", "p031_mes5324.png", 560, None, 57, 292, "MES5324", 1))
+    o.append(lab(345, 474, "MES5324", "Коммутатор агрегации 10G/40G", 1))
+    o.append(card(660, 218, 600, 380, "ДОСТУП", "p031_mes2300.png", 500, None, 712, 284, "MES2300-24", 2))
+    o.append(lab(965, 474, "MES2300-24", "Коммутатор доступа", 2))
+    o.append(card(1284, 218, 602, 380, "ДОСТУП PoE", "p031_mes2308p.png", 520, None, 1326, 296, "MES2308P", 3))
+    o.append(lab(1588, 474, "MES2308P", "Коммутатор доступа с поддержкой PoE", 3))
+    o.append(card(96, 618, 844, 427, "ПРОМЫШЛЕННЫЙ", "p031_mes3510s.png", 134, None, 486, 630, "MES3510S-08P", 4))
+    o.append(lab(554, 935, "MES3510S-08P", "Промышленный коммутатор", 4, "#2a50b8"))
+    o.append(card(964, 618, 834, 427, "ЦОД", "p031_mes5320.png", 600, None, 1080, 708, "MES5320-24", 5))
+    o.append(lab(1366, 935, "MES5320-24", "Коммутатор для центра обработки данных", 5))
     return "".join(o)
 
 
@@ -276,9 +278,9 @@ SLIDES.append(("p031", "Обзор коммутаторов MES", p031()))
 
 # =========================================================== p032
 def p032():
-    o = [f'<div class="ab" style="left:76px;top:22px;font-size:88px;font-weight:800;color:{NAVY};line-height:1;letter-spacing:-1px">MES2424P</div>',
-         f'<div class="ab" style="left:78px;top:112px;font-size:34px;font-weight:800;color:#3d72e8;letter-spacing:1px;text-transform:uppercase">Передняя панель</div>']
-    o.append('<img src="assets/p032_panel.jpg" alt="Передняя панель MES2424P" class="cut" style="' + A(85, 487, 1777, 210, "display:block") + '">')
+    o = [f'<div class="ab" style="left:76px;top:30px;font-size:112px;font-weight:900;color:{NAVY};line-height:1;letter-spacing:-1px">MES2424P</div>',
+         f'<div class="ab" style="left:74px;top:132px;font-size:42px;font-weight:800;color:#3d72e8;letter-spacing:1px;text-transform:uppercase">Передняя панель</div>']
+    o.append('<img src="assets/p032_mes2424p_front.png" alt="Передняя панель MES2424P" style="' + A(85, 492, 1777, None, "display:block;filter:drop-shadow(0 14px 20px rgba(30,60,130,.25))") + '">')
 
     def cardbase(l, t, w, h, n, title, s, inner):
         return (box(l, t, w, h, "", "card solid", s, "border-radius:22px")
@@ -287,30 +289,30 @@ def p032():
                 + f'<div data-s="{s}" style="{A(l, t + 86, w, None)}">{inner}</div>')
 
     def body(icn, text):
-        return (f'<div style="display:flex;gap:20px;align-items:center;padding:0 24px">{icoS(icn, "", 88, 52)}'
+        return (f'<div style="display:flex;gap:20px;align-items:center;padding:0 24px"><img src="assets/{icn}" alt="" style="width:96px;flex:none">'
                 f'<p class="b" style="font-size:21px;line-height:1.3">{text}</p></div>')
-    o.append(cardbase(75, 207, 518, 190, 1, "Разъём питания", 1, body("power", "Подключение к источнику переменного тока")))
+    o.append(cardbase(75, 207, 518, 190, 1, "Разъём питания", 1, body("p032_i_plug.png", "Подключение к источнику переменного тока")))
     leds = [("#2fa84f", "Power", "питание"), ("#2fa84f", "Status", "состояние устройства"), ("#e03030", "Alarm", "авария"), ("#2fa84f", "Fan", "состояние вентиляторов")]
     lt = "".join(f'<div style="display:flex;gap:12px;align-items:center;font-size:19px;line-height:1.38">{dot(c, 14)}<span><b>{a}</b> — {b}</span></div>' for c, a, b in leds)
     o.append(cardbase(693, 207, 561, 190, 2, "Индикаторы состояния", 2,
-                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px">{icoS("sun", "", 80, 50)}<div>{lt}</div></div>'))
-    o.append(cardbase(1318, 207, 527, 190, 3, "Консольный интерфейс", 3, body("mon", "Локальное управление устройством")))
+                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px"><img src="assets/p032_i_bulb.png" alt="" style="width:100px;flex:none"><div>{lt}</div></div>'))
+    o.append(cardbase(1318, 207, 527, 190, 3, "Консольный интерфейс", 3, body("p032_i_laptop.png", "Локальное управление устройством")))
 
     def bl(items):
         return "".join(f'<div style="display:flex;gap:12px;align-items:flex-start;font-size:19px;line-height:1.3;margin-bottom:6px">{dot("var(--blue)", 11)}<span>{i}</span></div>' for i in items)
     f_icon = '<span class="ico" style="width:88px;height:88px;border-radius:20px"><i style="width:44px;height:44px;border-radius:50%;background:#2a4fd0;display:block"></i></span>'
     o.append(cardbase(100, 779, 578, 218, 4, "Функциональная кнопка F", 4,
-                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px">{f_icon}<div>{bl(["Менее 10 секунд — перезагрузка", "Более 10 секунд — перезагрузка и сброс настроек"])}</div></div>'))
-    o.append(cardbase(732, 779, 516, 218, 5, "Ethernet-интерфейсы", 5, body("net", "Медные порты RJ-45")))
+                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px"><img src="assets/p032_i_f.png" alt="" style="width:100px;flex:none"><div>{bl(["Менее 10 секунд — перезагрузка", "Более 10 секунд — перезагрузка и сброс настроек"])}</div></div>'))
+    o.append(cardbase(732, 779, 516, 218, 5, "Ethernet-интерфейсы", 5, body("p032_i_rj.png", "Медные порты RJ-45")))
     o.append(cardbase(1322, 779, 523, 218, 6, "Uplink-интерфейсы", 6,
-                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px">{icoS("cable", "", 88, 52)}<div>{bl(["Подключение к вышестоящим устройствам", "Оптические модули SFP / SFP+"])}</div></div>'))
+                      f'<div style="display:flex;gap:22px;align-items:center;padding:0 24px"><img src="assets/p032_i_sfp.png" alt="" style="width:100px;flex:none"><div>{bl(["Подключение к вышестоящим устройствам", "Оптические модули SFP / SFP+"])}</div></div>'))
     sv = [SVG_OPEN,
-          path("M160 397 L160 520", 1),
-          path("M780 397 L780 462 L486 462 L486 548", 2),
-          path("M1414 397 L1414 437 L612 437 L612 610", 3),
-          path("M352 779 L352 750 L518 750 L518 672", 4),
-          path("M679 716 L679 724 L1418 724 L1418 716 M1048 724 L1048 779", 5),
-          path("M1472 722 L1472 732 L1834 732 L1834 722 M1653 732 L1653 779", 6),
+          path("M214 397 L214 580", 1),
+          path("M780 397 L780 462 L497 462 L497 590", 2),
+          path("M1414 397 L1414 437 L578 437 L578 612", 3),
+          path("M352 779 L352 750 L637 750 L637 660", 4),
+          path("M654 704 L654 714 L1458 714 L1458 704 M1056 714 L1056 779", 5),
+          path("M1466 704 L1466 714 L1846 714 L1846 704 M1656 714 L1656 779", 6),
           "</svg>"]
     o.append("".join(sv))
     return "".join(o)
@@ -335,32 +337,29 @@ def mark(kind, col="var(--blue)", s=44):
 
 
 def p033():
-    o = [f'<div class="ab" style="left:186px;top:58px;font-size:64px;font-weight:800;color:{NAVY};text-transform:uppercase;line-height:1.06">Режимы командной строки</div>',
-         '<div class="ab" style="left:186px;top:136px;font-size:56px;font-weight:800;color:#5f8ae6;text-transform:uppercase;line-height:1.06">Уровни привилегий</div>']
+    o = [f'<div class="ab" style="left:180px;top:52px;font-size:80px;font-weight:800;color:{NAVY};text-transform:uppercase;line-height:1.06">Режимы командной строки</div>',
+         '<div class="ab" style="left:184px;top:146px;font-size:68px;font-weight:800;color:#5f8ae6;text-transform:uppercase;line-height:1.06">Уровни привилегий</div>']
     o.append(box(85, 262, 768, 444, "", "card solid", 1, "border-radius:30px"))
     o.append(txt(120, 296, 700, 'Уровни <span style="font-size:84px;color:var(--blue);margin-left:10px;letter-spacing:2px">1&ndash;14</span>', 40, 800, NAVY, 1, "text-transform:uppercase;white-space:nowrap"))
-    o.append(f'<div data-s="1" style="{A(120, 430)}">{shield("lock", 250)}</div>')
-    o.append(txt(405, 436, 430, "Только доступ", 44, 800, NAVY, 1, "text-transform:uppercase;line-height:1"))
-    o.append(f'<div data-s="2" style="{A(405, 506, 440, None, "display:flex;gap:16px;align-items:center;font-size:23px;line-height:1.25")}">{mark("ok")}<span>Разрешён доступ к устройству</span></div>')
-    o.append(f'<div data-s="2" style="{A(405, 592, 440, None, "display:flex;gap:16px;align-items:center;font-size:23px;line-height:1.25;--dl:120ms")}">{mark("minus")}<span>Настройка устройства запрещена</span></div>')
-    o.append(SVG_OPEN + '<circle data-s="3" cx="900" cy="520" r="9" fill="none" stroke="var(--blue)" stroke-width="4"/><circle data-s="3" cx="1040" cy="372" r="9" fill="none" stroke="var(--blue)" stroke-width="4"/>'
-             + path("M912 505 C960 480 1000 450 1030 395", 3, "#4f7df0", 7)
-             + '<polygon class="hd" data-s="3" points="1030,380 1018,402 1048,398" fill="#4f7df0"/></svg>')
-    o.append(txt(1015, 312, 80, "15", 30, 700, NAVY, 3, "font-family:var(--mono)"))
-    o.append(txt(878, 556, 60, "1", 30, 700, NAVY, 3, "font-family:var(--mono);text-align:center"))
-    o.append(box(1116, 192, 729, 512, "", "card", 4, "border-radius:30px;background:linear-gradient(135deg,#3e63da,#1a2f9a);border:2px solid rgba(180,205,255,.8);box-shadow:0 0 50px rgba(80,120,255,.45)"))
+    o.append(f'<div data-s="1" style="{A(112, 400)}"><img src="assets/p033_shield_lock.png" alt="" style="width:260px;{FADE}"></div>')
+    o.append(txt(405, 426, 440, "Только доступ", 48, 800, NAVY, 1, "text-transform:uppercase;line-height:1"))
+    o.append(f'<div data-s="2" style="{A(405, 506, 440, None, "display:flex;gap:16px;align-items:center;font-size:28px;line-height:1.2")}">{mark("ok")}<span>Разрешён доступ к устройству</span></div>')
+    o.append(f'<div data-s="2" style="{A(405, 592, 440, None, "display:flex;gap:16px;align-items:center;font-size:28px;line-height:1.2;--dl:120ms")}">{mark("minus")}<span>Настройка устройства запрещена</span></div>')
+    o.append(f'<img data-s="3" src="assets/p033_curve.png" alt="" style="{A(876, 344, 202, None, FADE)}">')
+    o.append(txt(1030, 290, 80, "15", 44, 800, "#2f6be8", 3))
+    o.append(txt(872, 548, 60, "1", 48, 800, "#2f6be8", 3, "text-align:center"))
+    o.append(box(1116, 192, 729, 512, "", "card", 4, "border-radius:30px;background:linear-gradient(135deg,#2f74f2,#1b3aa8);border:2px solid rgba(180,205,255,.8);box-shadow:0 0 50px rgba(80,120,255,.45)"))
     o.append(txt(1190, 262, 600, 'Уровень <span style="font-size:90px;margin-left:10px">15</span>', 42, 800, "#fff", 4, "text-transform:uppercase;white-space:nowrap"))
-    o.append(f'<div data-s="4" style="{A(1150, 400)}">{shield("gear", 260)}</div>')
-    o.append(txt(1429, 400, 420, "Доступ и настройка", 32, 800, "#fff", 4, "text-transform:uppercase;line-height:1.1"))
-    o.append(f'<div data-s="5" style="{A(1429, 478, 410, None, "display:flex;gap:16px;align-items:center;font-size:23px;line-height:1.25;color:#fff")}">{mark("ok", "#4f86f7")}<span>Разрешён доступ к устройству</span></div>')
-    o.append(f'<div data-s="5" style="{A(1429, 590, 410, None, "display:flex;gap:16px;align-items:center;font-size:23px;line-height:1.25;color:#fff;--dl:120ms")}">{mark("ok", "#4f86f7")}<span>Разрешена настройка устройства</span></div>')
+    o.append(f'<div data-s="4" style="{A(1146, 360)}"><img src="assets/p033_shield15.jpg" alt="" style="width:270px;-webkit-mask-image:radial-gradient(closest-side,#000 72%,transparent);mask-image:radial-gradient(closest-side,#000 72%,transparent)"></div>')
+    o.append(txt(1428, 398, 460, "Доступ и настройка", 40, 800, "#fff", 4, "text-transform:uppercase;line-height:1.1"))
+    o.append(f'<div data-s="5" style="{A(1429, 478, 410, None, "display:flex;gap:16px;align-items:center;font-size:28px;line-height:1.2;color:#fff")}">{mark("ok", "#4f86f7")}<span>Разрешён доступ к устройству</span></div>')
+    o.append(f'<div data-s="5" style="{A(1429, 590, 410, None, "display:flex;gap:16px;align-items:center;font-size:28px;line-height:1.2;color:#fff;--dl:120ms")}">{mark("ok", "#4f86f7")}<span>Разрешена настройка устройства</span></div>')
     o.append(box(43, 742, 1834, 314, "", "card", 6, "border-radius:28px"))
-    o.append(txt(96, 782, 900, "Переход между режимами", 36, 800, NAVY, 6, "text-transform:uppercase"))
+    o.append(txt(96, 762, 900, "Переход между режимами", 42, 800, NAVY, 6, "text-transform:uppercase"))
     o.append(f'<div data-s="6" style="{A(970, 858, 3, 160, "background:var(--line)")}"></div>')
 
     def trans(l, up, title, c1, c2, s, col):
-        arrow = (f'<svg viewBox="0 0 60 120" style="width:62px;height:122px"><path d="M30 6l26 30H38v78H22V36H4z" fill="{col}"/></svg>' if up else
-                 f'<svg viewBox="0 0 60 120" style="width:62px;height:122px"><path d="M30 114L4 84h18V6h16v78h18z" fill="{col}"/></svg>')
+        arrow = f'<img src="assets/p033_{"up" if up else "down"}.png" alt="" style="width:100px;{FADE}">'
         return (f'<div data-s="{s}" style="{A(l, 840, 90, 130)}">{arrow}</div>'
                 + txt(l + 102, 836, 620, title, 23, 800, NAVY, s, "text-transform:uppercase")
                 + f'<div class="mono" data-s="{s}" style="{A(l + 102, 888, 612, 98, "background:#16254f;color:#eaf2ff;border-radius:14px;padding:12px 24px;font-size:27px;line-height:1.3;box-shadow:0 6px 18px rgba(16,37,90,.3)")}">{c1}<br>{c2}</div>')
@@ -385,39 +384,38 @@ def p034():
         return (f'<div class="mono"{ds(s)} style="{A(l, t, w, h, f"background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:12px;display:flex;align-items:center;padding-left:18px;font-size:{size}px;font-weight:700;color:{CM}")}">{text}</div>')
 
     def circ(l, t, d, icn, s):
-        return (f'<div{ds(s)} style="{A(l, t, d, d, "border-radius:50%;background:radial-gradient(circle,#fff,#d9e6ff);border:2px solid #fff;box-shadow:0 8px 22px rgba(40,80,200,.25);display:grid;place-items:center;color:var(--blue)")}">'
-                f'<svg viewBox="0 0 24 24" style="width:{d * .5:.0f}px;height:{d * .5:.0f}px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round">{ICON_PATHS[icn]}</svg></div>')
+        return f'<img{ds(s)} src="assets/p034_i_{icn}.png" alt="" style="{A(l, t, d, None)}">'
 
     def head(l, t, w, text, size, s):
         return txt(l, t, w, text, size, 800, NAVY, s, "text-transform:uppercase;white-space:nowrap")
     o.append(box(70, 100, 1754, 252, "", "card solid", 1, "border-radius:28px"))
     o.append(circ(118, 130, 112, "user", 1))
-    o.append(head(252, 128, 1200, "Пользовательский (непривилегированный) режим", 28, 1))
+    o.append(head(252, 116, 1200, "Пользовательский (непривилегированный) режим", 31, 1))
     o.append(prompt(256, 175, 346, 52, "console&gt;", 1, 27))
     o.append(cmds(740, 168, ["clear", "disable", "enable", "exit", "help"], 19, 25.6, 1))
     o.append(cmds(1060, 168, ["logout", "no", "ping", "set", "show"], 19, 25.6, 1))
     o.append(cmds(1344, 168, ["snmpwalk", "ssl", "test"], 19, 25.6, 1))
-    o.append(box(70, 353, 1786, 668, "", "card solid", 2, "border-radius:28px"))
-    o.append(circ(110, 380, 96, "shield", 2))
-    o.append(head(252, 366, 800, "Привилегированный режим", 28, 2))
+    o.append(box(70, 333, 1786, 700, "", "card solid", 2, "border-radius:28px"))
+    o.append(circ(108, 344, 112, "shield", 2))
+    o.append(head(248, 352, 800, "Привилегированный режим", 30, 2))
     o.append(prompt(252, 400, 266, 52, "console#", 2, 27))
     pr = ["backup", "boot", "clear", "clock", "configure", "copy", "debug", "delete", "dir", "disable", "dot1x", "dump", "enable", "end", "erase", "exit",
           "firmware", "help", "ip", "no", "ping", "release", "reload", "..."]
     o.append(cmds(268, 462, pr, 17, 22.8, 2))
     o.append(box(559, 405, 1222, 606, "", "card", 3, "border-radius:26px;background:rgba(236,243,255,.75)"))
-    o.append(circ(582, 424, 80, "gear", 3))
-    o.append(head(693, 432, 700, "Режим глобального конфигурирования", 22, 3))
-    o.append(prompt(693, 468, 340, 42, "console(config)#", 3, 21))
+    o.append(circ(576, 420, 92, "gear", 3))
+    o.append(head(692, 424, 900, "Режим глобального конфигурирования", 26, 3))
+    o.append(prompt(693, 462, 340, 46, "console(config)#", 3, 23))
     gl = ["aaa", "arp", "backup", "banner", "class-map", "clear", "clock", "cpu", "crypto", "debug", "default", "dot1x", "dump", "enable", "end", "exit",
           "hostname", "interface", "..."]
-    o.append(cmds(714, 533, gl, 17, 23.6, 3))
-    o.append(box(1060, 469, 721, 530, "", "card solid", 4, "border-radius:24px"))
-    o.append(circ(1086, 484, 70, "net", 4))
-    o.append(head(1190, 492, 600, "Режим конфигурирования интерфейса", 20, 4))
-    o.append(prompt(1190, 530, 300, 40, "console(config-if)#", 4, 20))
+    o.append(cmds(714, 524, gl, 17, 23.2, 3))
+    o.append(box(1060, 470, 724, 524, "", "card solid", 4, "border-radius:24px"))
+    o.append(circ(1074, 482, 92, "net", 4))
+    o.append(head(1190, 492, 600, "Режим конфигурирования интерфейса", 24, 4))
+    o.append(prompt(1190, 532, 356, 46, "console(config-if)#", 4, 23))
     ifc = ["channel-group", "description", "dot1x", "duplex", "end", "exit", "gvrp", "help", "ip", "l2protocol-tunnel", "lacp", "lldp", "mac", "mdix", "no",
            "port-isolation", "..."]
-    o.append(cmds(1216, 595, ifc, 17, 23.9, 4))
+    o.append(cmds(1216, 592, ifc, 17, 22.4, 4))
     return "".join(o)
 
 

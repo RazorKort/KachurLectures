@@ -97,16 +97,16 @@ def configs():
              f'<b style="color:var(--blue)">2.</b>{pair("candidate", "running", 21)}</div>')
     o.append(f'<p class="b sm ab" data-s="3" style="{ab(440, 300, 380)}text-align:center;font-size:20px">'
              f'Применение новых настроек</p>')
-    o.append(f'<div class="card"{sd(3)} style="{ab(450, 348, 360)}height:86px;padding:12px 18px;display:flex;'
+    o.append(f'<div class="card"{sd(3)} style="{ab(430, 332, 400)}height:128px;padding:10px 16px;display:flex;'
              f'gap:14px;align-items:center">{ico("clock", "sm")}<div>'
              f'<div style="font-size:17px;font-weight:800;color:var(--navy);text-transform:uppercase">Защитный интервал</div>'
              f'<div style="font-size:17px;color:var(--navy)">600 секунд по умолчанию</div>'
              f'<div style="font-size:15px;color:var(--dim)">Новые настройки уже работают</div></div></div>')
 
     # ветвление
-    o.append(f'<div class="card"{sd(4)} style="{ab(50, 470, 1820)}height:285px"></div>')
-    o.append(f'<div class="card solid"{sd(4)} style="{ab(865, 512, 190)}height:190px;transform:rotate(45deg);'
-             f'border-radius:30px"></div>')
+    o.append(f'<div class="card"{sd(4)} style="{ab(50, 456, 1820)}height:280px"></div>')
+    o.append(f'<div class="ab"{sd(4)} style="{ab(865, 512, 190)}height:190px;transform:rotate(45deg);background:rgba(255,255,255,.92);'
+             f'box-shadow:0 14px 30px rgba(90,110,180,.22);border:1.5px solid rgba(160,185,240,.6);border-radius:30px"></div>')
     o.append(f'<div{sd(4)} style="{ab(845, 545, 230)}height:130px;display:flex;align-items:center;justify-content:center;'
              f'text-align:center;font-size:25px;font-weight:800;color:var(--navy);line-height:1.3;'
              f'flex-direction:column">'
@@ -127,7 +127,7 @@ def configs():
     o.append(f'<div class="ab" data-s="6" style="left:1140px;top:580px;width:150px;height:54px;border-radius:30px;'
              f'background:linear-gradient(90deg,#f6b53a,#ee9a1c);color:#fff;font-size:26px;font-weight:800;'
              f'display:grid;place-items:center;box-shadow:0 8px 18px rgba(230,150,30,.35)">НЕТ</div>')
-    o.append(f'<div class="card cream"{sd(6)} style="{ab(1370, 492, 480)}height:240px;padding:18px 24px">'
+    o.append(f'<div class="card cream"{sd(6)} style="{ab(1370, 468, 480)}height:276px;padding:18px 24px">'
              f'<div style="display:flex;gap:20px;align-items:center">{ico("clock", "sm")}<div>'
              f'<div style="font-size:30px;font-weight:800;color:var(--navy)">RESTORE</div>'
              f'<div style="margin-top:2px">{pair("restore", "running", 21, ORANGE)}</div></div></div>'
@@ -138,21 +138,21 @@ def configs():
     o.append(layer(arrow_svg(412, 285, 808, 285, 3, w=9), arrow_svg(1140, 285, 1494, 285, 2, w=9)))
 
     # rollback
-    o.append(f'<div class="card"{sd(7)} style="{ab(50, 775, 1160)}height:310px"></div>')
-    o.append(doc(80, 795, 290, 270, "doc", "candidate-<br>configuration", "Новые, ещё не применённые настройки", 7, False))
-    o.append(doc(890, 795, 290, 270, "gear", "running-<br>configuration", "Текущая рабочая конфигурация", 7, False))
-    o.append(f'<div class="ab mono" data-s="7" style="left:500px;top:795px;font-size:36px;font-weight:800;color:#fff;'
+    o.append(f'<div class="card"{sd(7)} style="{ab(50, 748, 1160)}height:316px"></div>')
+    o.append(doc(80, 762, 290, 288, "doc", "candidate-<br>configuration", "Новые, ещё не применённые настройки", 7, False))
+    o.append(doc(890, 762, 290, 288, "gear", "running-<br>configuration", "Текущая рабочая конфигурация", 7, False))
+    o.append(f'<div class="ab mono" data-s="7" style="left:500px;top:762px;font-size:36px;font-weight:800;color:#fff;'
              f'padding:8px 28px;border-radius:12px;background:linear-gradient(90deg,#5a47c4,#3c2f93)">'
              f'<span style="color:#b9b0ff">&gt;</span> rollback</div>')
-    o.append(f'<div class="chip"{sd(7)} style="{ab(450, 858, 380)}justify-content:center;font-size:19px">'
+    o.append(f'<div class="chip"{sd(7)} style="{ab(450, 826, 380)}justify-content:center;font-size:19px">'
              f'{pair("running", "candidate", 19, PURPLE)}</div>')
-    o.append(f'<p class="b sm ab" data-s="7" style="{ab(385, 935, 480)}text-align:center;font-size:17px;line-height:1.3">'
+    o.append(f'<p class="b sm ab" data-s="7" style="{ab(385, 900, 480)}text-align:center;font-size:17px;line-height:1.3">'
              f'Удаляет неприменённые изменения из <span class="mono">candidate-configuration</span></p>')
-    o.append(f'<div class="note"{sd(7)} style="{ab(430, 985, 420)}padding:8px 14px;align-items:center">'
+    o.append(f'<div class="note"{sd(7)} style="{ab(400, 966, 470)}padding:8px 14px;align-items:center">'
              f'{mi("info", 34, 22)}<p class="b sm" style="font-size:16px">Рабочая конфигурация устройства не изменяется</p></div>')
-    o.append(layer(arrow_svg(880, 910, 380, 910, 7, col=PURPLE, w=9)))
+    o.append(layer(arrow_svg(880, 885, 380, 885, 7, col=PURPLE, w=9)))
 
-    o.append(f'<div class="card"{sd(8)} style="{ab(1240, 775, 630)}height:275px;padding:26px 30px">'
+    o.append(f'<div class="card"{sd(8)} style="{ab(1240, 748, 630)}height:300px;padding:24px 30px">'
              f'<div style="display:flex;gap:22px;align-items:center">{ico("link")}'
              f'<div style="font-size:30px;font-weight:800;color:var(--navy);line-height:1.15">'
              f'Потеряли IP-связность после <span class="mono">commit</span>?</div></div>'
@@ -167,13 +167,13 @@ SLIDES.append(("p059", "Механизм работы с конфигураци�
 
 # ======================================================= p060 IP-адрес на интерфейсе
 def ip_setup():
-    o = ['<h1 class="t ab ctr-x" style="top:26px;width:1700px">Настройка IP-адреса на интерфейсе <span class="lt">ESR</span></h1>',
+    o = ['<h1 class="t ab ctr-x" style="top:26px;width:1700px">Настройка IP-адреса на интерфейсе ESR</h1>',
          '<div class="sub ab ctr-x" style="top:104px;letter-spacing:6px;font-size:22px;color:var(--dim)">Простые шаги к надёжной сети</div>']
 
     def step(l, n, title, desc, cmd, short, icn, s):
         return (f'<div class="card"{sd(s)} style="{ab(l, 180, 570)}height:500px;padding:0">'
                 f'<div class="num ab" style="left:36px;top:30px;font-size:118px;color:#9bb4e6">{n}</div>'
-                f'<div class="ab" style="right:34px;top:30px">{ico(icn)}</div>'
+                f'<img class="ab" src="assets/{icn}" style="left:250px;top:26px;height:140px">'
                 f'<div class="ab" style="left:36px;top:190px;width:500px;font-size:31px;font-weight:800;color:var(--navy);'
                 f'line-height:1.15;height:76px">{title}</div>'
                 f'<p class="b sm ab" style="left:36px;top:278px;width:500px;font-size:21px;line-height:1.3">{desc}</p>'
@@ -184,12 +184,13 @@ def ip_setup():
                 + '</div>')
 
     o.append(step(70, "01", "Привилегированный режим", "Переход в режим глобальной конфигурации",
-                  'esr# <b style="color:var(--blue)">config</b>', "", "term", 1))
+                  'esr# <b style="color:var(--blue)">config</b>', "", "p060_i1.png", 1))
     o.append(step(675, "02", "Режим глобальной конфигурации", "Выбор интерфейса Gigabit Ethernet 1/0/1",
-                  'esr(config)# <b style="color:var(--blue)">interface gigabitethernet 1/0/1</b>', "int gi 1/0/1", "gear", 2))
+                  'esr(config)# <b style="color:var(--blue)">interface gigabitethernet 1/0/1</b>', "int gi 1/0/1", "p060_i2.png", 2))
     o.append(step(1280, "03", "Режим конфигурирования интерфейса", "Назначение IP-адреса с префиксом /24",
-                  'esr(config-if-gi)# <b style="color:var(--blue)">ip address 10.0.0.1/24</b>', "ip add 10.0.0.1/24", "net", 3))
-    o.append(layer(arrow_svg(646, 420, 672, 420, 2, w=8), arrow_svg(1251, 420, 1277, 420, 3, w=8)))
+                  'esr(config-if-gi)# <b style="color:var(--blue)">ip address 10.0.0.1/24</b>', "ip add 10.0.0.1/24", "p060_i3.png", 3))
+    o.append('<img class="ab" data-s="2" src="assets/p060_arr.png" style="left:624px;top:370px;width:66px;z-index:3">'
+             '<img class="ab" data-s="3" src="assets/p060_arr.png" style="left:1229px;top:370px;width:66px;z-index:3">')
 
     dot = '<i style="width:16px;height:16px;border-radius:50%;background:#7fb0ff;display:block"></i>'
     o.append(f'<div class="ab" data-s="4" style="{ab(110, 705, 1700)}height:225px;border-radius:22px;'
@@ -222,7 +223,7 @@ def mes_access():
     def col(l, pill, title, sub, s):
         return (f'<div class="card"{sd(s)} style="{ab(l, 150, 590)}height:730px"></div>'
                 f'<div class="ab" data-s="{s}" style="left:{l + 30}px;top:178px;min-width:210px;height:80px;'
-                f'padding:0 44px;border-radius:40px;background:linear-gradient(90deg,#c9d8fb,#8fa8ee);color:#fff;'
+                f'padding:0 60px;clip-path:polygon(14% 0,86% 0,100% 50%,86% 100%,14% 100%,0 50%);background:linear-gradient(90deg,#9fb6f2,#5f7fd8);color:#fff;'
                 f'font-size:50px;font-weight:800;display:grid;place-items:center;box-shadow:0 10px 24px rgba(60,100,200,.3);'
                 f'text-shadow:0 2px 6px rgba(30,60,160,.4)">{pill}</div>'
                 f'<div class="ab" data-s="{s}" style="left:{l + 20}px;top:290px;width:550px;font-size:29px;font-weight:800;'
@@ -235,9 +236,9 @@ def mes_access():
                 f'color:var(--navy)">{txt}</div>')
 
     o.append(col(30, "100M", "Коммутаторы доступа 100M", "Скорость физических интерфейсов — 100 Мбит/с", 1))
-    o.append(fit("p061_mes1124mb.jpg", 325, 395, 520, 160, 1))
+    o.append(devfit("dev/mes1124mb.webp", 325, 395, 520, 160, 1))
     o.append(cap(55, 560, 540, "MES1124MB", 1))
-    o.append(fit("p061_mes1124m.jpg", 325, 615, 520, 160, 1))
+    o.append(devfit("dev/mes1124m.webp", 325, 615, 520, 160, 1))
     o.append(cap(55, 780, 540, "MES1124M", 1))
     o.append(f'<div class="ab b sm" data-s="1" style="{ab(55, 835, 540)}text-align:center;font-size:21px;color:var(--dim)">'
              f'Также: <span class="mono">MES1428</span></div>')
@@ -245,30 +246,27 @@ def mes_access():
     o.append(col(665, "1G", "Коммутаторы доступа 1G", "Скорость физических интерфейсов — 1 Гбит/с", 2))
     o.append(f'<div class="ab" data-s="2" style="left:760px;top:410px;width:400px;height:400px;border-radius:50%;'
              f'background:radial-gradient(circle,rgba(180,210,255,.55),rgba(180,210,255,0) 70%)"></div>')
-    o.append(fit("p061_mes2300.jpg", 960, 460, 540, 200, 2))
+    o.append(devfit("dev/mes2300-08.webp", 960, 460, 540, 200, 2))
     o.append(cap(690, 665, 540, "MES2300-08", 2, 32))
     o.append(f'<div class="ab mono" data-s="2" style="{ab(690, 770, 540)}text-align:center;font-size:21px;line-height:1.75;'
              f'color:var(--navy)">MES2408 • MES2308R • MES2324<br>MES2428 • MES2424 • MES2411X • MES2448</div>')
 
     o.append(col(1300, "PoE", "Коммутаторы доступа PoE", "Одновременная передача данных и питания по Ethernet", 3))
-    o.append(fit("p061_mes2420d.jpg", 1595, 385, 540, 170, 3))
+    o.append(devfit("dev/mes2420d-24dp.webp", 1595, 402, 500, 145, 3))
     o.append(cap(1325, 560, 540, "MES2420D-24DP", 3))
     o.append(f'<div class="ab mono" data-s="3" style="{ab(1325, 615, 540)}text-align:center;font-size:19px;line-height:1.75;'
              f'color:var(--navy)">MES2408PL/P/CP • MES2308P • MES2324P<br>MES2424P • MES2448P • MES2428P • MES2348P</div>')
-    o.append(f'<div class="ab" data-s="3" style="left:1325px;top:735px;width:540px;display:flex;align-items:center;'
-             f'justify-content:center;gap:14px">{ico("db")}'
-             f'<svg width="150" height="30" viewBox="0 0 150 30"><rect x="0" y="9" width="30" height="12" rx="3" fill="#3f6fd8"/>'
-             f'<rect x="30" y="12" width="90" height="6" fill="#8fb0ee"/><rect x="120" y="9" width="30" height="12" rx="3" fill="#3f6fd8"/></svg>'
-             f'{ico("bolt")}</div>')
-    o.append(f'<div class="ab b sm" data-s="3" style="{ab(1325, 825, 540)}text-align:center;font-size:19px">'
+    o.append(f'<div class="ab" data-s="3" style="left:1325px;top:700px;width:540px;display:flex;align-items:center;'
+             f'justify-content:center"><img src="assets/p061_poe.png" style="width:530px"></div>')
+    o.append(f'<div class="ab b sm" data-s="3" style="{ab(1325, 838, 540)}text-align:center;font-size:19px">'
              f'Размещение устройств без отдельной розетки питания</div>')
 
     o.append(f'<div class="card"{sd(4)} style="{ab(30, 910, 1860)}height:130px"></div>')
-    items = [("speed", "100M", "100 Мбит/с", 4), ("speed", "1G", "1 Гбит/с", 5), ("db", "PoE", "данные + питание", 6)]
+    items = [("p061_g1.png", "100M", "100 Мбит/с", 4), ("p061_g2.png", "1G", "1 Гбит/с", 5), ("p061_g3.png", "PoE", "данные + питание", 6)]
     for i, (icn, a, b, s) in enumerate(items):
         x = 90 + i * 620
         o.append(f'<div class="ab" data-s="{s}" style="{ab(x, 935, 560)}height:80px;display:flex;gap:26px;align-items:center;'
-                 f'justify-content:center">{ico(icn)}<span style="font-size:30px;font-weight:700;color:var(--navy)">'
+                 f'justify-content:center"><img src="assets/{icn}" style="height:82px"><span style="font-size:30px;font-weight:700;color:var(--navy)">'
                  f'<b>{a}</b> — {b}</span></div>')
         if i:
             o.append(f'<div class="ab" data-s="{s}" style="left:{x - 28}px;top:930px;width:2px;height:90px;background:var(--line)"></div>')
@@ -289,30 +287,32 @@ def controllers():
     xs = [32, 506, 975, 1453]
     ws = [455, 450, 459, 435]
     names = ["WLC-3350", "WLC-3200", "WLC-30", "vWLC"]
-    imgs = ["p062_wlc3350.jpg", "p062_wlc3200.jpg", "p062_wlc30.jpg", "p062_vwlc.jpg"]
+    imgs = ["dev/wlc-3350.webp", "dev/wlc-3200.webp", "dev/wlc-30.webp", "dev/vwlc.webp"]
     for i in range(4):
         o.append(f'<div class="card"{sd(1 + i)} style="{ab(xs[i], 215, ws[i])}height:320px"></div>')
         o.append(f'<div class="ab mono" data-s="{1 + i}" style="{ab(xs[i], 238, ws[i])}text-align:center;font-size:38px;'
                  f'font-weight:800;color:var(--navy)">{names[i]}</div>')
         if i < 3:
-            o.append(fit(imgs[i], xs[i] + ws[i] / 2, 330, ws[i] - 40, 190, 1 + i))
+            o.append(devfit(imgs[i], xs[i] + ws[i] / 2, 330, ws[i] - 40, 180, 1 + i))
         else:
-            o.append(fit(imgs[i], xs[i] + ws[i] / 2, 305, 230, 215, 1 + i))
+            o.append(devfit(imgs[i], xs[i] + ws[i] / 2, 295, 380, 230, 1 + i))
 
-    feats = [("wifi", "Управление<br>точками доступа"), ("mon", "Мониторинг<br>клиентов и трафика"),
-             ("wifi", "Бесшовный<br>роуминг"), ("net", "VLAN · VPN · L2/L3"),
-             ("lock", "WPA2/WPA3 · RADIUS · LDAP"), ("shield", "FIREWALL · IDS · IPS")]
+    feats = [("p062_f1.png", "Управление<br>точками доступа"), ("p062_f2.png", "Мониторинг<br>клиентов и трафика"),
+             ("p062_f3.png", "Бесшовный<br>роуминг"), ("p062_f4.png", "VLAN · VPN · L2/L3"),
+             ("p062_f5.png", "WPA2/WPA3 · RADIUS · LDAP"), ("p062_f6.png", "FIREWALL · IDS · IPS")]
     for i, (icn, t) in enumerate(feats):
         o.append(f'<div class="card"{sd(5)} style="{ab(32 + i * 312, 565, 298)}height:215px;text-align:center;padding:22px 12px;'
-                 f'--dl:{i * 90}ms"><div style="display:flex;justify-content:center">{ico(icn, "hex")}</div>'
-                 f'<div style="margin-top:20px;font-size:21px;font-weight:800;color:var(--navy);text-transform:uppercase;'
+                 f'--dl:{i * 90}ms"><div style="display:flex;justify-content:center;align-items:center;height:120px">'
+                 f'<img src="assets/{icn}" style="max-height:118px;max-width:220px"></div>'
+                 f'<div style="margin-top:6px;font-size:21px;font-weight:800;color:var(--navy);text-transform:uppercase;'
                  f'line-height:1.25">{t}</div></div>')
 
-    places = [("user", "Офисы и учебные корпуса"), ("layers", "Кампусы и предприятия"), ("net", "Распределённые сети")]
+    places = [("p062_pl1.jpg", "Офисы и учебные корпуса"), ("p062_pl2.jpg", "Кампусы и предприятия"), ("p062_pl3.jpg", "Распределённые сети")]
     for i, (icn, t) in enumerate(places):
         o.append(f'<div class="card"{sd(6)} style="{ab(32 + i * 628, 815, 600)}height:225px;display:flex;gap:26px;'
-                 f'align-items:center;padding:0 40px;--dl:{i * 110}ms">{ico(icn, "hex")}'
-                 f'<div style="font-size:28px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.2">{t}</div></div>')
+                 f'padding:0;overflow:hidden;--dl:{i * 110}ms"><img src="assets/{icn}" style="position:absolute;left:0;top:0;width:100%;height:190px;object-fit:cover">'
+                 f'<div style="position:absolute;left:150px;right:10px;top:178px;font-size:25px;font-weight:800;color:var(--navy);'
+                 f'text-transform:uppercase;text-align:center">{t}</div></div>')
     return "".join(o)
 
 
@@ -326,13 +326,13 @@ def aps():
          '<p class="b sm ab ctr-x" style="top:158px;width:1700px;text-align:center;font-size:19px;color:var(--dim)">'
          'Точки доступа предназначены для офисов, вузов, гостиниц, конференц-залов, государственных учреждений и других объектов.</p>']
 
-    aps_ = [("p063_wep3ax.jpg", "WEP-3ax"), ("p063_wep1l.jpg", "WEP-1L"), ("p063_wep550k.jpg", "WEP-550K"),
-            ("p063_wep3l.jpg", "WEP-3L")]
+    aps_ = [("dev/wep-3ax.webp", "WEP-3ax"), ("dev/wep-1l.webp", "WEP-1L"), ("dev/wep-550k.webp", "WEP-550K"),
+            ("p063_a4.jpg", "WEP-3L")]
     for i, (img, nm) in enumerate(aps_):
         l = 60 + i * 450
         o.append(f'<div class="card"{sd(1 + i)} style="{ab(l, 195, 435)}height:320px"></div>')
-        o.append(fit(img, l + 217, 208, 340, 215, 1 + i))
-        o.append(f'<div class="ab mono" data-s="{1 + i}" style="{ab(l, 450, 435)}text-align:center;font-size:32px;'
+        o.append((devfit if img.startswith("dev/") else fit)(img, l + 217, 210, 380, 230, 1 + i))
+        o.append(f'<div class="ab" data-s="{1 + i}" style="{ab(l, 452, 435)}text-align:center;font-size:34px;'
                  f'font-weight:800;color:var(--navy)">{nm}</div>')
 
     def row(icn, txt, l, t, w):
@@ -376,18 +376,19 @@ SLIDES.append(("p063", "Модели и характеристики: точки
 
 # ======================================================= p064 модельный ряд ESR
 def esr_line():
-    o = ['<div class="ab" style="left:70px;top:16px;font-size:62px;font-weight:600;color:var(--navy);line-height:1">Модельный ряд</div>',
-         '<div class="ab" style="left:70px;top:82px;display:flex;align-items:flex-end;gap:26px">'
-         '<span class="big" style="font-size:96px;color:var(--navy2)">ESR</span>'
+    o = ['<div class="ab" style="left:70px;top:10px;font-size:58px;font-weight:600;color:var(--navy);line-height:1">Модельный ряд</div>',
+         '<div class="ab" style="left:70px;top:64px;display:flex;align-items:flex-end;gap:26px">'
+         '<span class="big" style="font-size:80px;line-height:1;color:var(--navy2)">ESR</span>'
          '<span style="font-size:23px;color:var(--dim);margin-bottom:16px">Сервисные маршрутизаторы</span></div>']
 
     def column(l, n, title, sub, icn, s, rows):
-        h = ['<div class="card"' + sd(s) + f' style="{ab(l, 190, 580)}height:505px"></div>',
-             f'<div class="ab" data-s="{s}" style="left:{l + 24}px;top:204px;display:flex;gap:16px;align-items:center;width:540px">'
+        h = ['<div class="card"' + sd(s) + f' style="{ab(l, 158, 580)}height:522px"></div>',
+             f'<div class="ab" data-s="{s}" style="left:{l + 24}px;top:170px;display:flex;gap:16px;align-items:center;width:540px">'
              f'<span class="num" style="font-size:54px">{n}</span><div style="flex:1">'
              f'<div style="font-size:29px;font-weight:700;color:var(--navy)">{title}</div>'
-             f'<div style="font-size:16px;color:var(--dim);letter-spacing:.5px">{sub}</div></div>{ico(icn, "sm")}</div>']
-        top, area = 285, 395
+             f'<div style="font-size:16px;color:var(--dim);letter-spacing:.5px">{sub}</div></div>'
+             f'<img src="assets/{icn}" style="height:58px"></div>']
+        top, area = 262, 410
         pitch = area / len(rows)
         for ri, r in enumerate(rows):
             for ci, (img, lab) in enumerate(r):
@@ -399,38 +400,38 @@ def esr_line():
         return "".join(h)
 
     D = "dev/%s.webp".__mod__
-    o.append(column(60, "01", "Младшие модели", "Компактность, гибкость, удобство", "router", 1, [
+    o.append(column(60, "01", "Младшие модели", "Компактность, гибкость, удобство", "p064_h1.png", 1, [
         [(D("esr-15"), "ESR-15"), (D("esr-15r"), "ESR-15R")],
         [(D("esr-14vf"), "ESR-14VF"), (D("esr-12vf"), "ESR-12VF")],
         [(D("esr-12v"), "ESR-12V"), (D("esr-10"), "ESR-10")]]))
-    o.append(column(670, "02", "Средние модели", "Оптимальный баланс возможностей", "server", 2, [
+    o.append(column(670, "02", "Средние модели", "Оптимальный баланс возможностей", "p064_h2.png", 2, [
         [(D("esr-30"), "ESR-30"), (D("esr-21"), "ESR-21")],
         [(D("esr-20"), "ESR-20"), (D("esr-200"), "ESR-200")],
         [(D("esr-100"), "ESR-100")]]))
-    o.append(column(1280, "03", "Старшие модели", "Максимальная производительность", "stack", 3, [
+    o.append(column(1280, "03", "Старшие модели", "Максимальная производительность", "p064_h3.png", 3, [
         [(D("esr-3100"), "ESR-3100"), (D("esr-3200"), "ESR-3200")],
         [(D("esr-1700"), "ESR-1700")],
         [(D("esr-1500"), "ESR-1500"), (D("esr-1511"), "ESR-1511")],
         [(D("esr-1000"), "ESR-1000"), (D("esr-1200"), "ESR-1200")]]))
 
-    descs = [("01", "Младшие модели", "gear",
+    descs = [("01", "Младшие модели", "p064_c1.png",
               "ESR-10, ESR-12, ESR-14, ESR-15, ESR-15R построены на одном процессоре и отличаются набором интерфейсов. "
               "Компактные решения для небольших и средних офисов."),
-             ("02", "Средние модели", "gear",
+             ("02", "Средние модели", "p064_c2.png",
               "ESR-20, ESR-21, ESR-30, ESR-100, ESR-200 отличаются процессором и набором интерфейсов. "
               "Например, ESR-21 имеет 3 RS-232 интерфейса, а ESR-30 — комбинированные интерфейсы с поддержкой SFP+ 10 Гбит/с."),
-             ("03", "Старшие модели", "server",
+             ("03", "Старшие модели", "p064_c3.png",
               "Серия ESR-1000 (ESR-1000, 1200, 1500, 1511, 1700) имеет чип коммутации, что разгружает центральный процессор. "
               "Серия ESR-3000 (ESR-3100, 3200) чипа коммутации не имеет — весь трафик проходит через центральный процессор. "
               "Все старшие модели оснащены 10 Гбит интерфейсами (SFP+/QSFP+).")]
     for i, (n, t, icn, txt) in enumerate(descs):
         l = 60 + i * 610
-        o.append(f'<div class="card"{sd(4 + i)} style="{ab(l, 715, 580)}height:255px;padding:16px 22px">'
-                 f'<div style="display:flex;gap:14px;align-items:center;margin-bottom:10px">'
+        o.append(f'<div class="card"{sd(4 + i)} style="{ab(l, 692, 580)}height:264px;padding:12px 18px">'
+                 f'<div style="display:flex;gap:14px;align-items:center;margin-bottom:6px">'
                  f'<span class="badge" style="width:44px;height:44px;font-size:21px">{n}</span>'
                  f'<div style="font-size:24px;font-weight:700;color:var(--navy)">{t}</div></div>'
-                 f'<div style="display:flex;gap:16px;align-items:flex-start">{ico(icn, "sm")}'
-                 f'<p class="b sm" style="font-size:18px;line-height:1.38;flex:1">{txt}</p></div></div>')
+                 f'<div style="display:flex;gap:14px;align-items:flex-start"><img src="assets/{icn}" style="width:46px;flex:none;margin-top:4px">'
+                 f'<p class="b sm" style="font-size:18px;line-height:1.24;flex:1">{txt}</p></div></div>')
 
     stars = ["ESR-1000 — первый маршрутизатор в линейке с 24 медными интерфейсами.",
              "ESR-1700 — очень мощный и единственный двухюнитовый маршрутизатор.",
@@ -438,9 +439,9 @@ def esr_line():
     star = ('<svg width="34" height="34" viewBox="0 0 24 24" style="flex:none"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6'
             'L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z" fill="#5b7bd4"/></svg>')
     for i, t in enumerate(stars):
-        o.append(f'<div class="card"{sd(7)} style="{ab(60 + i * 610, 985, 580)}height:75px;padding:10px 20px;display:flex;'
+        o.append(f'<div class="card"{sd(7)} style="{ab(60 + i * 610, 968, 580)}height:80px;padding:8px 18px;display:flex;'
                  f'gap:14px;align-items:center;--dl:{i * 100}ms">{star}'
-                 f'<p class="b sm" style="font-size:17px;line-height:1.3">{t}</p></div>')
+                 f'<p class="b sm" style="font-size:17px;line-height:1.22">{t}</p></div>')
     return "".join(o)
 
 
@@ -451,12 +452,12 @@ SLIDES.append(("p064", "Модельный ряд ESR", esr_line()))
 def wifi_params():
     o = ['<h1 class="t ab ctr-x" style="top:26px;width:1700px">Параметры беспроводного подключения</h1>']
 
-    steps = [("router", "1. Подключитесь<br>к устройству"), ("globe", "2. Откройте<br>web-браузер"),
-             (None, "3. Введите 192.168.1.10"), ("user", "4. Авторизуйтесь"), ("mon", "5. Откройте меню<br>мониторинга")]
+    steps = [("p065_i1.png", "1. Подключитесь<br>к устройству"), ("p065_i2.png", "2. Откройте<br>web-браузер"),
+             (None, "3. Введите 192.168.1.10"), ("p065_i4.png", "4. Авторизуйтесь"), ("p065_i5.png", "5. Откройте меню<br>мониторинга")]
     for i, (icn, t) in enumerate(steps):
         top = 150 + i * 140
         left = (f'<span class="chip mono" style="font-size:19px;padding:8px 14px;color:var(--dim)">'
-                f'{mi("search", 26, 18)}192.168.1.10</span>' if icn is None else ico(icn))
+                f'{mi("search", 26, 18)}192.168.1.10</span>' if icn is None else f'<img src="assets/{icn}" style="height:96px">')
         o.append(f'<div class="card"{sd(1 + i)} style="{ab(64, top, 640)}height:118px;padding:0 22px;display:flex;gap:22px;'
                  f'align-items:center"><span class="badge" style="width:62px;height:62px;font-size:34px;border-radius:14px;'
                  f'background:linear-gradient(160deg,#6d8be0,#4a68c4)">{i + 1}</span>'
@@ -464,7 +465,7 @@ def wifi_params():
                  f'<div style="font-size:24px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.2">{t}</div></div>')
 
     # браузер
-    o.append(f'<div class="card ab" data-s="2" style="{ab(740, 150, 730)}height:615px;padding:0;overflow:hidden">'
+    o.append(f'<div class="card ab" data-s="2" style="{ab(732, 150, 840)}height:615px;padding:0;overflow:hidden">'
              f'<div class="ab" style="left:0;right:0;top:0;height:46px;background:rgba(225,233,250,.9)">'
              f'<i class="ab" style="left:18px;top:15px;width:14px;height:14px;border-radius:50%;background:#ee6a5f"></i>'
              f'<i class="ab" style="left:40px;top:15px;width:14px;height:14px;border-radius:50%;background:#f5bd4f"></i>'
@@ -498,10 +499,9 @@ def wifi_params():
 
     ssid = ('<span class="mono" style="font-size:21px;font-weight:800;color:#fff;background:#2f4fa8;padding:3px 10px;'
             'border-radius:6px">SSID</span>')
-    bottom = [("wifi", "Режим беспроводной сети"), ("ssid", "SSID"), ("net", "Беспроводной канал")]
+    bottom = [("p065_b1.png", "Режим беспроводной сети"), ("p065_b2.png", "SSID"), ("p065_b3.png", "Беспроводной канал")]
     for i, (icn, t) in enumerate(bottom):
-        left = (f'<div style="width:78px;display:flex;justify-content:center">{ssid}</div>' if icn == "ssid"
-                else ico(icn, "hex"))
+        left = f'<img src="assets/{icn}" style="height:130px">'
         o.append(f'<div class="card"{sd(6)} style="{ab(64 + i * 600, 830, 560)}height:200px;padding:0 26px;display:flex;gap:24px;'
                  f'align-items:center;--dl:{i * 100}ms">{left}'
                  f'<div style="flex:1"><div style="font-size:22px;font-weight:800;color:var(--navy);text-transform:uppercase;'

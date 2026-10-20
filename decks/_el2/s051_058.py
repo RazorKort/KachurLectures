@@ -107,36 +107,28 @@ SLIDES.append(("p051", "Сервисные маршрутизаторы ESR", es
 
 # ================================================================ p052 справка
 def help_slide():
-    o = ['<h1 class="t ab ctr-x" style="top:50px;width:1700px">Справка в командной строке <span class="lt">ESR</span></h1>']
+    o = ['<h1 class="t ab ctr-x" style="top:100px;width:1700px;font-size:76px">Справка в командной строке <span class="lt">ESR</span></h1>']
 
-    def card(l, n, title, art, txt, s):
-        return (f'<div class="card" data-s="{s}" style="{ab(l, 230, 590)}height:634px;padding:30px 34px">'
-                f'<div style="display:flex;gap:26px;align-items:center">'
-                f'<span class="badge" style="width:92px;height:92px;font-size:46px;border-radius:16px">{n}</span>'
-                f'<div style="{NAVY};font-size:33px;line-height:1.15">{title}</div></div>'
-                f'<div style="height:230px;margin-top:34px;display:flex;justify-content:center;align-items:center">{art}</div>'
-                f'<p class="b" style="font-size:25px;line-height:1.4;margin-top:34px;padding-left:10px">{txt}</p></div>')
+    def card(l, w, n, title, art, aw, txt, s):
+        return (f'<div class="card ab" data-s="{s}" style="{ab(l, 231, w)}height:635px;padding:34px 48px">'
+                f'<div style="display:flex;gap:30px;align-items:center">'
+                f'<span class="badge" style="width:112px;height:112px;font-size:54px;border-radius:14px;flex:none">{n}</span>'
+                f'<div style="{NAVY};font-size:42px;line-height:1.15">{title}</div></div>'
+                f'<div style="height:215px;margin-top:22px;display:flex;justify-content:center;align-items:center">'
+                f'<img src="assets/{art}" style="width:{aw}px;mix-blend-mode:multiply"></div>'
+                f'<p class="b" style="font-size:31px;line-height:1.35;margin-top:24px;padding-left:66px;color:var(--navy)">{txt}</p></div>')
 
-    q = ('<div class="card solid" style="width:210px;height:200px;display:grid;place-items:center;border-radius:30px;'
-         'font-size:120px;font-weight:800;color:var(--navy)">?</div>')
-    term = ('<div style="width:460px;height:200px;border-radius:18px;background:#fff;border:2px solid var(--line);'
-            'box-shadow:var(--sh);overflow:hidden;position:relative">'
-            '<div style="height:44px;background:linear-gradient(180deg,#4f86f5,#2a5fd6);display:flex;gap:10px;align-items:center;padding-left:22px">'
-            + "".join('<i style="width:13px;height:13px;border-radius:50%;background:#fff;display:block"></i>' for _ in range(3)) +
-            '</div><div class="mono" style="position:absolute;left:28px;top:80px;font-size:50px;font-weight:700;color:var(--navy)">&gt;_</div>'
-            '<span style="position:absolute;right:30px;top:88px;width:64px;height:64px;border-radius:50%;background:var(--blue);'
-            'display:grid;place-items:center"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#fff" stroke-width="3" '
-            'stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>')
-    keys = ('<div style="display:flex;gap:22px">'
-            '<span class="chip key" style="font-size:30px;width:250px;height:150px;border-radius:26px;justify-content:center">CTRL</span>'
-            '<span class="chip key" style="font-size:30px;width:220px;height:150px;border-radius:26px;justify-content:center">TAB</span></div>')
-    o.append(card(43, "01", "Контекстная<br>подсказка", q, "Показывает доступные команды и параметры в текущем режиме", 1))
-    o.append(card(665, "02", "Проверка<br>синтаксиса", term, "Помогает обнаружить ошибку в введённой команде", 2))
-    o.append(card(1286, "03", "Горячие<br>клавиши", keys, "Ускоряют ввод, редактирование и работу с командами", 3))
-    o.append('<div class="card ab" data-s="4" style="left:160px;top:895px;width:1600px;height:84px;display:flex;gap:24px;'
-             'align-items:center;padding:0 40px">' + ico("info", "sm") +
+    o.append(card(51, 597, "01", "Контекстная<br>подсказка", "p028_q.png", 230,
+                  "Показывает доступные<br>команды и параметры<br>в текущем режиме", 1))
+    o.append(card(667, 583, "02", "Проверка<br>синтаксиса", "p028_term.png", 350,
+                  "Помогает обнаружить<br>ошибку в введённой<br>команде", 2))
+    o.append(card(1270, 597, "03", "Горячие<br>клавиши", "p028_keys.png", 430,
+                  "Ускоряют ввод,<br>редактирование и работу<br>с командами", 3))
+    o.append('<div class="card ab" data-s="4" style="left:160px;top:889px;width:1597px;height:88px;display:flex;gap:22px;'
+             'align-items:center;justify-content:center;padding:0 40px">'
+             '<img src="assets/p028_info.png" style="height:62px;mix-blend-mode:multiply">'
              '<span style="width:2px;height:40px;background:var(--line)"></span>'
-             '<p class="b" style="font-size:25px">Справка зависит от текущего режима командной строки</p></div>')
+             '<p class="b" style="font-size:31px;color:var(--navy)">Справка зависит от текущего режима командной строки</p></div>')
     return "".join(o)
 
 
@@ -145,38 +137,47 @@ SLIDES.append(("p052", "Справка в командной строке ESR", 
 
 # ================================================================ p053 VAP
 def vap():
-    o = ['<h1 class="t left ab" style="left:80px;top:24px;width:1700px;font-size:62px">Настройка '
+    o = ['<h1 class="t left ab" style="left:150px;top:22px;width:1700px;font-size:70px">Настройка '
          '<span class="lt">виртуальной</span> точки доступа</h1>']
-    o.append('<img class="ph ab" data-s="1" src="assets/p053_webui.jpg" style="left:43px;top:138px;width:1010px">')
+    o.append('<img class="ph ab" data-s="1" src="assets/p053_webui.jpg" style="left:43px;top:132px;width:1020px">')
+    MB = "mix-blend-mode:multiply"
 
-    def card(top, h, icn, title, txt, s, extra=""):
-        return (f'<div class="card" data-s="{s}" style="{ab(1088, top, 796)}height:{h}px;padding:22px 30px;display:flex;'
-                f'gap:24px;align-items:center">{ico(icn, "hex")}<div style="flex:1">'
-                f'<div style="{NAVY};font-size:32px;margin-bottom:6px">{title}</div>'
-                f'<p class="b" style="font-size:19px;line-height:1.35">{txt}</p></div>{extra}</div>')
+    def card(top, h, icon, title, txt, s, right):
+        return (f'<div class="card ab" data-s="{s}" style="{ab(1088, top, 795)}height:{h}px;padding:0"></div>'
+                f'<img class="ab" data-s="{s}" src="assets/{icon}" style="left:1112px;top:{top + 22}px;width:116px;{MB}">'
+                f'<div class="ab" data-s="{s}" style="left:1257px;top:{top + 24}px;width:440px">'
+                f'<div style="{NAVY};font-size:38px;line-height:1.1;margin-bottom:10px">{title}</div>'
+                f'<p class="b" style="font-size:20px;line-height:1.38;color:var(--navy);white-space:nowrap;max-width:none">{txt}</p></div>{right}')
 
-    wifi_chip = ('<div style="text-align:center;flex:none">' + ico("wifi") +
-                 '<div class="chip mono" style="font-size:16px;padding:6px 12px;margin-top:8px">WEP-3ax_Portal</div></div>')
-    o.append(card(139, 190, "check", "Включено", "Флаг включает виртуальную точку доступа. Без флага VAP отключена.", 2,
-                  '<div style="flex:none">' + ico("router") + '</div>'))
-    o.append(card(345, 222, "net", "VLAN ID", "Определяет VLAN для трафика клиентов. При передаче клиенту метка снимается, "
-                  "обратный трафик получает указанный VLAN ID.", 3,
-                  '<div class="mono" style="flex:none;font-size:30px;font-weight:800;color:var(--blue);text-align:center">VLAN<br>1000</div>'))
-    o.append(card(582, 228, "wifi", "SSID", "Имя беспроводной сети, по которому устройства находят нужную Wi-Fi-сеть. "
-                  "SSID чувствителен к регистру и должен совпадать во всех устройствах сети.", 4, wifi_chip))
+    o.append(card(139, 188, "p082_check.png", "Включено",
+                  "Флаг включает виртуальную точку<br>доступа. Без флага VAP отключена.", 2,
+                  f'<img class="ab" data-s="2" src="assets/p082_router.png" style="left:1690px;top:146px;width:172px;{MB}">'))
+    o.append(card(346, 219, "p082_vlanico.png", "VLAN ID",
+                  "Определяет VLAN для трафика клиентов.<br>При передаче клиенту метка снимается,<br>"
+                  "обратный трафик получает указанный<br>VLAN ID.", 3,
+                  f'<img class="ab" data-s="3" src="assets/p082_vlan1000.png" style="left:1668px;top:368px;width:196px;{MB}">'))
+    o.append(card(584, 222, "p082_ssidico.png", "SSID",
+                  "Имя беспроводной сети, по которому<br>устройства находят нужную Wi-Fi-сеть.<br>"
+                  "SSID чувствителен к регистру и должен<br>совпадать у всех устройств сети.", 4,
+                  f'<img class="ab" data-s="4" src="assets/p082_wifi.png" style="left:1703px;top:612px;width:126px;{MB}">'
+                  '<div class="chip ab" data-s="4" style="left:1660px;top:715px;width:205px;font-size:21px;padding:6px 6px;white-space:nowrap;font-family:var(--f);'
+                  'justify-content:center;color:var(--navy);font-weight:600">WEP-3ax_Portal</div>'))
 
-    o.append('<div class="card ab" data-s="5" style="left:139px;top:840px;width:1642px;height:160px"></div>')
-
-    def cell(l, w, inner, s):
-        return (f'<div class="ab" data-s="{s}" style="left:{l}px;top:855px;width:{w}px;height:130px;display:flex;'
-                f'align-items:center;justify-content:center;gap:20px">{inner}</div>')
-
-    o.append(cell(190, 360, ico("db") + '<div class="mono" style="font-size:34px;font-weight:800;color:var(--navy)">VLAN<br>1000</div>', 5))
-    o.append(cell(700, 330, ico("router") + '<div style="font-size:30px;font-weight:800;color:var(--navy)">VAP</div>', 6))
-    o.append(cell(1110, 340, ico("wifi") + '<div class="mono" style="font-size:25px;font-weight:700;color:var(--navy)">SSID:<br>WEP-3ax_Portal</div>', 7))
-    o.append(cell(1480, 280, ico("pc") + ico("phone") + ico("mon"), 8))
-    o.append(layer(arrow_svg(560, 920, 690, 920, 6), arrow_svg(1040, 920, 1100, 920, 7), arrow_svg(1440, 920, 1490, 920, 8)))
-    o.append('<p class="b ab ctr-x" data-s="8" style="top:1018px;font-size:20px;color:var(--navy);text-align:center;width:1400px">'
+    o.append('<div class="card ab" data-s="5" style="left:141px;top:838px;width:1636px;height:162px"></div>')
+    o.append('<div class="card solid ab" data-s="5" style="left:189px;top:857px;width:247px;height:105px"></div>')
+    o.append(f'<img class="ab" data-s="5" src="assets/p082_db.png" style="left:222px;top:860px;width:90px;{MB}">')
+    o.append('<div class="ab" data-s="5" style="left:325px;top:872px;font-size:30px;font-weight:700;color:var(--navy);line-height:1.05">'
+             'VLAN<br><span style="font-size:36px">1000</span></div>')
+    o.append(f'<img class="ab" data-s="6" src="assets/p082_vap.png" style="left:509px;top:838px;width:265px;{MB}">')
+    o.append('<div class="ab" data-s="6" style="left:590px;top:968px;width:110px;text-align:center;font-size:30px;font-weight:800;'
+             'color:var(--navy)">VAP</div>')
+    o.append('<div class="card solid ab" data-s="7" style="left:882px;top:857px;width:352px;height:105px"></div>')
+    o.append(f'<img class="ab" data-s="7" src="assets/p082_wifi2.png" style="left:905px;top:868px;width:104px;{MB}">')
+    o.append('<div class="ab" data-s="7" style="left:1017px;top:875px;font-size:26px;font-weight:700;color:var(--navy);line-height:1.2">'
+             'SSID:<br>WEP-3ax_Portal</div>')
+    o.append(f'<img class="ab" data-s="8" src="assets/p082_devs.png" style="left:1331px;top:843px;width:411px;{MB}">')
+    o.append(layer(arrow_svg(449, 912, 500, 912, 6), arrow_svg(800, 912, 860, 912, 7), arrow_svg(1257, 912, 1315, 912, 8)))
+    o.append('<p class="b ab ctr-x" data-s="8" style="top:1010px;font-size:23px;color:var(--navy);text-align:center;width:1400px">'
              'Одна VAP объединяет клиентов с общими параметрами беспроводной сети.</p>')
     return "".join(o)
 
@@ -214,7 +215,7 @@ def cli_modes():
              + lst(1280, 181, ["ssh", "telnet", "terminal", "traceroute", "uptime"], 21, 26)
              + side(1520, 200, ["Доступ", "Проверка", "Диагностика"]) + '</div>')
 
-    o.append('<div class="card ab" data-s="2" style="left:60px;top:352px;width:1779px;height:651px"></div>')
+    o.append('<div class="card ab" data-s="2" style="left:60px;top:352px;width:1779px;height:670px"></div>')
     o.append(f'<div class="ab" data-s="2" style="left:85px;top:375px">{ico("shield")}</div>')
     o.append('<div class="ab" data-s="2" style="left:210px;top:393px;width:900px;font-size:30px;font-weight:800;'
              'color:var(--navy);text-transform:uppercase">Привилегированный режим</div>')
@@ -223,18 +224,18 @@ def cli_modes():
     o.append(prompt(214, 442, 260, "esr#", 26, 2))
     o.append('<div data-s="2">' + lst(214, 515, ["boot", "clear", "commit", "config", "confirm", "copy", "debug", "delete", "dir", "...", "verify"],
                                      22, 28) + '</div>')
-    o.append('<div class="card solid ab" data-s="2" style="left:85px;top:900px;width:420px;height:76px;display:flex;gap:16px;'
+    o.append('<div class="card solid ab" data-s="2" style="left:72px;top:915px;width:440px;height:76px;display:flex;gap:16px;'
              'align-items:center;padding:0 20px">' + ico("lock", "sm") +
-             '<span class="mono" style="font-size:15px;color:var(--navy);line-height:1.3">admin / password &nbsp;•&nbsp; уровень привилегий 15</span></div>')
+             '<span style="font-size:15px;color:var(--navy);line-height:1.25">admin / password &nbsp;•&nbsp; уровень привилегий 15</span></div>')
 
-    o.append('<div class="card ab" data-s="3" style="left:523px;top:437px;width:1307px;height:548px;background:rgba(255,255,255,.5)"></div>')
+    o.append('<div class="card ab" data-s="3" style="left:523px;top:437px;width:1307px;height:568px;background:rgba(255,255,255,.5)"></div>')
     o.append(f'<div class="ab" data-s="3" style="left:545px;top:455px">{ico("gear", "sm")}</div>')
     o.append('<div class="ab" data-s="3" style="left:625px;top:462px;width:900px;font-size:25px;font-weight:800;'
              'color:var(--navy);text-transform:uppercase">Режим глобального конфигурирования</div>')
-    o.append(prompt(625, 524, 330, "esr(config)#", 20, 3))
-    o.append('<div data-s="3">' + lst(800, 515, ["aaa", "banner", "boot", "bridge", "clock", "do", "enable", "end", "exit", "hostname", "interface",
+    o.append(prompt(608, 524, 200, "esr(config)#", 20, 3))
+    o.append('<div data-s="3">' + lst(800, 500, ["aaa", "banner", "boot", "bridge", "clock", "do", "enable", "end", "exit", "hostname", "interface",
                                                  "line", "object-group", "port-channel", "privilege", "router", "security", "syslog", "system",
-                                                 "tunnel", "username", "vlan", "...", "zabbix-proxy"], 17, 19.4)
+                                                 "tunnel", "username", "vlan", "...", "zabbix-proxy"], 17, 19.6)
              + '<div class="ab" style="left:560px;top:690px;width:200px;font-size:15px;letter-spacing:1px;color:var(--dim);'
                'text-transform:uppercase;line-height:1.7">Конфигурация<br>системы<br>управление<br>ресурсами</div></div>')
 
@@ -244,23 +245,23 @@ def cli_modes():
               f'<div class="ab" data-s="{s}" style="left:1090px;top:{top + 18}px;width:700px;font-size:17px;font-weight:800;'
               f'color:var(--navy);text-transform:uppercase">{title}</div>')
         if prm:
-            h_ += prompt(1090, top + 56, 280, prm, 17, s)
+            h_ += prompt(1050, top + 60, 290, prm, 17, s)
         if items:
-            h_ += (f'<div data-s="{s}">' + lst(1385, top + 40, items, 16, 19.5) +
-                   f'<div class="ab" style="left:1630px;top:{top + 56}px;width:170px;font-size:13px;letter-spacing:1px;color:var(--dim);'
-                   f'text-transform:uppercase;line-height:1.6;border-left:2px solid var(--line);padding-left:12px">{side_t}</div></div>')
+            h_ += (f'<div data-s="{s}">' + lst(1440, top + (14 if len(items) > 6 else 30), items, 16, 21) +
+                   f'<div class="ab" style="left:1645px;top:{top + 30}px;width:165px;font-size:13px;letter-spacing:0;color:var(--dim);'
+                   f'text-transform:uppercase;line-height:1.3;border-left:2px solid var(--line);padding-left:12px">{side_t}</div></div>')
         return h_
 
-    o.append(sub(506, 160, "gear", "Конфигурирование интерфейса", "esr(config-if-gi)#",
+    o.append(sub(498, 172, "gear", "Конфигурирование интерфейса", "esr(config-if-gi)#",
                  ["channel-group", "do", "ip", "mode", "mtu", "...", "wan"], "Настройка<br>интерфейсов", 4))
-    o.append(sub(678, 160, "net", "Конфигурирование маршрутизации", "esr(config-ospf)#",
+    o.append(sub(682, 168, "net", "Конфигурирование маршрутизации", "esr(config-ospf)#",
                  ["area", "do", "enable", "preference", "...", "router-id"], "Настройка<br>протоколов<br>маршрутизации", 5))
-    o.append(sub(849, 122, "layers", "Конфигурирование функционала", "", None, "", 6))
-    o.append('<div class="ab mono" data-s="6" style="left:1020px;top:906px;width:620px;font-size:17px;font-weight:600;color:var(--navy);'
-             'background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;white-space:nowrap">'
-             '(config-user)# &nbsp;•&nbsp; (config-gre)# &nbsp;•&nbsp; (config-line-ssh)#</div>')
-    o.append('<div class="ab" data-s="6" style="left:1660px;top:895px;width:150px;font-size:13px;color:var(--dim);'
-             'letter-spacing:1px;text-transform:uppercase;line-height:1.5;border-left:2px solid var(--line);padding-left:12px">'
+    o.append(sub(862, 135, "layers", "Конфигурирование функционала", "", None, "", 6))
+    o.append('<div class="ab mono" data-s="6" style="left:1015px;top:925px;width:615px;font-size:17px;font-weight:600;color:var(--navy);'
+             'background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;white-space:nowrap;letter-spacing:-1px">'
+             '(config-user)# • (config-gre)# • (config-line-ssh)#</div>')
+    o.append('<div class="ab" data-s="6" style="left:1645px;top:893px;width:165px;font-size:13px;color:var(--dim);'
+             'letter-spacing:0;text-transform:uppercase;line-height:1.3;border-left:2px solid var(--line);padding-left:12px">'
              'Настройка дополнительных функций</div>')
     return "".join(o)
 
@@ -270,51 +271,53 @@ SLIDES.append(("p054", "Режимы командной строки", cli_modes
 
 # ================================================================ p055 ошибки
 def errors():
-    o = ['<h1 class="t ab ctr-x" style="top:30px;width:1700px;font-size:58px">Ошибки в командной строке <span class="lt" style="color:var(--navy)">ESR</span></h1>']
-    T = ('background:#101c3d;border-radius:12px;padding:16px 18px;font-family:var(--mono);color:#eaf2ff;font-size:19px;line-height:1.5')
+    o = ['<h1 class="t ab ctr-x" style="top:42px;width:1700px;font-size:70px">Ошибки в командной строке ESR</h1>']
+    T = ('background:#101c3d;border-radius:12px;padding:12px 24px;font-family:var(--mono);color:#eaf2ff;font-size:23px;line-height:1.45;'
+         'letter-spacing:.5px')
 
-    def card(l, cls, bord, icol, name, ru, cause_i, cause, ex1, ex2, fix, s):
-        return (f'<div class="card {cls}" data-s="{s}" style="{ab(l, 160, 590)}height:578px;padding:20px 24px;'
+    def card(l, k, cls, bord, name, ru, cause, ex1, ex2, fix, s):
+        return (f'<div class="card {cls} ab" data-s="{s}" style="{ab(l, 155, 600)}height:582px;padding:14px 20px;'
                 f'border:2px solid {bord}">'
-                f'<div style="display:flex;gap:18px;align-items:center">'
-                f'<span style="width:84px;height:84px;border-radius:50%;background:{icol};display:grid;place-items:center;flex:none;'
-                f'box-shadow:0 8px 20px rgba(0,0,0,.18)"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#fff" '
-                f'stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.2h.01"/></svg></span>'
-                f'<div><div style="font-size:31px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.1">{name}</div>'
-                f'<div style="font-size:26px;font-weight:600;color:#5a74b8">{ru}</div></div></div>'
-                f'<div class="card solid" style="margin-top:20px;padding:16px 20px;display:flex;gap:18px;align-items:center">{ico(cause_i, "sm")}'
-                f'<div><div style="font-size:22px;font-weight:800;color:var(--navy)">Причина:</div>'
-                f'<p class="b" style="font-size:19px;line-height:1.3">{cause}</p></div></div>'
-                f'<div style="margin-top:16px;font-size:20px;font-weight:800;color:var(--navy)">Пример в командной строке:</div>'
-                f'<div style="{T};margin-top:8px"><div>esr# {ex1}</div>'
-                f'<div style="margin-top:6px;border:2.5px solid #e53935;padding:5px 10px;border-radius:3px;font-size:18px">Syntax error: {ex2}</div></div>'
-                f'<div class="card solid" style="margin-top:16px;padding:16px 20px;display:flex;gap:18px;align-items:center">{ico("wrench", "sm")}'
-                f'<div><div style="font-size:22px;font-weight:800;color:var(--navy)">Что исправить:</div>'
-                f'<p class="b" style="font-size:19px;line-height:1.3">{fix}</p></div></div></div>')
+                f'<div style="display:flex;gap:16px;align-items:center;height:150px">'
+                f'<img src="assets/p030e_w{k}.png" style="width:150px;flex:none;margin-left:-6px;mix-blend-mode:multiply">'
+                f'<div><div style="font-size:40px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.05;'
+                f'white-space:nowrap">{name}</div>'
+                f'<div style="font-size:31px;font-weight:600;color:#6a83c4;white-space:nowrap">{ru}</div></div></div>'
+                f'<div class="card solid" style="margin-top:6px;padding:8px 14px;display:flex;gap:16px;align-items:center;height:112px">'
+                f'<img src="assets/p030e_c{k}.png" style="width:86px;flex:none;mix-blend-mode:multiply">'
+                f'<div><div style="font-size:24px;font-weight:800;color:var(--navy)">Причина:</div>'
+                f'<p class="b" style="font-size:21px;line-height:1.3;color:var(--navy)">{cause}</p></div></div>'
+                f'<div style="margin-top:10px;font-size:23px;font-weight:800;color:var(--navy);padding-left:10px">Пример в командной строке:</div>'
+                f'<div style="{T};margin-top:6px"><div>esr# {ex1}</div><div>Syntax error: {ex2}</div></div>'
+                f'<div class="card solid" style="margin-top:14px;padding:8px 14px;display:flex;gap:16px;align-items:center;height:112px">'
+                f'<img src="assets/p030e_f{k}.png" style="width:86px;flex:none;mix-blend-mode:multiply">'
+                f'<div><div style="font-size:24px;font-weight:800;color:var(--navy)">Что исправить:</div>'
+                f'<p class="b" style="font-size:21px;line-height:1.3;color:var(--navy)">{fix}</p></div></div></div>')
 
-    o.append(card(38, "cream", "#f2c26b", "linear-gradient(160deg,#ffbf3c,#f08a00)", "Incompleted command", "Незаконченная команда", "doc",
-                  "Введены не все ключевые слова или параметры.", "set", "Incompleted command",
-                  "Дополнить команду: <b class=\"mono\">set date</b> и указать необходимые параметры.", 1))
-    o.append(card(657, "rose", "#f0a7c6", "linear-gradient(160deg,#ff5a6a,#d3173c)", "Unknown command", "Неизвестная команда", "gear",
-                  "Командная строка не распознала введённую команду.", "s", "Unknown command",
-                  "Проверить написание и ввести полное имя команды.", 2))
-    o.append(card(1276, "", "#9cc0f2", "linear-gradient(160deg,#ff5a6a,#d3173c)", "Illegal parameter", "Недопустимый параметр", "list",
-                  "Введено значение, которое команда не может принять.", "set date 22:44:33 15 1", "Illegal parameter",
-                  "Вместо <b class=\"mono\">1</b> указать название месяца, например <b class=\"mono\">January</b>.", 3))
+    o.append(card(38, 1, "cream", "#f2c26b", "Incompleted command", "Незаконченная команда",
+                  "Введены не все ключевые слова<br>или параметры.", "set", "Incompleted command",
+                  "Дополнить команду: set date и указать<br>необходимые параметры.", 1))
+    o.append(card(657, 2, "rose", "#f0a7c6", "Unknown command", "Неизвестная команда",
+                  "Командная строка не распознала<br>введённую команду.", "s", "Unknown command",
+                  "Проверить написание и ввести<br>полное имя команды.", 2))
+    o.append(card(1276, 3, "", "#8fd6e6", "Illegal parameter", "Недопустимый параметр",
+                  "Введено значение, которое команда<br>не может принять.", "set date 22:44:33 15 1", "Illegal parameter",
+                  "Вместо 1 указать название месяца,<br>например January.", 3))
 
-    o.append('<div class="card ab" data-s="4" style="left:38px;top:757px;width:1843px;height:290px"></div>')
-    o.append('<div class="ab" data-s="4" style="left:100px;top:775px;font-size:33px;font-weight:800;color:var(--navy);'
+    o.append('<div class="card ab" data-s="4" style="left:38px;top:757px;width:1843px;height:300px"></div>')
+    o.append('<div class="ab" data-s="4" style="left:112px;top:772px;font-size:44px;font-weight:800;color:var(--navy);'
              'text-transform:uppercase">Как обрабатывается команда</div>')
-    steps = [("doc", "1.", "Ввод команды"), ("reload", "2.", "Нажатие Enter"), ("search", "3.", "Анализ слева направо"),
-             ("gear", "4.", "Проверка синтаксиса"), ("check", "5.", "Выполнение или сообщение об ошибке")]
-    xs = [255, 585, 935, 1285, 1640]
-    for i, ((ic, n, t), x) in enumerate(zip(steps, xs)):
-        o.append(f'<div class="ab" data-s="{5 + i}" style="left:{x - 150}px;top:830px;width:300px;text-align:center">'
-                 f'<div style="display:flex;justify-content:center">{ico(ic)}</div>'
-                 f'<p class="b" style="font-size:19px;margin-top:12px;color:var(--navy)"><b>{n}</b> {t}</p></div>')
-    o.append(layer(*[arrow_svg(xs[i] + 90, 870, xs[i + 1] - 100, 870, 6 + i) for i in range(4)]))
-    o.append('<div class="note ab ctr-x" data-s="10" style="top:965px;width:1250px;font-size:20px;padding:12px 22px">' + ico("info", "sm") +
-             '<p class="b" style="font-size:20px;align-self:center">Если команда распознана, она выполняется, затем командная '
+    steps = [("1.", "Ввод команды"), ("2.", "Нажатие Enter"), ("3.", "Анализ слева направо"),
+             ("4.", "Проверка синтаксиса"), ("5.", "Выполнение или<br>сообщение об ошибке")]
+    xs = [253, 586, 957, 1300, 1660]
+    for i, ((n, t), x) in enumerate(zip(steps, xs)):
+        o.append(f'<div class="ab" data-s="{5 + i}" style="left:{x - 170}px;top:822px;width:340px;text-align:center">'
+                 f'<img src="assets/p030e_s{i + 1}.png" style="width:118px;mix-blend-mode:multiply">'
+                 f'<p class="b" style="font-size:23px;line-height:1.2;margin-top:0;color:var(--navy)"><b>{n}</b> {t}</p></div>')
+    o.append(layer(*[arrow_svg(xs[i] + 125, 880, xs[i + 1] - 125, 880, 6 + i) for i in range(4)]))
+    o.append('<div class="card solid ab" data-s="10" style="left:330px;top:990px;width:1260px;height:58px;display:flex;gap:18px;'
+             'align-items:center;padding:0 22px">' + ico("info", "sm") +
+             '<p class="b" style="font-size:21px;color:var(--navy);white-space:nowrap;max-width:none">Если команда распознана, она выполняется, затем командная '
              'строка ожидает следующий ввод.</p></div>')
     return "".join(o)
 
@@ -393,32 +396,37 @@ SLIDES.append(("p056", "Доступ к сетевому устройству", 
 
 # ================================================================ p057 индустриальные
 def industrial():
-    o = ['<h1 class="t ab ctr-x" style="top:16px;width:1700px;font-size:58px">Индустриальные коммутаторы</h1>']
-    feats = [(384, "temp", "Широкий диапазон температур"), (661, "shield", "Прочный корпус"), (960, "chart", "Защита от ЭМП"),
-             (1248, "bolt", "Защита от скачков"), (1532, "clock", "Надёжность 24/7")]
-    for i, (cx, ic, t) in enumerate(feats):
-        o.append(f'<div class="ab" data-s="1" style="left:{cx - 140}px;top:108px;width:280px;text-align:center;--dl:{i * 80}ms">'
-                 f'<div style="display:flex;justify-content:center">{ico(ic)}</div>'
-                 f'<div style="font-size:17px;letter-spacing:.5px;text-transform:uppercase;color:var(--navy);margin-top:6px;line-height:1.2">{t}</div></div>')
-    lab = 'text-align:center;font-size:31px;font-weight:800;color:var(--navy)'
-    o.append('<div class="card ab" data-s="2" style="left:47px;top:267px;width:849px;height:490px"></div>')
-    o.append('<img class="cut ab" data-s="2" src="assets/p057_mes3510.jpg" style="left:100px;top:360px;width:740px">')
-    o.append(f'<div class="ab mono" data-s="2" style="left:47px;top:690px;width:849px;{lab}">MES3510DS-24F</div>')
-    o.append('<div class="card ab" data-s="3" style="left:921px;top:267px;width:476px;height:490px"></div>')
-    o.append('<img class="cut ab" data-s="3" src="assets/p057_mes3500.jpg" style="left:1055px;top:290px;width:210px">')
-    o.append(f'<div class="ab mono" data-s="3" style="left:921px;top:700px;width:476px;{lab}">MES3500I-8P8F</div>')
-    o.append('<div class="card ab" data-s="4" style="left:1418px;top:267px;width:459px;height:490px"></div>')
-    o.append('<img class="cut ab" data-s="4" src="assets/p057_mes3710.jpg" style="left:1565px;top:300px;width:180px">')
-    o.append(f'<div class="ab mono" data-s="4" style="left:1418px;top:700px;width:459px;{lab}">MES3710P</div>')
-    o.append('<div class="card ab" data-s="5" style="left:47px;top:779px;width:1830px;height:276px"></div>')
-    o.append('<div class="ab" data-s="5" style="left:47px;top:796px;width:1830px;text-align:center;font-size:27px;font-weight:800;'
+    o = ['<h1 class="t ab ctr-x" style="top:14px;width:1700px;font-size:70px">Индустриальные коммутаторы</h1>']
+    MB = "mix-blend-mode:multiply"
+    feats = [(385, "Широкий<br>диапазон температур"), (676, "Прочный<br>корпус"), (958, "Защита<br>от ЭМП"),
+             (1242, "Защита<br>от скачков"), (1534, "Надёжность<br>24/7")]
+    for i, (cx, t) in enumerate(feats):
+        o.append(f'<div class="ab" data-s="1" style="left:{cx - 150}px;top:92px;width:300px;text-align:center;--dl:{i * 80}ms">'
+                 f'<img src="assets/p043_f{i + 1}.png" style="width:112px;{MB}">'
+                 f'<div style="font-size:19px;font-weight:700;text-transform:uppercase;color:var(--navy);line-height:1.1">{t}</div></div>')
+    for x in (550, 818, 1102, 1386):
+        o.append(f'<div class="ab" data-s="1" style="left:{x}px;top:130px;width:2px;height:90px;background:var(--line)"></div>')
+    lab = 'text-align:center;font-size:40px;font-weight:800;color:var(--navy)'
+    o.append('<div class="card ab" data-s="2" style="left:49px;top:269px;width:855px;height:488px"></div>')
+    o.append(f'<img class="ab" data-s="2" src="assets/dev/mes3510ds-24f.webp" style="left:72px;top:385px;width:810px">')
+    o.append(f'<div class="ab" data-s="2" style="left:49px;top:678px;width:855px;{lab}">MES3510DS-24F</div>')
+    o.append('<div class="card ab" data-s="3" style="left:920px;top:269px;width:482px;height:488px"></div>')
+    o.append(f'<img class="ab" data-s="3" src="assets/dev/mes3500i-8p8f.webp" style="left:1003px;top:290px;width:316px">')
+    o.append(f'<div class="ab" data-s="3" style="left:920px;top:692px;width:482px;{lab}">MES3500I-8P8F</div>')
+    o.append('<div class="card ab" data-s="4" style="left:1417px;top:269px;width:453px;height:488px"></div>')
+    o.append(f'<img class="ab" data-s="4" src="assets/dev/mes3710p.webp" style="left:1553px;top:288px;width:184px">')
+    o.append(f'<div class="ab" data-s="4" style="left:1417px;top:692px;width:453px;{lab}">MES3710P</div>')
+    o.append('<div class="card ab" data-s="5" style="left:49px;top:772px;width:1824px;height:290px"></div>')
+    o.append('<div class="ab" data-s="5" style="left:420px;top:785px;width:1080px;text-align:center;font-size:33px;font-weight:800;'
              'color:var(--navy);text-transform:uppercase">Сеть промышленного объекта</div>')
-    o.append('<img class="cut ab" data-s="5" src="assets/p057_factory.jpg" style="left:130px;top:845px;width:460px">')
-    o.append('<img class="cut ab" data-s="6" src="assets/p057_din.jpg" style="left:880px;top:860px;width:170px">')
-    o.append('<img class="cut ab" data-s="7" src="assets/p057_cams.jpg" style="left:1570px;top:830px;width:150px">')
-    o.append(layer(line_svg(610, 935, 870, 935, 6), line_svg(1060, 935, 1560, 935, 7)))
-    o.append('<div class="ab" data-s="6" style="left:620px;top:900px;font-size:19px;font-weight:600;color:var(--navy)">Ethernet</div>')
-    o.append('<div class="ab" data-s="7" style="left:1230px;top:900px;font-size:19px;font-weight:600;color:var(--navy)">Ethernet</div>')
+    o.append(f'<img class="ab" data-s="5" src="assets/p043_factory.jpg" style="left:125px;top:786px;width:486px;{MB}">')
+    o.append(f'<img class="ab" data-s="6" src="assets/dev/mes3500i-8p8f.webp" style="left:916px;top:838px;width:126px">')
+    o.append(f'<img class="ab" data-s="7" src="assets/p043_cams.jpg" style="left:1559px;top:783px;width:192px;{MB}">')
+    o.append(layer(line_svg(577, 921, 872, 921, 6), line_svg(1097, 921, 1468, 921, 7),
+                   line_svg(1468, 921, 1468, 827, 7), line_svg(1468, 921, 1468, 985, 7),
+                   line_svg(1468, 827, 1562, 827, 7), line_svg(1468, 985, 1562, 985, 7), line_svg(1468, 902, 1562, 902, 7)))
+    o.append('<div class="ab" data-s="6" style="left:640px;top:882px;width:160px;text-align:center;font-size:21px;font-weight:600;color:var(--navy)">Ethernet</div>')
+    o.append('<div class="ab" data-s="7" style="left:1190px;top:882px;width:160px;text-align:center;font-size:21px;font-weight:600;color:var(--navy)">Ethernet</div>')
     return "".join(o)
 
 
@@ -427,46 +435,50 @@ SLIDES.append(("p057", "Индустриальные коммутаторы", in
 
 # ================================================================ p058 IP на MES
 def mes_ip():
-    o = ['<h1 class="t ab ctr-x" style="top:42px;width:1800px;font-size:60px">Настройка IP-адреса на интерфейсе <span style="color:var(--navy)">MES</span></h1>']
-    CODE = 'font-family:var(--mono);font-weight:600;color:var(--navy);font-size:21px'
+    o = ['<h1 class="t ab ctr-x" style="top:36px;width:1800px;font-size:70px">Настройка IP-адреса на интерфейсе MES</h1>']
+    CODE = 'font-family:var(--mono);font-weight:500;color:var(--navy);font-size:22px'
+    MB = "mix-blend-mode:multiply"
 
-    def card(l, w, n, title, txt, code, abbr, icn, s):
-        h = (f'<div class="card" data-s="{s}" style="{ab(l, 166, w)}height:453px;padding:20px 24px">'
-             f'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
-             f'<span style="font-size:84px;font-weight:800;color:#8aa6dc;line-height:1;font-family:var(--mono)">{n}</span>{ico(icn)}</div>'
-             f'<div style="{NAVY};font-size:28px;line-height:1.15;margin-top:12px;min-height:64px">{title}</div>'
-             f'<p class="b" style="font-size:18px;line-height:1.3;margin-top:12px;min-height:50px">{txt}</p>'
-             f'<div class="card solid" style="margin-top:14px;padding:12px 14px;border-radius:12px"><div style="{CODE}">{code}</div></div>')
+    def card(l, w, n, title, txt, code, abbr, k, s):
+        h = (f'<div class="card ab" data-s="{s}" style="{ab(l, 167, w)}height:451px;padding:22px 28px">'
+             f'<div style="display:flex;justify-content:space-between;align-items:flex-start;height:120px">'
+             f'<span style="font-size:110px;font-weight:800;line-height:1;background:linear-gradient(180deg,#6f93e6,#2f58c4);'
+             f'-webkit-background-clip:text;background-clip:text;color:transparent">{n}</span>'
+             f'<img src="assets/p058_i{k}.png" style="width:140px;{MB};margin-top:-6px"></div>'
+             f'<div style="{NAVY};font-size:31px;line-height:1.12;margin-top:10px;min-height:70px">{title}</div>'
+             f'<div style="width:100px;height:2px;background:#7d97da;margin:6px 0 10px"></div>'
+             f'<p class="b" style="font-size:22px;line-height:1.25;min-height:56px;color:var(--navy)">{txt}</p>'
+             f'<div class="card solid" style="margin-top:12px;padding:10px 14px;border-radius:10px"><div style="{CODE}">{code}</div></div>')
         if abbr:
-            h += (f'<div class="card solid" style="margin-top:12px;padding:8px 14px;border-radius:12px"><span style="font-size:18px;color:var(--dim)">'
-                  f'Сокращённо:</span> <b style="{CODE};font-size:20px"> {abbr}</b></div>')
+            h += (f'<div class="card solid" style="margin-top:8px;padding:6px 8px;border-radius:10px;white-space:nowrap;letter-spacing:-.6px">'
+                  f'<span style="font-size:19px;color:var(--navy)">Сокращённо:</span> <b style="{CODE};font-weight:700"> {abbr}</b></div>')
         return h + '</div>'
 
-    B = '<b style="color:var(--blue)">'
-    o.append(card(38, 457, "01", "Привилегированный режим", "Переход в режим глобальной конфигурации", f"console# {B}config</b>", "", "term", 1))
-    o.append(card(523, 448, "02", "Создание VLAN", "Создание VLAN 10", f"console(config)# {B}vlan 10</b>", "", "db", 2))
-    o.append(card(988, 445, "03", "Выбор интерфейса VLAN", "Переход в режим настройки интерфейса VLAN 10",
-                  f"console(config)# {B}interface vlan 10</b>", "int vl 10", "gear", 3))
-    o.append(card(1455, 429, "04", "Назначение IP-адреса", "Назначение IP-адреса с префиксом /24",
-                  f"console(config-if)# {B}ip address 10.0.0.1/24</b>", "ip add 10.0.0.1/24", "net", 4))
-    o.append(layer(*[f'<polygon data-s="{s}" points="{x},548 {x + 26},573 {x},598 {x + 4},573" fill="var(--blue)"/>'
-                     for s, x in [(2, 500), (3, 965), (4, 1432)]]))
+    B = '<b style="color:#1d3fae">'
+    o.append(card(38, 434, "01", "Привилегированный<br>режим", "Переход в режим глобальной<br>конфигурации", f"console# {B}config</b>", "", 1, 1))
+    o.append(card(520, 423, "02", "Создание VLAN", "Создание VLAN 10", f"console(config)# {B}vlan 10</b>", "", 2, 2))
+    o.append(card(988, 421, "03", "Выбор интерфейса<br>VLAN", "Переход в режим настройки<br>интерфейса VLAN 10",
+                  f"console(config)# {B}interface vlan 10</b>", "int vl 10", 3, 3))
+    o.append(card(1456, 425, "04", "Назначение IP-адреса", "Назначение IP-адреса с префиксом /24",
+                  f"console(config-if)# {B}ip address 10.0.0.1/24</b>", "ip add 10.0.0.1/24", 4, 4))
+    o.append(layer(*[f'<polygon data-s="{s}" points="{x},330 {x + 30},357 {x},384 {x + 6},357" fill="var(--blue)"/>'
+                     for s, x in [(2, 482), (3, 951), (4, 1419)]]))
 
     lines = [("Login: ", "admin"), ("Password: ", "admin"), ("console# ", "config"), ("console(config)# ", "vlan 10"),
              ("console(config)# ", "interface vlan 10"), ("console(config-if)# ", "ip address 10.0.0.1/24")]
-    t = ('<div class="ab" data-s="5" style="left:111px;top:725px;width:1698px;height:270px;border-radius:20px;background:#0f1d4a;'
+    t = ('<div class="ab" data-s="5" style="left:113px;top:722px;width:1696px;height:266px;border-radius:20px;background:#0f1d4a;'
          'box-shadow:0 14px 34px rgba(16,37,90,.35);border:2px solid #3a63c9;overflow:hidden">'
          '<div style="height:50px;background:#16285f;display:flex;align-items:center;justify-content:space-between;padding:0 30px">'
-         '<span style="font-size:17px;letter-spacing:3px;color:#cfdcff;text-transform:uppercase">Конфигурация в командной строке</span>'
+         '<span style="font-size:22px;letter-spacing:3px;color:#cfdcff;text-transform:uppercase;font-family:var(--f);font-weight:600">Конфигурация в командной строке</span>'
          '<span style="display:flex;gap:12px">' + "".join('<i style="width:16px;height:16px;border-radius:50%;background:#5b8cff;display:block"></i>' for _ in range(3)) +
-         '</span></div><div class="mono" style="position:absolute;left:120px;top:64px;font-size:24px;line-height:1.3;color:#dbe7ff">'
+         '</span></div><div class="mono" style="position:absolute;left:155px;top:62px;font-size:27px;line-height:1.15;color:#dbe7ff">'
          + "<br>".join(f'{a}<b style="color:#6fa8ff">{b}</b>' for a, b in lines) + '</div>'
          '<div class="mono" style="position:absolute;left:30px;top:70px;font-size:34px;color:#8fb0f5">&gt;_</div></div>')
     o.append(t)
-    o.append('<div class="card solid ab ctr-x" data-s="6" style="top:1008px;width:640px;height:60px;display:flex;gap:16px;align-items:center;'
-             'justify-content:center;padding:0;border-radius:16px">' + ico("net", "sm") +
-             '<span style="font-size:22px;color:var(--navy)">IP-адрес интерфейса: </span>'
-             '<b class="mono" style="font-size:27px;color:var(--blue)">10.0.0.1/24</b></div>')
+    o.append('<div class="card solid ab ctr-x" data-s="6" style="top:998px;width:684px;height:68px;display:flex;gap:16px;align-items:center;'
+             'justify-content:center;padding:0;border-radius:16px"><img src="assets/p058_net.png" style="height:56px;mix-blend-mode:multiply">'
+             '<span style="font-size:27px;color:var(--navy)">IP-адрес интерфейса: </span>'
+             '<b style="font-size:34px;color:#1d3fae">10.0.0.1/24</b></div>')
     return "".join(o)
 
 

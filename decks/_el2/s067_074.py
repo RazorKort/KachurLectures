@@ -111,7 +111,7 @@ def post_boot():
             'line-height:1.3">Самотестирование при включении электропитания.</div>',
             '<div class="ab" style="left:32px;top:170px;width:320px;font-size:21px;line-height:1.35;color:var(--ink)">'
             'POST проверяет наличие и работоспособность компонентов до начала работы устройства.</div>']
-    o.append(kcard(34, 128, 833, 322, 1, "card", "".join(post), "padding:0"))
+    o.append(kcard(34, 122, 830, 312, 1, "card", "".join(post), "padding:0"))
 
     cx, cy = 610, 311
     nodes = [("sd", 494, 219, "Память", 494, 242, "c"), ("gear", 668, 219, "Прошивка", 700, 209, "l"),
@@ -130,35 +130,35 @@ def post_boot():
 
     sig = ['<div style="font-size:22px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.1;margin-bottom:8px">'
            'Сигналы<br>неисправности</div>',
-           '<div class="card solid" style="padding:8px 12px;display:flex;gap:12px;align-items:center;margin-bottom:8px;border-radius:16px">'
+           '<div class="card solid" style="padding:4px 10px;display:flex;gap:12px;align-items:center;margin-bottom:6px;border-radius:16px">'
            + big_ico(xi(SPK, ""), 52, 14) +
-           '<div style="font-size:17px;line-height:1.22"><b>Звуковые</b> — комбинации коротких и длинных сигналов</div></div>',
-           '<div class="card solid" style="padding:8px 12px;display:flex;gap:12px;align-items:center;margin-bottom:10px;border-radius:16px">'
+           '<div style="font-size:17px;line-height:1.12"><b>Звуковые</b> — комбинации коротких и длинных сигналов</div></div>',
+           '<div class="card solid" style="padding:4px 10px;display:flex;gap:12px;align-items:center;margin-bottom:6px;border-radius:16px">'
            + big_ico(ico("mon"), 52, 14) +
-           '<div style="font-size:17px;line-height:1.22"><b>Текстовые</b> — описание или код ошибки</div></div>',
-           f'<div class="card rose" style="padding:10px 12px;display:flex;gap:10px;align-items:center;font-size:16px;'
+           '<div style="font-size:17px;line-height:1.12"><b>Текстовые</b> — описание или код ошибки</div></div>',
+           f'<div class="card rose" style="padding:6px 10px;display:flex;gap:10px;align-items:center;font-size:16px;'
            f'line-height:1.25;color:{RED};font-weight:600;border-radius:16px"><span style="display:grid;place-items:center;flex:none;width:34px;height:34px;'
            f'border-radius:50%;background:{RED};color:#fff;font-size:20px;font-weight:800">!</span><div>Ошибка компонента{AR}сигнал неисправности '
            f'и остановка соответствующего этапа.</div></div>']
-    o.append(kcard(878, 124, 336, 340, 2, "card", "".join(sig), "padding:12px 14px"))
-    o.append(img("p067_switch.jpg", 1227, 176, 693, None, 2))
+    o.append(kcard(878, 122, 440, 312, 2, "card", "".join(sig), "padding:10px 14px"))
+    o.append(img("dev/mes2424.webp", 1336, 150, 570, 260, 2, cls="ab", extra="object-fit:contain"))
 
     stages = [
-        (34, 473, "01", "ROM BOOTLOADER", "Загрузчик ПЗУ", "p067_rom.jpg", 128, 64,
+        (34, 432, "01", "ROM BOOTLOADER", "Загрузчик ПЗУ", "p067_rom.jpg", 128, 64,
          ["Запуск устройства", "Инициализация аппаратных регистров", "Выбор источника: NOR Flash • SD/MMC • PCI Express",
           "Вычисление и сравнение хеша открытого ключа", f"Хеш совпал{AR}запуск Booton"],
          f"Хеш не совпал{AR}<span style=\"color:{RED}\">остановка загрузки</span>"),
-        (524, 392, "02", "BOOTON", "Первичный загрузчик", "p067_booton.jpg", 138, 74,
+        (471, 452, "02", "BOOTON", "Первичный загрузчик", "p067_booton.jpg", 138, 74,
          ["Запуск Booton", "Инициализация CPU, UART и DRAM", "Запуск защитного таймера",
           "Чтение параметров и выбор источника", "Копирование образа U-Boot в DRAM", "Проверка подлинности U-Boot",
           f"Проверка пройдена{AR}запуск U-Boot"],
          f"Ошибка проверки{AR}<span style=\"color:{RED}\">остановка загрузки</span>"),
-        (1001, 405, "03", "U-BOOT", "Универсальный загрузчик", "p067_uboot.jpg", 138, 75,
+        (928, 520, "03", "U-BOOT", "Универсальный загрузчик", "p067_uboot.jpg", 138, 75,
          ["Запуск U-Boot", "Проверка заголовка, ключа, цифровой подписи и хеша", "Минимальная инициализация аппаратного окружения",
           "Инициализация NOR Flash и сетевых интерфейсов", "Выбор активного раздела eMMC / NAND",
           "Проверка подлинности раздела", f"Проверка пройдена{AR}запуск Firmware"],
          f"Ошибка проверки{AR}<span style=\"color:{RED}\">остановка загрузки</span>"),
-        (1488, 398, "04", "FIRMWARE", "Файл прошивки", "p067_fw.jpg", 95, 88,
+        (1453, 432, "04", "FIRMWARE", "Файл прошивки", "p067_fw.jpg", 95, 88,
          ["Запуск Firmware", "Проверка подлинности: CRC", "Распаковка образа Firmware",
           "Полная инициализация аппаратного окружения", "Проверка остальных компонентов", "Загрузка рабочей конфигурации"],
          None)]
@@ -170,15 +170,15 @@ def post_boot():
                 f'box-shadow:0 6px 16px rgba(42,107,242,.35)">{n}</span>'
                 f'<div><div style="font-size:25px;font-weight:800;color:var(--navy)">{name}</div>'
                 f'<div style="font-size:21px;color:var(--blue)">{sub}</div></div></div>')
-        pic = chipimg(chip, (w - cw) / 2, 84, cw, ch)
-        body = f'<div class="ab" style="{ab(22, 162, w - 44)}">{bullets(bl, 17.5 if len(bl) > 6 else 18, 3, 1.17)}'
+        pic = chipimg(chip, 40 + (110 - cw * .8) / 2, 84, cw * .8, ch * .8)
+        body = f'<div class="ab" style="{ab(18, 150, w - 30)}">{bullets(bl, 21, 2, 1.13)}'
         if err:
-            body += (f'<div style="margin-top:14px;border-radius:12px;background:rgba(253,226,234,.9);'
-                     f'padding:8px 12px;display:flex;gap:10px;align-items:center;font-size:17px;font-weight:600;'
+            body += (f'<div style="margin-top:8px;border-radius:12px;background:rgba(253,226,234,.9);'
+                     f'padding:5px 10px;display:flex;gap:10px;align-items:center;font-size:21px;font-weight:600;line-height:1.1;'
                      f'color:var(--navy)"><span style="display:grid;place-items:center;flex:none;width:24px;height:24px;'
                      f'border-radius:50%;background:{RED};color:#fff;font-size:16px;font-weight:800">!</span><div>{err}</div></div>')
         else:
-            body += (f'<div style="margin-top:16px;border-radius:14px;background:rgba(210,244,226,.95);'
+            body += (f'<div style="margin-top:10px;border-radius:14px;background:rgba(210,244,226,.95);'
                      f'padding:10px 16px;display:flex;gap:14px;align-items:center;font-size:23px;font-weight:800;'
                      f'color:#12805a;line-height:1.15;border:1.5px solid rgba(60,190,140,.45)">'
                      f'<span style="display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;'
@@ -186,30 +186,30 @@ def post_boot():
                      f'stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>'
                      f'<div>КОММУТАТОР<br>ГОТОВ К РАБОТЕ</div></div>')
         body += '</div>'
-        o.append(kcard(l, 469, w, 436, s, "card", head + pic + body, "padding:0"))
-    for i, (ax, lc, st_) in enumerate([(442, 449, 4), (912, 920, 5), (1406, 1412, 6)]):
-        o.append(f'<div class="ab" data-s="{st_}" style="{ab(lc - 90, 549, 180)}text-align:center;font-size:15px;'
-                 f'line-height:1.15;color:var(--navy);font-weight:600">Успешная проверка{AR}<br>следующий этап</div>')
-        o.append(f'<svg class="ab" data-s="{st_}" style="{ab(ax, 603, 70, 60)}overflow:visible" viewBox="0 0 110 72" preserveAspectRatio="none">'
+        o.append(kcard(l, 446, w, 478, s, "card", head + pic + body, "padding:0"))
+    for i, (ax, lc, st_) in enumerate([(430, 466 - 110, 4), (888, 923 - 110, 5), (1415, 1448 - 110, 6)]):
+        o.append(f'<div class="ab" data-s="{st_}" style="{ab(lc - 142, 528, 250)}text-align:right;font-size:15px;white-space:nowrap;'
+                 f'line-height:1.0;color:var(--navy);font-weight:600">Успешная проверка{AR}<br>следующий этап</div>')
+        o.append(f'<svg class="ab" data-s="{st_}" style="{ab(ax + 4, 570, 52, 30)}overflow:visible" viewBox="0 0 110 72" preserveAspectRatio="none">'
                  f'<defs><linearGradient id="bg{i}" x1="0" x2="1"><stop offset="0" stop-color="#9cc3ff"/><stop offset="1" stop-color="#2a6bf2"/></linearGradient></defs>'
                  f'<path d="M0 18h62V0l48 36-48 36V54H0z" fill="url(#bg{i})"/></svg>')
 
-    flow = [("p067_rom.jpg", 521, 110, 56, "ROM", "(загрузчик ПЗУ)"), ("p067_booton.jpg", 793, 112, 60, "Booton", "(первичный)"),
-            ("p067_uboot.jpg", 1097, 112, 60, "U-Boot", "(универсальный)"),
-            ("p067_fw.jpg", 1385, 58, 54, "Firmware", "(файл прошивки)"), ("p067_cfg.jpg", 1691, 56, 54, "Конфигурация", "")]
+    flow = [("p067_rom.jpg", 521, 110, 56, "ROM", "(BOOTLOADER)"), ("p067_booton.jpg", 793, 112, 60, "Booton", "(ПЕРВИЧНЫЙ ЗАГРУЗЧИК)"),
+            ("p067_uboot.jpg", 1097, 112, 60, "U-Boot", "(УНИВЕРСАЛЬНЫЙ ЗАГРУЗЧИК)"),
+            ("p067_fw.jpg", 1385, 58, 54, "Firmware", "(ФАЙЛ ПРОШИВКИ)"), ("p067_cfg.jpg", 1691, 56, 54, "Конфигурация", "")]
     bar = hd("Общая схема загрузки", 26, "var(--navy)", "position:absolute;left:30px;top:26px;width:300px")
-    L0, T0 = 34, 933                       # координаты карточки: содержимое считаем от неё
+    L0, T0 = 34, 934                       # координаты карточки: содержимое считаем от неё
     inner = [bar]
     for im, cxx, w, h, lab, sub in flow:
-        inner.append(chipimg(im, cxx - w / 2 - L0, 5, w, h))
-        inner.append(f'<div class="ab" style="{ab(cxx - 120 - L0, 73, 240)}text-align:center;line-height:1.15">'
+        inner.append(chipimg(im, cxx - w * .4 - L0, 6, w * .8, h * .8))
+        inner.append(f'<div class="ab" style="{ab(cxx - 160 - L0, 62, 320)}text-align:center;line-height:1.05">'
                      f'<div style="font-size:20px;font-weight:800;color:var(--navy)">{lab}</div>'
-                     f'<div style="font-size:14px;color:var(--navy)">{sub}</div></div>')
+                     f'<div style="font-size:14px;color:var(--navy);white-space:nowrap;letter-spacing:-.3px">{sub}</div></div>')
     inner.append('<svg class="ab" style="left:0;top:0;width:1778px;height:150px;overflow:visible" '
                  'viewBox="0 0 1778 150">'
                  + "".join(arrow_svg(x - L0, 39, x - L0 + 60, 39, None, w=5) for x in (636, 934, 1240, 1518))
                  + '</svg>')
-    o.append(kcard(L0, T0, 1778, 150, 7, "card", "".join(inner), "padding:0"))
+    o.append(kcard(L0, T0, 1852, 140, 7, "card", "".join(inner), "padding:0"))
     return "".join(o)
 
 
@@ -272,43 +272,42 @@ SLIDES.append(("p068", "ESR-3300: задняя панель", esr3300()))
 
 # ======================================================= p069 Контроллеры беспроводного доступа
 def wlc():
-    o = ['<div class="ab" style="left:1138px;top:0;width:782px;height:598px;'
-         '-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);mask-image:linear-gradient(to bottom,#000 78%,transparent)">'
-         '<img src="assets/p069_building.jpg" style="width:782px;height:598px;display:block;'
-         '-webkit-mask-image:linear-gradient(to right,transparent,#000 22%);mask-image:linear-gradient(to right,transparent,#000 22%)"></div>',
+    o = [faded("p069_bld2.jpg", 1050, 0, 870, 616, None, 9),
          '<h1 class="t ab left" style="left:75px;top:44px;width:1250px;font-size:72px;line-height:1.08;white-space:nowrap">'
          'Контроллеры<br>беспроводного доступа</h1>']
-    o.append(kcard(316, 240, 470, 150, 1, "card solid",
-                   '<div style="text-align:center;font-size:58px;font-weight:800;color:var(--navy);line-height:1">WLC-30</div>'
-                   '<div style="text-align:center;font-size:26px;color:var(--navy);margin-top:8px;text-transform:uppercase">'
-                   'до <b style="font-size:34px;color:var(--blue)">150</b> точек доступа</div>',
-                   "padding:12px 20px;border-radius:20px;background:rgba(255,255,255,.55)"))
-    o.append(img("p069_wlc.jpg", 117, 380, 950, 158, 1))
+    o.append(img("dev/wlc-30.webp", 110, 390, 960, 170, 1, cls="ab", extra="object-fit:contain"))
+    o.append(kcard(292, 246, 492, 146, 1, "card solid",
+                   '<div style="text-align:center;font-size:62px;font-weight:800;color:var(--navy);line-height:1">WLC-30</div>'
+                   '<div style="text-align:center;font-size:27px;color:var(--navy);margin-top:6px;text-transform:uppercase">'
+                   'до <b style="font-size:36px;color:var(--blue)">150</b> точек доступа</div>',
+                   "padding:12px 20px;border-radius:20px;background:rgba(255,255,255,.6)"))
 
-    feats = [(60, 570, "gear", "Централизованное управление", "Настройка и мониторинг точек доступа"),
-             (666, 582, "chart", "Контроль сети", "Статистика трафика и времени сессий"),
-             (1276, 585, "shield", "Безопасный доступ", "WPA/WPA2 Enterprise и Personal")]
+    feats = [(60, 570, "p069_hgear.png", "Централизованное управление", "Настройка и мониторинг точек доступа"),
+             (667, 576, "p069_hchart.png", "Контроль сети", "Статистика трафика и времени сессий"),
+             (1276, 584, "p069_hshield.png", "Безопасный доступ", "WPA/WPA2 Enterprise и Personal")]
     for i, (l, w, icn, t, d) in enumerate(feats):
-        inner = (f'<div style="display:flex;gap:26px;align-items:center;height:100%">{big_ico(ico(icn), 104, 26)}'
-                 f'<div>{hd(t, 25)}<p class="b" style="margin-top:12px;font-size:23px">{d}</p></div></div>')
-        o.append(kcard(l, 608, w, 190, 2 + i, "card", inner, "padding:24px 30px"))
+        inner = (faded(icn, 18, 6, 168, 176, None, 10, "mix-blend-mode:multiply")
+                 + f'<div class="ab" style="left:196px;top:22px;width:2px;height:144px;background:var(--line)"></div>'
+                 + f'<div class="ab" style="{ab(222, 0, w - 236, 188)}display:flex;flex-direction:column;justify-content:center">'
+                 f'{hd(t, 27)}<p class="b" style="margin-top:8px;font-size:25px;line-height:1.2">{d}</p></div>')
+        o.append(kcard(l, 606, w, 188, 2 + i, "card", inner, "padding:0"))
 
-    o.append(kcard(60, 818, 879, 232, 5, "card",
-                   '<div style="display:flex;gap:26px;align-items:flex-start">'
-                   '<img src="assets/p069_wlc_small.jpg" style="width:175px;height:92px;object-fit:cover;margin-top:30px;mix-blend-mode:multiply;flex:none">'
-                   '<div><div style="font-size:30px;font-weight:800;color:var(--navy);margin-bottom:6px">WLC-30</div>'
-                   '<p class="b sm" style="font-size:18px;line-height:1.3;margin-bottom:8px">Аппаратный контроллер для централизованного управления корпоративной сетью Wi-Fi малого и среднего бизнеса.</p>'
+    o.append(kcard(32, 812, 922, 252, 5, "card",
+                   img("dev/wlc-30.webp", 24, 90, 230, 60, cls="ab", extra="object-fit:contain")
+                   + f'<div class="ab" style="{ab(272, 14, 640)}">'
+                   '<div style="font-size:40px;font-weight:800;color:var(--navy);line-height:1.1">WLC-30</div>'
+                   '<p class="b sm" style="font-size:21px;line-height:1.2;margin:2px 0 4px">Аппаратный контроллер для централизованного управления корпоративной сетью Wi-Fi малого и среднего бизнеса.</p>'
                    + bullets(["Подключение до 150 точек доступа", "Мониторинг оборудования и клиентов",
-                              "Анализ трафика и времени сессий", "Индивидуальная настройка Wi-Fi"], 18, 2, 1.2) + '</div></div>',
-                   "padding:18px 26px"))
-    o.append(kcard(971, 818, 896, 232, 6, "card",
-                   '<div style="display:flex;gap:26px;align-items:flex-start">'
-                   '<img src="assets/p069_cloud.jpg" style="width:150px;height:108px;object-fit:cover;margin-top:26px;mix-blend-mode:multiply;flex:none">'
-                   '<div><div style="font-size:30px;font-weight:800;color:var(--navy);margin-bottom:6px">SoftWLC</div>'
-                   '<p class="b sm" style="font-size:18px;line-height:1.3;margin-bottom:8px">Программный комплекс для управления беспроводной сетью.</p>'
+                              "Анализ трафика и времени сессий", "Индивидуальная настройка Wi-Fi"], 21, 0, 1.18) + '</div>',
+                   "padding:0"))
+    o.append(kcard(970, 812, 918, 252, 6, "card",
+                   faded("p069_hcloud.png", 30, 14, 214, 222, None, 8, "mix-blend-mode:multiply")
+                   + f'<div class="ab" style="{ab(282, 14, 620)}">'
+                   '<div style="font-size:40px;font-weight:800;color:var(--navy);line-height:1.1">SoftWLC</div>'
+                   '<p class="b sm" style="font-size:21px;line-height:1.2;margin:2px 0 4px">Программный комплекс для управления беспроводной сетью.</p>'
                    + bullets(["Единый интерфейс управления", "Организация HotSpot", "Авторизация пользователей",
-                              "Поддержка корпоративных и операторских сетей", "Возможность построения гибридных схем"], 18, 1, 1.2)
-                   + '</div></div>', "padding:18px 26px"))
+                              "Поддержка корпоративных и операторских сетей", "Возможность построения гибридных схем"], 21, 0, 1.18)
+                   + '</div>', "padding:0"))
     return "".join(o)
 
 
@@ -319,7 +318,7 @@ SLIDES.append(("p069", "Контроллеры беспроводного дос
 def bs_devices():
     T = TH
     o = [title("Базовые станции", 10, 80)]
-    o.append(faded("p070_scene.jpg", 200 * T, 54 * T, 500 * T, 276 * T, 1, 6))
+    o.append(faded("p070_scene2.jpg", 440, 130, 1030, 590, 1, 6))
 
     def dev(l, t, w, h, s, im, iw, ih, ix, iy, name, sub, tx, tw):
         txt = (f'<div class="ab" style="{ab(tx, 0, tw)}top:50%;transform:translateY(-50%)">'
@@ -329,30 +328,29 @@ def bs_devices():
         pic = (f'<img src="assets/{im}" class="ab" style="{ab(ix, iy, iw, ih)}object-fit:contain;mix-blend-mode:multiply">')
         return kcard(l, t, w, h, s, "card", pic + txt, "padding:0;background:rgba(255,255,255,.55)")
 
-    o.append(dev(17, 60, 456, 346, 2, "p070_wop3ax.jpg", 168, 292, 28, 28, "WOP-3ax-LR5", "Базовая станция", 230, 200))
-    o.append(dev(1446, 60, 448, 346, 3, "p070_wop2ac.jpg", 146, 300, 38, 24, "WOP-2ac-LR5<br>SYNC", "Базовая станция", 220, 210))
-    o.append(dev(17, 427, 420, 267, 4, "p070_wb2plr2.jpg", 180, 190, 22, 36, "WB-2P-LR2", "Абонентская станция", 230, 170))
-    o.append(dev(1483, 427, 411, 267, 5, "p070_wb2plr5.jpg", 186, 190, 20, 36, "WB-2P-LR5", "Абонентская станция", 218, 170))
+    o.append(dev(17, 60, 456, 346, 2, "p070_wop3ax2.png", 168, 292, 28, 28, "WOP-3ax-LR5", "Базовая станция", 230, 200))
+    o.append(dev(1446, 60, 448, 346, 3, "dev/wop-2ac-lr5.webp", 170, 300, 26, 24, "WOP-2ac-LR5<br>SYNC", "Базовая станция", 220, 210))
+    o.append(dev(17, 427, 420, 267, 4, "p070_wb2plr22.png", 180, 200, 22, 32, "WB-2P-LR2", "Абонентская станция", 230, 170))
+    o.append(dev(1483, 427, 411, 267, 5, "dev/wb-2p-lr5.webp", 186, 200, 20, 32, "WB-2P-LR5", "Абонентская станция", 218, 170))
 
-    feats = [("Дальняя связь", "Беспроводные каналы между удалёнными объектами",
-              xi('<circle cx="12" cy="9" r="2"/><path d="M12 11l-4 10M12 11l4 10M9.5 17h5M7 5.5a7 7 0 0 0 0 7M17 5.5a7 7 0 0 1 0 7"/>', "")),
-             ("MIMO / MU-MIMO", "Одновременная передача данных", ico("wifi")),
-             ("Безопасность", "WPA2/WPA3 и RADIUS", ico("shield")),
-             ("PoE", "Питание по Ethernet-кабелю", xi('<path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0zM12 17v4"/>', "")),
-             ("Всепогодное исполнение", "от −45 до +60 °C", ico("snow"))]
+    feats = [("Дальняя связь", "Беспроводные каналы между удалёнными объектами", "p070_h1.png"),
+             ("MIMO / MU-MIMO", "Одновременная передача данных", "p070_h2.png"),
+             ("Безопасность", "WPA2/WPA3 и RADIUS", "p070_h3.png"),
+             ("PoE", "Питание по Ethernet-кабелю", "p070_h4.png"),
+             ("Всепогодное исполнение", "от −45 до +60 °C", "p070_h5.png")]
     xs = [(20, 190), (200, 362), (368, 530), (536, 697), (704, 880)]
     for (x0, x1), (t, d, ic) in zip(xs, feats):
-        inner = (f'<div style="display:flex;gap:14px;align-items:center;height:100%">{big_ico(ic, 78, 20)}<div>'
+        inner = (f'<div style="display:flex;gap:14px;align-items:center;height:100%"><img src="assets/{ic}" style="width:92px;height:100px;flex:none;mix-blend-mode:multiply"><div>'
                  f'<div style="font-size:18px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.15">{t}</div>'
                  f'<div style="font-size:16px;color:var(--ink);margin-top:5px;line-height:1.25">{d}</div></div></div>')
         o.append(kcard(x0 * T, 729, (x1 - x0) * T, 152, 6, "card", inner, "padding:12px 14px;border-radius:18px"))
 
     o.append(kcard(26, 896, 593, 160, 7, "card",
-                   '<img src="assets/p070_tower.jpg" class="ab" style="left:20px;top:12px;width:150px;height:136px;object-fit:cover;mix-blend-mode:multiply">'
-                   '<div class="ab" style="left:190px;top:34px;width:380px"><div style="font-size:34px;font-weight:800;color:var(--navy)">2,4 ГГц</div>'
+                   '<img src="assets/p070_tower2.jpg" class="ab" style="left:12px;top:10px;width:240px;height:140px;object-fit:cover;mix-blend-mode:multiply">'
+                   '<div class="ab" style="left:262px;top:30px;width:320px"><div style="font-size:34px;font-weight:800;color:var(--navy)">2,4 ГГц</div>'
                    '<div style="font-size:21px;color:var(--navy);margin-top:6px">больше дальность, больше помех</div></div>', "padding:0"))
     o.append(kcard(631, 896, 638, 160, 7, "card",
-                   '<img src="assets/p070_city.jpg" class="ab" style="left:20px;top:14px;width:240px;height:132px;object-fit:cover;mix-blend-mode:multiply">'
+                   '<img src="assets/p070_city2.jpg" class="ab" style="left:20px;top:14px;width:240px;height:132px;object-fit:cover;mix-blend-mode:multiply">'
                    '<div class="ab" style="left:280px;top:34px;width:340px"><div style="font-size:34px;font-weight:800;color:var(--navy)">5 и 6 ГГц</div>'
                    '<div style="font-size:21px;color:var(--navy);margin-top:6px">выше скорость, нужна прямая видимость</div></div>', "padding:0"))
     chips = "".join(f'<span class="chip" style="font-family:var(--f);font-size:19px;font-weight:500;padding:8px 14px;border-radius:10px">{c}</span>'
@@ -372,22 +370,21 @@ def bs_map():
     T = TH
     o = ['<div class="ab" style="left:64px;top:64px;font-size:88px;font-weight:800;line-height:1.02;color:var(--navy);'
          'letter-spacing:-.5px">БАЗОВЫЕ<br><span style="color:#6b7db0">СТАНЦИИ</span></div>']
-    o.append(faded("p071_mapB.jpg", 8 * T, 125 * T, 297 * T, 263 * T, 1, 5))
-    o.append(faded("p071_mapA.jpg", 247 * T, 12 * T, 475 * T, 376 * T, 1, 4))
+    o.append(img("p071_A.jpg", 0.28 * 1920, 0, 0.515 * 1920, 0.79 * 1080, 1, cls="ab"))
+    o.append(img("p071_B.jpg", 0.03 * 1920, 0.27 * 1080, 0.25 * 1920, 0.52 * 1080, 1, cls="ab"))
+    o.append(img("p071_C.jpg", 0.795 * 1920, 0.36 * 1080, 0.135 * 1920, 0.43 * 1080, 1, cls="ab"))
     leg = ('<img src="assets/p071_leg1.jpg" class="ab" style="left:36px;top:16px;width:92px;height:158px;object-fit:cover;mix-blend-mode:multiply">'
            '<div class="ab" style="left:164px;top:62px;font-size:22px;font-weight:700;color:var(--navy)">WOP-2ac-LR5 SYNC</div>'
            '<img src="assets/p071_leg2.jpg" class="ab" style="left:42px;top:182px;width:85px;height:119px;object-fit:cover;mix-blend-mode:multiply">'
            '<div class="ab" style="left:164px;top:222px;font-size:24px;font-weight:700;color:var(--navy)">WB-2P-LR5</div>')
     o.append(kcard(1532, 64, 367, 318, 2, "card", leg, "padding:0"))
-    cards = [(43, 576, "Широкая зона покрытия", "Надёжная беспроводная связь на больших расстояниях.",
-              xi('<circle cx="12" cy="11" r="2"/><path d="M12 13v8M8 7.5a5.5 5.5 0 0 0 0 7M16 7.5a5.5 5.5 0 0 1 0 7M5.5 5a9 9 0 0 0 0 12M18.5 5a9 9 0 0 1 0 12"/>', "")),
-             (646, 616, "Связь с удалёнными объектами", "Эффективное подключение отдалённых населённых пунктов, предприятий и инфраструктуры.", ico("globe")),
-             (1280, 597, "Единая синхронизация", "Согласованная работа всех базовых станций в единой сети.",
-              xi('<circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="4.5" r="1.8"/><circle cx="12" cy="19.5" r="1.8"/><circle cx="4.5" cy="12" r="1.8"/><circle cx="19.5" cy="12" r="1.8"/><path d="M12 6.3v3.5M12 14.2v3.5M6.3 12h3.5M14.2 12h3.5"/>', ""))]
+    cards = [(43, 576, "Широкая зона покрытия", "Надёжная беспроводная связь на больших расстояниях.", "p071_h1.png"),
+             (646, 616, "Связь с удалёнными объектами", "Эффективное подключение отдалённых населённых пунктов, предприятий и инфраструктуры.", "p071_h2.png"),
+             (1280, 597, "Единая синхронизация", "Согласованная работа всех базовых станций в единой сети.", "p071_h3.png")]
     for i, (l, w, t, d, ic) in enumerate(cards):
-        inner = (f'<div style="display:flex;gap:24px;align-items:center;height:100%">{big_ico(ic, 92, 24)}<div>{hd(t, 22)}'
+        inner = (f'<div style="display:flex;gap:24px;align-items:center;height:100%"><img src="assets/{ic}" style="width:110px;height:132px;flex:none;mix-blend-mode:multiply"><div>{hd(t, 22)}'
                  f'<p class="b" style="font-size:20px;line-height:1.35;margin-top:10px;color:var(--dim)">{d}</p></div></div>')
-        o.append(kcard(l, 875, w, 181, 3 + i, "card", inner, "padding:20px 26px"))
+        o.append(kcard(l, 875, w, 181, 3 + i, "card", inner, "padding:16px 22px"))
     return "".join(o)
 
 
@@ -577,20 +574,18 @@ def post_self():
 
     def row(top, icn, ttl, txt, side, h, tw=330):
         return (f'<div class="card solid ab" style="{ab(18, top, 616, h)}border-radius:18px;padding:0">'
-                + hexi(icn, 26) +
+                + faded(icn, 10, 36, 92, 104, None, 16, "mix-blend-mode:multiply") +
                 f'<div class="ab" style="left:112px;top:18px;width:{tw}px;font-size:22px;line-height:1.28">'
                 f'<b style="font-size:26px;color:var(--navy)">{ttl}</b><br>{txt}</div>' + side + '</div>')
 
-    sig = (row(116, SPK, "Звуковой",
+    sig = (row(116, "p074_spk.png", "Звуковой",
                "По типу азбуки Морзе — каждая комбинация «точек» и «тире» обозначает конкретную неисправность.", morse, 190)
-           + row(322, mon, "Текстовый", "С описанием или кодом неисправности.", term, 190, 228))
+           + row(322, "p074_mon.png", "Текстовый", "С описанием или кодом неисправности.", term, 190, 228))
     o.append(kcard(620, 40, 652, 532, 1, "card",
                    '<div class="ab" style="left:28px;top:22px;width:580px;font-size:28px;font-weight:700;color:var(--navy);line-height:1.25">'
                    'При обнаружении неисправности POST подаёт сигнал:</div>' + sig, "padding:0;border-radius:24px"))
 
-    o.append(img("dev/esr-200.webp", 1310, 150, 560, None, 1, cls="ab"))
-    o.append(f'<div class="ab mono" data-s="1" style="{ab(1310, 404, 560)}text-align:center;font-size:22px;'
-             f'font-weight:800;color:var(--navy)">ESR-200</div>')
+    o.append(img("dev/esr-200.webp", 1300, 120, 590, None, 1, cls="ab"))
 
     o.append(kcard(59, 700, 1213, 250, 2, "card",
                    '<div class="ab" style="left:28px;top:6px;font-size:90px;font-family:Georgia,serif;font-weight:800;color:#5f86e6;line-height:1">&#8220;</div>'
@@ -611,17 +606,17 @@ SLIDES.append(("p074", "POST: самотестирование при включ
 # ======================================================= p074b этапы загрузки
 def boot_stages():
     o = [title("Этапы загрузки устройства", 30, 58),
-         f'<div class="ab" data-s="1" style="{ab(360, 122, 1200)}text-align:center;font-size:26px;line-height:1.32;color:var(--navy)">'
+         f'<div class="ab" data-s="1" style="{ab(160, 112, 1600)}text-align:center;font-size:24px;line-height:1.32;color:var(--navy)">'
          f'На каждом этапе происходит инициализация, выбор или поиск и проверка хеша и подлинности. '
          f'Если все условия этапа удовлетворяются — происходит переход к следующему этапу.</div>']
 
-    st = [("01", "ROM BOOTLOADER", "Загрузчик ПЗУ", chip("ROM"), "power", "Запуск устройства",
+    st = [("01", "ROM BOOTLOADER", "Загрузчик ПЗУ", "p074_rom.png", "power", "Запуск устройства",
            ["Инициализация аппаратных регистров.",
             "Чтение параметров загрузки и выбор источника загрузки (NOR flash, SD/MMC card, PCI Express).",
             "Вычисление и сравнение хеш-суммы открытого ключа с хешем в регистре.",
             "Если хеши не совпадают — остановка загрузки.",
             "Если совпадают — запуск Primary loader."]),
-          ("02", "PRIMARY LOADER", "Первичный загрузчик", chip("CPU"), "gear", "Запуск Primary-loader",
+          ("02", "PRIMARY LOADER", "Первичный загрузчик", "p074_cpu.png", "gear", "Запуск Primary-loader",
            ["Инициализация CPU (процессор), UART (RS-232 или COM-порт), DRAM (память).",
             "Запуск таймера.",
             "Чтение параметров загрузки и выбор источников загрузки.",
@@ -629,13 +624,13 @@ def boot_stages():
             "Проверка подлинности образа U-boot.",
             "Если проверка не пройдена — остановка загрузки.",
             "Если пройдена — запуск U-boot."]),
-          ("03", "U-BOOT", "Универсальный загрузчик", chip("U-BOOT"), "gear", "Запуск U-boot",
+          ("03", "U-BOOT", "Универсальный загрузчик", "p074_uboot.png", "gear", "Запуск U-boot",
            ["Проверка заголовка, ключа, цифровой подписи и значения хеш.",
             "Инициализация аппаратного окружения, NOR-flash и сетевых интерфейсов.",
             "Выбор активного раздела (eMMC / NAND).",
             "Проверка подлинности.",
             "Если проверка пройдена — запуск Firmware."]),
-          ("04", "FIRMWARE", "Файл прошивки", fw_chip(), "play", "Запуск Firmware",
+          ("04", "FIRMWARE", "Файл прошивки", "p074_fw.png", "play", "Запуск Firmware",
            ["Проверка подлинности (CRC).",
             "Распаковка образа Firmware.",
             "Загрузка готовой конфигурации.",
@@ -644,21 +639,23 @@ def boot_stages():
              "gear": '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8'
                      'M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
              "play": '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/>'}
-    W, GAP, L0, TOP, H = 450, 20, 30, 204, 820
+    W, GAP, L0, TOP, H = 430, 46, 22, 196, 860
     for i, (n, nm, sb, pic, picn, pill, bl) in enumerate(st):
         l = L0 + i * (W + GAP)
         head = (f'<div class="ab" style="{ab(24, 18, W - 48)}display:flex;gap:16px;align-items:center">'
                 f'<span style="font-size:58px;font-weight:800;color:#2d3d7c;line-height:1">{n}</span>'
-                f'<div><div style="font-size:26px;font-weight:800;color:#33458a;line-height:1.1">{nm}</div>'
+                f'<div><div style="font-size:24px;font-weight:800;color:#33458a;line-height:1.1">{nm}</div>'
                 f'<div style="font-size:22px;color:#4f6199">{sb}</div></div></div>')
-        chp = f'<div class="ab" style="{ab((W - 250) / 2, 102, 250, 150)}">{pic}</div>'
+        chp = faded(pic, (W - 230) / 2, 102, 230, 140, None, 14, "mix-blend-mode:multiply")
         pl = (f'<div class="ab card solid" style="{ab(20, 268, W - 40, 56)}border-radius:28px;padding:0;display:flex;gap:12px;'
               f'align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--navy)">'
               f'<span style="color:var(--blue);display:inline-flex"><svg viewBox="0 0 24 24" style="width:28px;height:28px" fill="none" '
               f'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">{icons[picn]}</svg></span>{pill}</div>')
         inner = (f'<div class="ab" style="{ab(16, 340, W - 32, H - 356)}border-radius:16px;background:rgba(255,255,255,.5)"></div>'
-                 f'<div class="ab" style="{ab(32, 358, W - 64)}">{bullets(bl, 22, 12, 1.3)}</div>')
+                 f'<div class="ab" style="{ab(30, 354, W - 56)}">{bullets(bl, 21, 9, 1.26)}</div>')
         o.append(kcard(l, TOP, W, H, 2 + i, "card", head + chp + pl + inner, "padding:0;border-radius:24px"))
+        if i:
+            o.append(layer(arrow_svg(l - GAP + 6, TOP + 170, l - 6, TOP + 170, 2 + i)))
     return "".join(o)
 
 

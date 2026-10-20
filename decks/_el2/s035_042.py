@@ -63,46 +63,46 @@ def p035():
              f'<div class="mono" style="{ab(122, 52)}font-size:42px;font-weight:800;color:var(--blue)">{model}</div>']
         ix, iy, iw, ih = ibox
         x.append(f'<img src="assets/{img}" alt="{model}" style="{ab(ix, iy, iw, ih)}object-fit:contain">')
-        x.append(f'<div style="{ab(548, 100)}display:flex;align-items:center;gap:12px">{cico(picn, "sm")}'
+        x.append(f'<div style="{ab(520, 92)}display:flex;align-items:center;gap:12px">{cico(picn, "sm")}'
                  f'<span class="tag" style="font-size:20px;padding:8px 22px;border-radius:22px;background:rgba(150,185,250,.35)">{pill}</span></div>')
-        x.append(f'<p class="b sm" style="{ab(548, 158, 350)}font-size:18px;line-height:1.35">{desc}</p>')
-        cw = 277
+        x.append(f'<p class="b sm" style="{ab(520, 150, 385)}font-size:19px;line-height:1.2">{desc}</p>')
+        cw = 287
         for i, (icn, tx) in enumerate(chips):
-            x.append(f'<div style="{ab(26 + i * (cw + 12), h - 74, cw, 56)}display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);'
+            x.append(f'<div style="{ab(20 + i * (cw + 10), h - 66, cw, 54)}display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);'
                      f'border:1.5px solid var(--line);border-radius:14px;padding:0 12px"><span style="color:var(--blue);display:flex">{sv24(icn)}</span>'
-                     f'<span style="font-size:17px;font-weight:600;color:{NAVY};line-height:1.1">{tx}</span></div>')
+                     f'<span style="font-size:17px;font-weight:600;color:{NAVY};line-height:1.0">{tx}</span></div>')
         x.append('</div>')
         return "".join(x)
 
-    o.append(dev(60, 96, 345, "01", "Контроллер беспроводного доступа", "WLC-3350", "p035_wlc3350.jpg", (30, 112, 490, 150),
+    o.append(dev(60, 88, 362, "01", "Контроллер беспроводного доступа", "WLC-3350", "dev/wlc-3350.webp", (30, 118, 470, 120),
                  "Управление сетью", ic("gear"),
                  "Управляет сотнями точек доступа, выполняет мониторинг, анализирует трафик и время сессий, задаёт индивидуальные настройки Wi-Fi.",
                  [(ic("net"), "Централизованное управление"), (ic("chart"), "Статистика"), (ic("reload"), "Бесшовный роуминг")], 1))
-    o.append(dev(1000, 96, 345, "02", "Беспроводная точка доступа", "WEP-3L", "p035_wep3l.jpg", (40, 108, 440, 152),
+    o.append(dev(1000, 88, 362, "02", "Беспроводная точка доступа", "WEP-3L", "p035_wep3l2.png", (60, 106, 300, 160),
                  "Подключение клиентов", ic("wifi"),
                  "Подключает смартфоны, планшеты и другие беспроводные устройства к проводной сети.",
                  [(ic("wifi"), "Wi-Fi"), (PEOPLE, "Мобильные клиенты"), (ic("link"), "Проводная сеть")], 2))
-    o.append(dev(60, 458, 345, "03", "Базовая станция БШПД", "WOP-3ax-LR6", "p035_wop3ax.jpg", (50, 110, 230, 150),
+    o.append(dev(60, 462, 362, "03", "Базовая станция БШПД", "WOP-3ax-LR6", "dev/wop-3ax-lr6.webp", (100, 108, 150, 175),
                  "Широкополосный доступ", TOWER,
                  "Организует беспроводную сеть широкополосного доступа и поддерживает сервисы Triple Play: интернет, телевидение и голос.",
                  [(ic("shield"), "Наружная установка"), (TOWER, "Секторные антенны"), (ic("sun"), "Разные климатические условия")], 3))
-    o.append(dev(1000, 458, 345, "04", "Абонентская станция", "WB-2P-LR5", "p035_wb2p.jpg", (50, 110, 190, 150),
+    o.append(dev(1000, 462, 362, "04", "Абонентская станция", "WB-2P-LR5", "dev/wb-2p-lr5.webp", (90, 108, 200, 175),
                  "Подключение абонента", TOWER,
                  "Принимает сигнал базовой станции и обеспечивает подключение удалённого абонента к сети.",
                  [(TOWER, "Направленная связь"), (HOUSE, "Удалённый объект"), (ic("speed"), "Широкополосный канал")], 4))
 
-    o.append(f'<div class="card" data-s="5" style="{ab(60, 820, 1820, 245)}padding:0"></div>')
-    o.append(f'<div data-s="5" style="{ab(90, 836)}font-size:26px;font-weight:800;color:{NAVY};text-transform:uppercase">Схема работы сети</div>')
+    o.append(f'<div class="card" data-s="5" style="{ab(60, 834, 1820, 236)}padding:0"></div>')
+    o.append(f'<div data-s="5" style="{ab(90, 842)}font-size:26px;font-weight:800;color:{NAVY};text-transform:uppercase">Схема работы сети</div>')
 
     def lab(cx, t1, t2, s, w):
-        return (f'<div data-s="{s}" style="{ab(cx - w // 2, 948, w)}text-align:center;font-size:16px;font-weight:700;color:{NAVY};text-transform:uppercase;line-height:1.25">'
+        return (f'<div data-s="{s}" style="{ab(cx - w // 2, 950, w)}text-align:center;font-size:16px;font-weight:700;color:{NAVY};text-transform:uppercase;line-height:1.25">'
                 f'{t1}<br><span class="mono" style="color:var(--blue);font-size:18px">{t2}</span></div>')
 
-    o.append(f'<img data-s="5" src="assets/p035_wlc3350.jpg" alt="WLC-3350" style="{ab(111, 880, 240)}">')
-    o.append(f'<img data-s="6" src="assets/p035_wep3l.jpg" alt="WEP-3L" style="{ab(474, 858, 113)}">')
+    o.append(f'<img data-s="5" src="assets/dev/wlc-3350.webp" alt="WLC-3350" style="{ab(111, 890, 240)}">')
+    o.append(f'<img data-s="6" src="assets/p035_wep3l2.png" alt="WEP-3L" style="{ab(464, 872, 130)}">')
     o.append(f'<img data-s="7" src="assets/p035_clients.jpg" alt="Клиенты" style="{ab(736, 870, 224)}">')
-    o.append(f'<img data-s="8" src="assets/p035_wop3ax.jpg" alt="WOP-3ax-LR6" style="{ab(1160, 840, 80)}">')
-    o.append(f'<img data-s="9" src="assets/p035_wb2p.jpg" alt="WB-2P-LR5" style="{ab(1500, 850, 76)}">')
+    o.append(f'<img data-s="8" src="assets/dev/wop-3ax-lr6.webp" alt="WOP-3ax-LR6" style="{ab(1170, 852, 60)}">')
+    o.append(f'<img data-s="9" src="assets/dev/wb-2p-lr5.webp" alt="WB-2P-LR5" style="{ab(1505, 852, 66)}">')
     o += [lab(231, "Контроллер WLC", "WLC-3350", 5, 280), lab(530, "Точки доступа WAP", "WEP-3L", 6, 260),
           lab(848, "Клиенты", "&nbsp;", 7, 200), lab(1200, "Базовая станция БШПД", "WOP-3ax-LR6", 8, 280),
           lab(1546, "Абонентская станция", "WB-2P-LR5", 9, 260)]
@@ -112,7 +112,7 @@ def p035():
           f'<g data-s="9">{waves(1300, 900, 1)}{waves(1450, 900, -1)}<path d="M1362 900H1388M1362 900l8-6M1362 900l8 6M1388 900l-8-6M1388 900l-8 6" stroke="var(--blue)" stroke-width="3" fill="none"/></g>',
           '</svg>']
     o.append("".join(sv))
-    o.append(f'<div class="note" data-s="10" style="{ab(497, 1006, 930, 50)}align-items:center;padding:0 20px;font-size:18px;gap:14px">'
+    o.append(f'<div class="note" data-s="10" style="{ab(400, 1012, 1120, 50)}align-items:center;padding:0 20px;font-size:18px;gap:14px">'
              f'<span style="color:var(--blue);display:flex">{sv24(ic("info"))}</span>'
              f'Точки доступа с поддержкой LTE могут подключаться к сети оператора через активную SIM-карту.</div>')
     return "".join(o)
@@ -351,23 +351,28 @@ SLIDES.append(("p041", "Ошибки в командной строке ESR", er
 
 # ---------------------------------------------------------------- p042
 def p042():
-    o = [f'<img class="ab" src="assets/p042_scene.jpg" alt="WOP-2ac-LR5 SYNC на опоре" style="{ab(905, 0, 1015)}-webkit-mask-image:linear-gradient(to right,transparent,#000 14%);mask-image:linear-gradient(to right,transparent,#000 14%)">',
+    fade = ("-webkit-mask-image:linear-gradient(to right,transparent,#000 18%,#000 82%,transparent);"
+            "mask-image:linear-gradient(to right,transparent,#000 18%,#000 82%,transparent)")
+    o = [f'<img class="ab" src="assets/p042_land.jpg" alt="" style="{ab(1060, 230, 300, 760)}object-fit:cover;{fade}">',
+         f'<img class="ab" data-s="1" src="assets/dev/wop-2ac-lr5.webp" alt="WOP-2ac-LR5 SYNC" style="{ab(1330, 56, 324, 832)}object-fit:contain">',
          f'<div class="ab" style="left:75px;top:56px;font-size:88px;font-weight:800;color:{NAVY};line-height:1;letter-spacing:-1px">WOP-2ac-LR5 SYNC</div>',
          '<div class="ab" style="left:78px;top:158px;font-size:48px;font-weight:800;color:#6f8fc9;text-transform:uppercase;letter-spacing:1px">Базовая станция БШПД</div>']
-    cells = [(ic("wifi"), "5 ГГц · IEEE 802.11a/n/ac"), (ic("speed"), "До 867 Мбит/с"), (TOWER, "MIMO 2×2"), (PEOPLE, "До 30 клиентов"),
-             (ic("chart"), "Мощность до 28 дБм"), (ic("temp"), "От −45 до +65 °C")]
-    for i, (p, tx) in enumerate(cells):
-        l = 64 if i % 2 == 0 else 512
-        w = 432 if i % 2 == 0 else 392
-        o.append(f'<div class="card solid" data-s="{i + 1}" style="{ab(l, 284 + (i // 2) * 134, w, 100)}padding:0 18px;display:flex;align-items:center;gap:18px;border-radius:20px">'
-                 f'{cico(p, "hex")}<span style="white-space:nowrap;font-size:21px;font-weight:700;color:{NAVY};text-transform:uppercase;line-height:1.1">{tx}</span></div>')
-    o.append(f'<div class="card solid" data-s="7" style="{ab(64, 657, 840, 150)}padding:0 26px;display:flex;align-items:center;gap:22px;border-radius:22px">'
-             f'{cico(TOWER, "hex")}<div><div style="font-size:30px;font-weight:800;color:{NAVY};text-transform:uppercase">Межсекторная синхронизация</div>'
-             f'<div style="font-size:19px;color:var(--dim);text-transform:uppercase;margin-top:8px;line-height:1.3">Эффективная работа при ограниченном частотном ресурсе</div></div></div>')
-    for k, (f, lab) in enumerate([("p042_house.jpg", "Частная застройка"), ("p042_tower.jpg", "Удалённые объекты"), ("p042_tv.jpg", "Triple Play")]):
-        cx = [160, 540, 880][k]
-        o.append(f'<div data-s="{8 + k}" style="{ab(cx - 160, 840, 320)}text-align:center"><img src="assets/{f}" alt="{lab}" style="height:120px;width:auto;margin:0 auto;display:block">'
-                 f'<div style="font-size:19px;font-weight:600;color:{NAVY};text-transform:uppercase;margin-top:44px">{lab}</div></div>')
+    cells = ["5 ГГц · IEEE 802.11a/n/ac", "До 867 Мбит/с", "MIMO 2×2", "До 30 клиентов", "Мощность до 28 дБм", "От −45 до +65 °C"]
+    for i, tx in enumerate(cells):
+        l = 64 if i % 2 == 0 else 509
+        w = 421 if i % 2 == 0 else 389
+        o.append(f'<div class="card solid" data-s="{i + 2}" style="{ab(l, 285 + (i // 2) * 119, w, 101)}padding:0 14px;display:flex;align-items:center;gap:18px;border-radius:18px">'
+                 f'<img src="assets/p042_i{i + 1}.png" alt="" style="width:86px;height:89px;flex:none;mix-blend-mode:multiply">'
+                 f'<span style="white-space:nowrap;font-size:24px;font-weight:700;color:{NAVY};text-transform:uppercase;line-height:1.1">{tx}</span></div>')
+    o.append(f'<div class="card solid" data-s="8" style="{ab(64, 649, 834, 155)}padding:0 22px;display:flex;align-items:center;gap:22px;border-radius:20px">'
+             f'<img src="assets/p042_i7.png" alt="" style="width:180px;height:137px;flex:none;mix-blend-mode:multiply">'
+             f'<div style="border-left:2px solid var(--line);padding-left:24px"><div style="font-size:30px;font-weight:800;color:{NAVY};text-transform:uppercase">Межсекторная синхронизация</div>'
+             f'<div style="font-size:21px;color:var(--dim);text-transform:uppercase;margin-top:8px;line-height:1.25">Эффективная работа при ограниченном<br>частотном ресурсе</div></div></div>')
+    for k, (f, lab, l, w) in enumerate([("p042_house2.jpg", "Частная застройка", 51, 302), ("p042_tower2.jpg", "Удалённые объекты", 408, 317),
+                                        ("p042_tv2.jpg", "Triple Play", 763, 314)]):
+        o.append(f'<div class="ab" data-s="{9 + k}" style="{ab(l, 823, w)}text-align:center"><img src="assets/{f}" alt="{lab}" '
+                 f'style="width:{w}px;height:{round(w * 151 / 262 if k < 2 else w * 134 / 273)}px;display:block;mix-blend-mode:multiply;object-fit:cover">'
+                 f'<div style="font-size:21px;font-weight:600;color:{NAVY};text-transform:uppercase;margin-top:12px">{lab}</div></div>')
     return "".join(o)
 
 
