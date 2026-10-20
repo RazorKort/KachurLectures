@@ -78,7 +78,9 @@ TAG = ('<div class="ab" style="left:1726px;top:20px;width:170px;font-size:14px;l
 def p043():
     o = ['<h1 class="t ab" style="left:76px;top:26px;font-size:80px;text-align:left;white-space:nowrap">Обзор коммутаторов MES</h1>',
          TAG]
-    o.append('<img class="cut ab" src="assets/p043_mes1428.jpg" alt="Коммутатор MES1428" style="left:77px;top:324px;width:1229px;'+feather(30,"ltb")+'">')
+    # официальный рендер на прозрачном фоне вместо размытого кропа 896px из pptx
+    o.append('<img class="ab" src="assets/dev/mes1428.webp" alt="Коммутатор MES1428" style="left:77px;top:324px;width:1229px;'
+             'filter:drop-shadow(0 16px 26px rgba(110,100,165,.24))">')
     o.append(icard(T(45, 75, 318, 170), "cpu", "Коммутатор",
                    "Специализированный компьютер для быстрого приёма, обработки и пересылки данных.", 1, "card solid", 29, 22))
     chip = (f'<div style="display:flex;gap:22px;align-items:center;height:100%">{mi("cpu", "")}'

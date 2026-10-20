@@ -556,7 +556,6 @@ def esr_functions():
               '</svg>']
     o.append(f'<div class="card" data-s="11" style="{ab(90, 770, 1740)}height:270px;padding:0">'
              + "".join(scheme)
-             + f'<div class="ab" style="left:800px;top:58px;width:400px">{dev("esr-30.webp", 0, 0, 400)}</div>'
              + "".join(f'<div class="ab" style="left:{x - 90}px;top:{165 if i % 2 == 0 else 20}px;width:180px;'
                        f'text-align:center">'
                        f'<div style="display:flex;justify-content:center">{ico(icn, "sm")}</div>'

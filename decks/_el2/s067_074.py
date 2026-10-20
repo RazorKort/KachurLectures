@@ -521,86 +521,145 @@ SLIDES.append(("p073", "Память маршрутизатора", memory()))
 
 
 # ======================================================= p074 POST: самотестирование
+# bump() при сборке поднимает мелкие кегли до 21px, поэтому слайд свёрстан
+# сразу крупным шрифтом; этапы загрузки вынесены на отдельный слайд — в одну
+# страницу четыре списка читаемым кеглем не помещались и текст уезжал за карточки
+def chip(label, w=250, h=150):
+    """Микросхема: корпус с ножками и подписью — вместо размытого кропа из pptx."""
+    gid = "cg_" + label.replace("-", "")
+    legs = "".join(f'<rect x="{34 + i * 26}" y="18" width="14" height="14" rx="3" fill="#aebbe4"/>'
+                   f'<rect x="{34 + i * 26}" y="118" width="14" height="14" rx="3" fill="#aebbe4"/>' for i in range(7))
+    legs += "".join(f'<rect x="12" y="{40 + i * 28}" width="14" height="14" rx="3" fill="#aebbe4"/>'
+                    f'<rect x="224" y="{40 + i * 28}" width="14" height="14" rx="3" fill="#aebbe4"/>' for i in range(2))
+    return (f'<svg viewBox="0 0 250 150" style="{ab(0, 0, w, h)}">'
+            f'<defs><linearGradient id="{gid}" x1="0" y1="0" x2="0" y2="1">'
+            f'<stop offset="0" stop-color="#7f9bea"/><stop offset="1" stop-color="#36'
+            f'4da6"/></linearGradient></defs>{legs}'
+            f'<rect x="32" y="30" width="186" height="90" rx="12" fill="url(#{gid})"/>'
+            f'<rect x="40" y="38" width="170" height="74" rx="8" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>'
+            f'<text x="125" y="84" text-anchor="middle" font-family="Oswald,sans-serif" font-weight="700" '
+            f'font-size="30" fill="#fff" letter-spacing="1">{label}</text></svg>')
+
+
+def fw_chip(w=250, h=150):
+    """Пакет прошивки: слои образа и шестерня."""
+    return (f'<svg viewBox="0 0 250 150" style="{ab(0, 0, w, h)}">'
+            f'<defs><linearGradient id="fwg" x1="0" y1="0" x2="0" y2="1">'
+            f'<stop offset="0" stop-color="#7f9bea"/><stop offset="1" stop-color="#364da6"/></linearGradient></defs>'
+            f'<path d="M125 96l82 22-82 22-82-22z" fill="#aebbe4"/>'
+            f'<path d="M125 62l82 22-82 22-82-22z" fill="url(#fwg)"/>'
+            f'<g fill="none" stroke="#364da6" stroke-width="7" stroke-linecap="round">'
+            f'<circle cx="125" cy="40" r="15"/>'
+            f'<path d="M125 12v10M125 58v10M97 40h10M143 40h10M105 20l7 7M138 53l7 7M145 20l-7 7M112 53l-7 7"/></g></svg>')
+
+
 def post_self():
-    o = ['<div class="ab" style="left:52px;top:0px;font-size:140px;font-weight:800;line-height:1;letter-spacing:-2px;'
+    o = ['<div class="ab" style="left:52px;top:14px;font-size:140px;font-weight:800;line-height:1;letter-spacing:-2px;'
          'background:linear-gradient(90deg,#1c2c63,#4a62b0);-webkit-background-clip:text;background-clip:text;color:transparent">POST</div>',
-         '<div class="ab" style="left:59px;top:138px;width:520px;font-size:34px;font-weight:700;line-height:1.18;color:#6a7fb8;'
+         '<div class="ab" style="left:59px;top:168px;width:540px;font-size:36px;font-weight:700;line-height:1.18;color:#6a7fb8;'
          'text-transform:uppercase">Самотестирование<br>при включении</div>',
-         '<p class="b ab" style="left:59px;top:224px;width:470px;font-size:19px;line-height:1.17">В любом электронном устройстве есть механизм '
+         '<p class="b ab" style="left:59px;top:272px;width:520px;font-size:26px;line-height:1.32">В любом электронном устройстве есть механизм '
          'самотестирования перед началом работы или при включении электропитания.</p>',
-         '<p class="b ab" style="left:59px;top:302px;width:490px;font-size:19px;line-height:1.17">POST (Power On Self Test) — '
+         '<p class="b ab" style="left:59px;top:434px;width:520px;font-size:26px;line-height:1.32">POST (Power On Self Test) — '
          'это механизм, который проверяет наличие всех компонентов, необходимых для нормальной работы устройства, и их работоспособность '
          'сразу при включении питания и перед началом работы.</p>']
-    hexi = lambda inner, top: (f'<span class="ico hex ab" style="left:12px;top:{top}px;width:76px;height:76px">'
+    hexi = lambda inner, top: (f'<span class="ico hex ab" style="left:18px;top:{top}px;width:76px;height:76px">'
                                f'<svg viewBox="0 0 24 24">{inner}</svg></span>')
-    mon = ('<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M9 21h6M12 17v4"/>')
-    snd = ('<div class="card solid" style="position:absolute;left:14px;top:92px;width:496px;height:112px;border-radius:16px;background:rgba(255,255,255,.55);padding:0">'
-           + hexi(SPK, 18) +
-           '<div class="ab" style="left:104px;top:6px;width:236px;font-size:19px;line-height:1.25"><b style="font-size:20px">Звуковой</b><br>'
-           '<span style="font-size:16px;line-height:1.2;display:block">По типу азбуки Морзе — каждая комбинация «точек» и «тире» обозначает конкретную неисправность.</span></div>'
-           '<div class="ab" style="left:350px;top:22px;width:136px;height:68px;border-radius:12px;background:linear-gradient(180deg,#a9bdf0,#8fa6e6)">'
-           '<svg viewBox="0 0 136 68" style="width:136px;height:68px"><path d="M10 34h6M22 34h2M30 30v8M36 24v20M42 30v8M50 34h8M64 28v12M70 34h4M80 22v24M86 34h6M98 30v8M104 34h4M114 34h12" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div></div>'
-           '<div class="card solid" style="position:absolute;left:14px;top:216px;width:496px;height:112px;border-radius:16px;background:rgba(255,255,255,.55);padding:0">'
-           + hexi(mon, 18) +
-           '<div class="ab" style="left:104px;top:18px;width:230px;font-size:19px;line-height:1.3"><b style="font-size:20px">Текстовый</b><br>'
-           '<span style="font-size:17px">С описанием или кодом неисправности.</span></div>'
-           '<div class="ab mono" style="left:340px;top:10px;width:150px;height:92px;border-radius:10px;background:linear-gradient(180deg,#3a52b0,#26398a);'
-           'color:#dfe8ff;font-size:13px;line-height:1.55;padding:12px 12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)">POST ERROR<br>MEMORY NOT FOUND<br>CODE: 0x1A</div></div>')
-    o.append(kcard(559, 46, 524, 360, 1, "card",
-                   '<div class="ab" style="left:24px;top:14px;width:470px;font-size:21px;font-weight:700;color:var(--navy);line-height:1.3">'
-                   'При обнаружении неисправности<br>POST подаёт сигнал:</div>' + snd, "padding:0;border-radius:22px"))
-    o.append(img("p074_device.jpg", 1097, 185, 823, 220, 1))
+    mon = '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M9 21h6M12 17v4"/>'
+    morse = ('<div class="ab" style="left:452px;top:48px;width:148px;height:74px;border-radius:14px;'
+             'background:linear-gradient(180deg,#a9bdf0,#8fa6e6)">'
+             '<svg viewBox="0 0 136 68" style="width:148px;height:74px"><path d="M10 34h6M22 34h2M30 30v8M36 24v20M42 30v8'
+             'M50 34h8M64 28v12M70 34h4M80 22v24M86 34h6M98 30v8M104 34h4M114 34h12" stroke="#fff" stroke-width="3" '
+             'stroke-linecap="round" fill="none"/></svg></div>')
+    term = ('<div class="ab mono" style="left:352px;top:30px;width:248px;border-radius:12px;'
+            'background:linear-gradient(180deg,#3a52b0,#26398a);color:#dfe8ff;font-size:21px;line-height:1.5;'
+            'padding:14px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)">POST ERROR<br>MEMORY NOT FOUND<br>CODE: 0x1A</div>')
 
-    o.append(f'<div class="ab" data-s="2" style="{ab(59, 420, 700)}font-size:30px;font-weight:800;color:var(--navy);text-transform:uppercase">Этапы загрузки устройства</div>')
-    o.append(f'<div class="ab" data-s="2" style="{ab(1108, 404, 800)}font-size:17px;line-height:1.3;color:var(--navy)">'
-             f'На каждом этапе происходит инициализация, выбор или поиск и проверка хеша и подлинности. '
-             f'Если все условия этапа удовлетворяются — происходит переход к следующему этапу.</div>')
+    def row(top, icn, ttl, txt, side, h, tw=330):
+        return (f'<div class="card solid ab" style="{ab(18, top, 616, h)}border-radius:18px;padding:0">'
+                + hexi(icn, 26) +
+                f'<div class="ab" style="left:112px;top:18px;width:{tw}px;font-size:22px;line-height:1.28">'
+                f'<b style="font-size:26px;color:var(--navy)">{ttl}</b><br>{txt}</div>' + side + '</div>')
 
-    st = [(41, 455, "01", "ROM BOOTLOADER", "Загрузчик ПЗУ", "p074_rom.jpg", 234, 112, "power", "Запуск устройства",
-           ["Инициализация аппаратных регистров.", "Чтение параметров загрузки и выбор источника загрузки (NOR flash, SD/MMC card, PCI Express).",
-            "Вычисление и сравнение хеш-суммы открытого ключа с хешем в регистре.", "Если хеши не совпадают — остановка загрузки.",
-            "Если совпадают — запуск Primary loader."]),
-          (514, 442, "02", "PRIMARY LOADER", "Первичный загрузчик", "p074_cpu.jpg", 196, 116, "gear", "Запуск Primary-loader",
-           ["Инициализация CPU (процессор), UART (RS-232 или COM-порт), DRAM (память).", "Запуск таймера.",
-            "Чтение параметров загрузки и выбор источников загрузки.", "Копирование образа U-boot в DRAM.",
-            "Проверка подлинности образа U-boot.", "Если проверка не пройдена — остановка загрузки.", "Если пройдена — запуск U-boot."]),
-          (974, 439, "03", "U-BOOT", "Универсальный загрузчик", "p074_uboot.jpg", 233, 112, "gear", "Запуск U-boot",
-           ["Проверка заголовка, ключа, цифровой подписи и значения хеш.", "Инициализация аппаратного окружения, NOR-flash и сетевых интерфейсов.",
-            "Выбор активного раздела (eMMC / NAND).", "Проверка подлинности.", "Если проверка пройдена — запуск Firmware."]),
-          (1429, 470, "04", "FIRMWARE", "Файл прошивки", "p074_fw.jpg", 194, 112, "play", "Запуск Firmware",
-           ["Проверка подлинности (CRC).", "Распаковка образа Firmware.", "Загрузка готовой конфигурации.", "Запуск Firmware."])]
-    icons = {"power": '<path d="M12 4v8M7.5 7a7 7 0 1 0 9 0"/>',
-             "gear": '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
-             "play": '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/>'}
-    for i, (l, w, n, nm, sb, im, iw, ih, picn, pill, bl) in enumerate(st):
-        s = 3 + i
-        head = (f'<div class="ab" style="left:22px;top:10px;display:flex;gap:18px;align-items:center">'
-                f'<span style="font-size:58px;font-weight:800;color:#2d3d7c;line-height:1">{n}</span>'
-                f'<div><div style="font-size:22px;font-weight:800;color:#33458a;line-height:1.1">{nm}</div>'
-                f'<div style="font-size:20px;color:#4f6199">{sb}</div></div></div>')
-        pic = chipimg(im, (w - iw) / 2, 78, iw, ih)
-        pl = (f'<div class="ab card solid" style="{ab((w - 300) / 2, 202, 300, 46)}border-radius:23px;padding:0;display:flex;gap:12px;'
-              f'align-items:center;justify-content:center;font-size:19px;font-weight:700;color:var(--navy)">'
-              f'<span style="color:var(--blue);display:inline-flex"><svg viewBox="0 0 24 24" style="width:26px;height:26px" fill="none" stroke="currentColor" '
-              f'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">{icons[picn]}</svg></span>{pill}</div>')
-        fs = 16.5 if len(bl) > 5 else 17.5
-        inner = (f'<div class="ab" style="{ab(14, 258, w - 28, 240)}border-radius:14px;background:rgba(255,255,255,.5)"></div>'
-                 f'<div class="ab" style="{ab(28, 268, w - 52)}">{bullets(bl, fs, 3, 1.2)}</div>')
-        o.append(kcard(l, 500, w, 480, s, "card", head + pic + pl + inner, "padding:0;border-radius:22px"))
-    # карточки этапов стоят вплотную — стрелки между ними не помещались и
-    # рисовались обрубками, последовательность читается по номерам 01-04
+    sig = (row(116, SPK, "Звуковой",
+               "По типу азбуки Морзе — каждая комбинация «точек» и «тире» обозначает конкретную неисправность.", morse, 190)
+           + row(322, mon, "Текстовый", "С описанием или кодом неисправности.", term, 190, 228))
+    o.append(kcard(620, 40, 652, 532, 1, "card",
+                   '<div class="ab" style="left:28px;top:22px;width:580px;font-size:28px;font-weight:700;color:var(--navy);line-height:1.25">'
+                   'При обнаружении неисправности POST подаёт сигнал:</div>' + sig, "padding:0;border-radius:24px"))
 
-    o.append(kcard(48, 943, 1129, 99, 7, "card",
-                   '<div class="ab" style="left:24px;top:6px;font-size:90px;font-family:Georgia,serif;font-weight:800;color:#5f86e6;line-height:1">“</div>'
-                   '<div class="ab" style="left:104px;top:14px;width:1000px;font-size:19px;line-height:1.4;color:var(--navy)">'
-                   'Механизм POST присутствует во всех современных устройствах:<br>'
-                   'персональных компьютерах, ноутбуках, смартфонах, точках доступа, коммутаторах, маршрутизаторах и др.<br>'
-                   'Это более сложный процесс, интегрированный в систему загрузки устройства.</div>', "padding:0;border-radius:20px"))
-    o.append(kcard(1369, 943, 517, 99, 8, "card",
+    o.append(img("dev/esr-200.webp", 1310, 150, 560, None, 1, cls="ab"))
+    o.append(f'<div class="ab mono" data-s="1" style="{ab(1310, 404, 560)}text-align:center;font-size:22px;'
+             f'font-weight:800;color:var(--navy)">ESR-200</div>')
+
+    o.append(kcard(59, 700, 1213, 250, 2, "card",
+                   '<div class="ab" style="left:28px;top:6px;font-size:90px;font-family:Georgia,serif;font-weight:800;color:#5f86e6;line-height:1">&#8220;</div>'
+                   '<div class="ab" style="left:116px;top:36px;width:1060px;font-size:26px;line-height:1.4;color:var(--navy)">'
+                   'Механизм POST присутствует во всех современных устройствах: персональных компьютерах, ноутбуках, '
+                   'смартфонах, точках доступа, коммутаторах, маршрутизаторах и др. Это более сложный процесс, '
+                   'интегрированный в систему загрузки устройства.</div>', "padding:0;border-radius:22px"))
+    o.append(kcard(1310, 700, 560, 250, 3, "card",
                    f'<div style="display:flex;gap:18px;align-items:center;height:100%">{ico("warn", "sm")}'
-                   '<div style="font-size:18px;line-height:1.35;color:var(--navy)">Различные модели маршрутизаторов ESR имеют свои особенности загрузки, '
-                   'но общий принцип остаётся единым.</div></div>', "padding:12px 20px;border-radius:20px"))
+                   '<div style="font-size:24px;line-height:1.35;color:var(--navy)">Различные модели маршрутизаторов ESR имеют свои особенности загрузки, '
+                   'но общий принцип остаётся единым.</div></div>', "padding:16px 24px;border-radius:22px"))
     return "".join(o)
 
 
 SLIDES.append(("p074", "POST: самотестирование при включении", post_self()))
+
+
+# ======================================================= p074b этапы загрузки
+def boot_stages():
+    o = [title("Этапы загрузки устройства", 30, 58),
+         f'<div class="ab" data-s="1" style="{ab(360, 122, 1200)}text-align:center;font-size:26px;line-height:1.32;color:var(--navy)">'
+         f'На каждом этапе происходит инициализация, выбор или поиск и проверка хеша и подлинности. '
+         f'Если все условия этапа удовлетворяются — происходит переход к следующему этапу.</div>']
+
+    st = [("01", "ROM BOOTLOADER", "Загрузчик ПЗУ", chip("ROM"), "power", "Запуск устройства",
+           ["Инициализация аппаратных регистров.",
+            "Чтение параметров загрузки и выбор источника загрузки (NOR flash, SD/MMC card, PCI Express).",
+            "Вычисление и сравнение хеш-суммы открытого ключа с хешем в регистре.",
+            "Если хеши не совпадают — остановка загрузки.",
+            "Если совпадают — запуск Primary loader."]),
+          ("02", "PRIMARY LOADER", "Первичный загрузчик", chip("CPU"), "gear", "Запуск Primary-loader",
+           ["Инициализация CPU (процессор), UART (RS-232 или COM-порт), DRAM (память).",
+            "Запуск таймера.",
+            "Чтение параметров загрузки и выбор источников загрузки.",
+            "Копирование образа U-boot в DRAM.",
+            "Проверка подлинности образа U-boot.",
+            "Если проверка не пройдена — остановка загрузки.",
+            "Если пройдена — запуск U-boot."]),
+          ("03", "U-BOOT", "Универсальный загрузчик", chip("U-BOOT"), "gear", "Запуск U-boot",
+           ["Проверка заголовка, ключа, цифровой подписи и значения хеш.",
+            "Инициализация аппаратного окружения, NOR-flash и сетевых интерфейсов.",
+            "Выбор активного раздела (eMMC / NAND).",
+            "Проверка подлинности.",
+            "Если проверка пройдена — запуск Firmware."]),
+          ("04", "FIRMWARE", "Файл прошивки", fw_chip(), "play", "Запуск Firmware",
+           ["Проверка подлинности (CRC).",
+            "Распаковка образа Firmware.",
+            "Загрузка готовой конфигурации.",
+            "Запуск Firmware."])]
+    icons = {"power": '<path d="M12 4v8M7.5 7a7 7 0 1 0 9 0"/>',
+             "gear": '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8'
+                     'M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
+             "play": '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/>'}
+    W, GAP, L0, TOP, H = 450, 20, 30, 204, 820
+    for i, (n, nm, sb, pic, picn, pill, bl) in enumerate(st):
+        l = L0 + i * (W + GAP)
+        head = (f'<div class="ab" style="{ab(24, 18, W - 48)}display:flex;gap:16px;align-items:center">'
+                f'<span style="font-size:58px;font-weight:800;color:#2d3d7c;line-height:1">{n}</span>'
+                f'<div><div style="font-size:26px;font-weight:800;color:#33458a;line-height:1.1">{nm}</div>'
+                f'<div style="font-size:22px;color:#4f6199">{sb}</div></div></div>')
+        chp = f'<div class="ab" style="{ab((W - 250) / 2, 102, 250, 150)}">{pic}</div>'
+        pl = (f'<div class="ab card solid" style="{ab(20, 268, W - 40, 56)}border-radius:28px;padding:0;display:flex;gap:12px;'
+              f'align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--navy)">'
+              f'<span style="color:var(--blue);display:inline-flex"><svg viewBox="0 0 24 24" style="width:28px;height:28px" fill="none" '
+              f'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">{icons[picn]}</svg></span>{pill}</div>')
+        inner = (f'<div class="ab" style="{ab(16, 340, W - 32, H - 356)}border-radius:16px;background:rgba(255,255,255,.5)"></div>'
+                 f'<div class="ab" style="{ab(32, 358, W - 64)}">{bullets(bl, 22, 12, 1.3)}</div>')
+        o.append(kcard(l, TOP, W, H, 2 + i, "card", head + chp + pl + inner, "padding:0;border-radius:24px"))
+    return "".join(o)
+
+
+SLIDES.append(("p074b", "Этапы загрузки устройства", boot_stages()))

@@ -243,21 +243,9 @@ SLIDES.append(("p022", "Обзор беспроводного оборудова
 # p023  Монтаж в стойку
 # =====================================================================
 def s023():
-    o = [f'<h1 class="t ab" style="{A(107, 46)}font-size:72px;text-align:left;white-space:nowrap">Монтаж <span class="lt">в стойку</span></h1>',
-         f'<div class="ab" style="{A(107, 160, 330, 3)}background:linear-gradient(90deg,var(--blue),transparent)"></div>',
-         f'<img class="cut ab" data-s="1" src="assets/p023_rack_big.jpg" alt="Монтаж ESR в стойку" style="{A(57, 194, 941)}">',
-         f'<img class="cut ab" data-s="2" src="assets/p023_rack_small.jpg" alt="Монтаж компактного ESR в стойку" style="{A(1018, 248, 845)}">']
-    o.append(f'<div class="card solid" data-s="3" style="{A(32, 751, 544, 305)}padding:0">'
-             f'<div style="{A(24, 20, 480)}font-size:21px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.25">Кронштейны<br>для установки<br>в стойку</div>'
-             f'<img class="cut ab" src="assets/p023_brackets.jpg" alt="Кронштейны" style="{A(120, 160, 360)}"></div>')
-    o.append(f'<div class="card solid" data-s="4" style="{A(591, 751, 476, 305)}padding:0">'
-             f'<div style="{A(24, 20, 430)}font-size:21px;font-weight:800;color:var(--navy);text-transform:uppercase;line-height:1.25">Винты для крепления<br>кронштейнов</div>'
-             f'<img class="cut ab" src="assets/p023_screws.jpg" alt="Винты" style="{A(110, 120, 260)}"></div>')
-    o.append(f'<div class="card solid" data-s="5" style="{A(1094, 751, 794, 305)}display:flex;align-items:center;gap:30px;padding:0 40px">'
-             f'<span style="display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--blue);color:#fff;font-size:40px;font-weight:800;flex:none">!</span>'
-             f'<p class="b" style="font-size:24px">В комплект поставки устройства входят кронштейны для установки в стойку и винты для крепления кронштейнов к корпусу '
-             f'устройства, кроме моделей <span class="mono">ESR-10</span> и <span class="mono">ESR-15</span>, которые имеют пластиковый корпус и не предназначены для установки в стойку.</p></div>')
-    return "".join(o)
+    # слайд целиком — исходный визуал из pptx, без пересборки блоками
+    return ('<img class="ab" src="assets/p023_full.jpg" alt="Монтаж в стойку" '
+            'style="position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover">')
 
 
 SLIDES.append(("p023", "Монтаж в стойку", s023()))

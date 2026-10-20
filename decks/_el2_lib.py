@@ -36,6 +36,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:#e9e6f
 .slide{position:relative;width:1920px;min-height:1080px;display:none;overflow:hidden;
   background:url(__BG__) center/cover no-repeat}
 .slide::before,.slide::after{content:"";position:absolute;pointer-events:none;opacity:.85;z-index:0}
+.slide.ice::before,.slide.ice::after{display:none}
+__ICE__
 .slide::before{left:0;top:0;width:520px;height:520px;background:url(__FTL__) left top/contain no-repeat}
 .slide::after{right:0;bottom:0;width:520px;height:520px;background:url(__FBR__) right bottom/contain no-repeat}
 .slide.on{display:block}.slide .pad>.glow{position:absolute;border-radius:50%;pointer-events:none;z-index:0}.slide::first-line{}
@@ -396,7 +398,7 @@ def arrow_svg(x1, y1, x2, y2, step=None, col="var(--blue)", w=4, dash=False):
             f'<polygon class="hd" points="{x2},{y2} {bx+nx*8:.1f},{by+ny*8:.1f} {bx-nx*8:.1f},{by-ny*8:.1f}" fill="{col}"/></g>')
 
 
-def build(slides, out, bg="assets/bg.jpg", ftl="assets/frost_tl.png", fbr="assets/frost_br.png", assets_dir="."):
+def build(slides, out, bg="assets/bg.jpg", ftl="assets/frost_tl.png", fbr="assets/frost_br.png", assets_dir=".", ice=()):
     """slides: список (label, html). Картинки src="assets/..." инлайнятся в base64."""
     import base64, os, re, pathlib
     root = pathlib.Path(assets_dir)
@@ -418,12 +420,14 @@ def build(slides, out, bg="assets/bg.jpg", ftl="assets/frost_tl.png", fbr="asset
                    ("__F_IN8__", "inter800.woff2"), ("__F_MO4__", "mono400.woff2"),
                    ("__F_MO7__", "mono700.woff2")):
         css = css.replace(ph, b64(fn))
+    css = css.replace("__ICE__", "".join(f".slide.ice.b{k}{{background-image:url({b64(f)})}}" for k, f in enumerate(ice)))
     body = []
     for item in slides:
         label, html = item[0], item[1]
         auto = item[2] if len(item) > 2 else "1"
+        cls = f"slide ice b{item[3]}" if len(item) > 3 and ice else "slide"
         html = re.sub(r'src="assets/([^"]+)"', lambda m: f'src="{b64(m.group(1))}"', html)
-        body.append(f'<section class="slide" data-label="{label}" data-auto="{auto}">'
+        body.append(f'<section class="{cls}" data-label="{label}" data-auto="{auto}">'
                     f'<div class="pad">{html}</div></section>')
     doc = ('<!doctype html><html lang="ru"><head><meta charset="utf-8">'
            '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
