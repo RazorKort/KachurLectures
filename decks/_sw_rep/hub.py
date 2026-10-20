@@ -78,6 +78,6 @@ HTML = CSS + f"""
 {_card(28, 768, 532, 130, "", "", "РАНЬШЕ", "Коаксиальный кабель &nbsp;•<br>Т-разъём • терминаторы", "hub_coax.png", "left:282px;top:788px;width:266px")}
 {_card(575, 768, 523, 130, "", "", "С КОНЦЕНТРАТОРОМ", "Отдельный кабель от компьютера<br>к порту хаба", "hub_star.png", "left:884px;top:785px;width:188px")}
 {_card(1114, 768, 530, 130, "r", "", "", "", "hub_warn.png", "left:1130px;top:793px;width:84px")}
-<div class="step"><div class="ab os hub-blink" style="left:1228px;top:792px;font-weight:700;font-size:22px;letter-spacing:-.3px;white-space:nowrap;color:#ff4d8a">ВСЕ ПОРТЫ ХАБА = ОДИН ДОМЕН КОЛЛИЗИЙ</div>
+<div class="step"><div class="ab os hub-blink" style="left:1228px;top:792px;font-weight:700;font-size:21px;letter-spacing:-.4px;white-space:nowrap;color:#ff4d8a">ВСЕ ПОРТЫ ХАБА = ОДИН ДОМЕН КОЛЛИЗИЙ</div>
   <div class="hub-t" style="left:1228px;top:828px;font-size:21px">Хаб не анализирует MAC-адреса<br>и не выбирает получателя.</div></div>
 """

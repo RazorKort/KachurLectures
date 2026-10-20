@@ -20,7 +20,7 @@ CSS = """<style>
 .bc-num{position:absolute;top:644px;width:62px;height:54px;background:var(--c2);border:2px solid var(--c);border-radius:8px 0 8px 0;
   font-family:Oswald,sans-serif;font-weight:700;font-size:34px;line-height:50px;text-align:center;color:#fff}
 .bc-t{position:absolute;text-align:center;color:#fff;font-size:24px;line-height:1.24}
-.bc-t b{font-family:Oswald,sans-serif;font-weight:700}
+.bc-t b{font-weight:700}
 </style>"""
 
 B = "--c:#2ad4ff;--g:rgba(42,212,255,.45);--b:rgba(8,30,76,.85);--c2:#0b4fa0"
@@ -72,6 +72,6 @@ HTML = CSS + f"""
 <div class="ab" style="left:1322px;top:644px;width:2px;height:216px;border-left:2px dashed rgba(42,212,255,.6)"></div>
 <div class="ab" style="left:1346px;top:668px;width:286px;height:156px;border:2px solid #2ad4ff;border-radius:10px;background:rgba(8,30,76,.85);box-shadow:0 0 14px rgba(42,212,255,.5)"></div>
 {img("rep/base_console_bulb.png", "left:1363px;top:686px;width:59px", "ab")}
-<div class="ab" style="left:1438px;top:690px;font-size:20px;line-height:1.38;color:#e6f1ff">Рекомендуется<br>устанавливать<br>скорость 115200 бод<br>вручную.</div>
+<div class="ab" style="left:1438px;top:692px;font-size:19px;line-height:1.38;color:#e6f1ff">Рекомендуется<br>устанавливать<br>скорость 115200 бод<br>вручную.</div>
 </div>
 """

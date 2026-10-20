@@ -79,6 +79,6 @@ def build(n, cards, info, mid_extra="", hl=-1):
 HTML = build("bridge_fwd", "".join([
     _card(20, 506, "", "1", "ОБУЧЕНИЕ", "Мост запоминает MAC-адрес<br>источника и входной порт.", "bridge_fwd_book.png", "left:432px;top:680px;width:78px"),
     _card(539, 550, "m", "2", "ПЕРЕСЫЛКА PC-A → PC-C", "Адрес PC-C изучен на E2:<br>мост передаёт кадр из E1 в E2.", "bridge_fwd_env.png", "left:990px;top:690px;width:72px"),
-    _card(1106, 546, "", "3", "ФИЛЬТРАЦИЯ PC-A → PC-B", "Оба узла за E1: мост не передаёт<br>кадр в другой сегмент.", "bridge_fwd_no.png", "left:1560px;top:685px;width:72px"),
+    _card(1106, 546, "", "3", "<span style=\"font-size:27px\">ФИЛЬТРАЦИЯ PC-A → PC-B</span>", "Оба узла за E1: мост не передаёт<br>кадр в другой сегмент.", "bridge_fwd_no.png", "left:1560px;top:685px;width:72px"),
 ]), '<div class="ab" style="left:460px;top:858px;font-size:23px;color:#fff">Неизвестный адрес назначения &nbsp;— &nbsp;рассылка во все порты, кроме входного.</div>',
     '<svg class="ab brf-glow" style="left:800px;top:478px" width="70" height="30" viewBox="0 0 70 30"><path d="M2 15 H58 M46 4 L64 15 L46 26" fill="none" stroke="#ffb02e" stroke-width="4"/></svg>')

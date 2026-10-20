@@ -25,7 +25,7 @@ CSS = """<style>
 .wl-c{position:absolute;top:812px;width:76px;height:76px;border:3px solid #2ad4ff;border-radius:50%;box-shadow:0 0 14px #2ad4ff,inset 0 0 10px rgba(42,212,255,.4);
   font-family:Oswald,sans-serif;font-weight:500;font-size:46px;line-height:70px;text-align:center;color:#2ad4ff}
 .wl-s{position:absolute;color:#fff;font-size:23px;line-height:1.22}
-.wl-gt{position:absolute;top:818px;font-family:Golos Text,sans-serif;font-weight:700;font-size:64px;line-height:64px;color:#2ad4ff;text-shadow:0 0 10px #2ad4ff}
+.wl-gt{position:absolute;top:826px;font-size:46px;line-height:50px;color:#2ad4ff;text-shadow:0 0 10px #2ad4ff}
 .wl-btn{animation:wlpulse 2s ease-in-out infinite}
 @keyframes wlpulse{50%{box-shadow:0 0 26px #2ad4ff}}
 </style>"""
@@ -75,13 +75,13 @@ HTML = CSS + f"""
 <div class="wl-st" style="left:76px;width:438px"></div><div class="wl-c" style="left:88px">1</div>
 {img("rep/web_login_s1.png", "left:193px;top:823px;width:84px", "ab")}
 <div class="wl-s" style="left:296px;top:822px">1. Введите<br>&nbsp;&nbsp;&nbsp;&nbsp;admin / admin</div>
-<div class="wl-gt" style="left:548px">›</div>
+<div class="wl-gt" style="left:548px">❯</div>
 </div>
 <div class="step">
 <div class="wl-st" style="left:600px;width:436px"></div><div class="wl-c" style="left:614px">2</div>
 {img("rep/web_login_s2.png", "left:723px;top:820px;width:69px", "ab")}
 <div class="wl-s" style="left:814px;top:822px">2. Войдите<br>&nbsp;&nbsp;&nbsp;&nbsp;в систему</div>
-<div class="wl-gt" style="left:1072px">›</div>
+<div class="wl-gt" style="left:1072px">❯</div>
 </div>
 <div class="step">
 <div class="wl-st" style="left:1124px;width:472px"></div><div class="wl-c" style="left:1138px">3</div>

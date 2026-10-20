@@ -49,9 +49,11 @@ HTML = CSS + f"""
   <div class="ab os" style="left:1108px;top:532px;font-weight:700;font-size:26px;color:#ff8ae8">Независимый сегмент 2</div>
 </div>
 <div class="step">
+  <div class="ab" style="left:596px;top:405px;width:110px;height:5px;border-radius:3px;background:#2a7bff;box-shadow:0 0 10px #2ad4ff"></div>
+  <div class="ab" style="left:970px;top:405px;width:110px;height:5px;border-radius:3px;background:#2a7bff;box-shadow:0 0 10px #2ad4ff"></div>
   {img("rep/bridge_split_m.png", "left:700px;top:258px;width:275px", "ab bsp-f")}
   <div class="ab os" style="left:700px;top:200px;width:275px;text-align:center;font-weight:700;font-size:21px;line-height:1.22;color:#ffc53d">Коллизии не проходят<br>через мост</div>
-  <div class="bsp-e" style="left:665px;top:436px">E1</div><div class="bsp-e" style="left:975px;top:436px">E2</div>
+  <div class="bsp-e" style="left:660px;top:436px">E1</div><div class="bsp-e" style="left:975px;top:436px">E2</div>
 </div>
 <div class="step">
   <div class="bsp-pan" style="left:240px;top:616px;width:1192px;height:68px;border-radius:14px"></div>

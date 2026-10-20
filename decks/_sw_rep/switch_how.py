@@ -125,4 +125,6 @@ HTML = CSS + f"""
 
 <div class="step">
   <div class="ab" style="left:1327px;top:897px;width:313px;height:32px;border-radius:6px;border:1.5px solid rgba(42,212,255,.6);background:rgba(4,16,44,.8)"></div>
-  <div class="sh-t" style="left:1327px;top:903px;width:313px;text-align:center;font-size:15px">x0:xx:xx:xx:xx:xx — одноадресный
+  <div class="sh-t" style="left:1327px;top:903px;width:313px;text-align:center;font-size:15px">x0:xx:xx:xx:xx:xx — одноадресный MAC</div>
+</div>
+"""

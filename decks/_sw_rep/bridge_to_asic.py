@@ -76,18 +76,18 @@ HTML = CSS + f"""
   {img("rep/bridge_to_asic_s1.png", "left:220px;top:695px;width:285px", "ab bta-f bta-run")}
   <div class="bta-hex" style="left:574px;top:664px">2</div>
   <div class="bta-l" style="left:676px;top:660px;font-size:19px">ASIC АНАЛИЗИРУЕТ</div>
-  {img("rep/bridge_to_asic_s2.png", "left:700px;top:665px;width:375px", "ab bta-f")}
+  {img("rep/bridge_to_asic_s2.png", "left:700px;top:692px;width:375px", "ab bta-f")}
   <div class="bta-hex" style="left:1124px;top:664px">3</div>
   <div class="bta-l" style="left:1228px;top:658px;font-size:19px">КАДР НАПРАВЛЯЕТСЯ<br>В НУЖНЫЙ ПОРТ</div>
-  {img("rep/bridge_to_asic_s3.png", "left:1275px;top:675px;width:335px", "ab bta-f")}
+  {img("rep/bridge_to_asic_s3.png", "left:1270px;top:704px;width:340px", "ab bta-f")}
 </div>
 
 <div class="step">
   <div class="bta-pan" style="left:166px;top:790px;width:1460px;height:130px"></div>
+  {img("rep/bridge_to_asic_circ.png", "left:1196px;top:800px;width:134px", "ab bta-f")}
   {img("rep/bridge_to_asic_chip.png", "left:196px;top:805px;width:104px", "ab bta-f")}
-  <div class="ab os" style="left:330px;top:806px;font-weight:700;font-size:46px;line-height:1;color:#fff"><span style="color:#5fe8ff">ASIC</span> — APPLICATION-SPECIFIC INTEGRATED CIRCUIT</div>
+  <div class="ab os" style="left:330px;top:806px;font-weight:700;font-size:43px;line-height:1;color:#fff;white-space:nowrap"><span style="color:#5fe8ff">ASIC</span> — APPLICATION-SPECIFIC INTEGRATED CIRCUIT</div>
   <div class="ab os" style="left:332px;top:860px;font-weight:500;font-size:25px;color:#5fe8ff">ИНТЕГРАЛЬНАЯ СХЕМА ДЛЯ СПЕЦИАЛИЗИРОВАННОГО ПРИЛОЖЕНИЯ</div>
-  {img("rep/bridge_to_asic_circ.png", "left:1140px;top:800px;width:190px", "ab bta-f")}
   <div class="bta-l" style="left:1336px;top:816px;font-weight:400;font-size:17px;line-height:1.55">СПЕЦИАЛИЗИРОВАННАЯ ЛОГИКА<br>ВЫСОКАЯ ПРОИЗВОДИТЕЛЬНОСТЬ<br>ЭФФЕКТИВНАЯ СЕТЕВАЯ ОБРАБОТКА</div>
 </div>
 """
