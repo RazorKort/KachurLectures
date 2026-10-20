@@ -227,9 +227,11 @@ def img(rel, style="", cls=""):
     import mimetypes
     p = os.path.join(ASSETS, rel)
     if rel not in _cache:
-        mt = mimetypes.guess_type(p)[0] or "image/png"
-        with open(p, "rb") as fh:
-            _cache[rel] = "data:%s;base64,%s" % (mt, base64.b64encode(fh.read()).decode())
+        import io
+        from PIL import Image
+        buf = io.BytesIO()  # PNG-кропы пережимаются в webp при сборке: дека в разы легче
+        Image.open(p).save(buf, "WEBP", quality=86, method=5)
+        _cache[rel] = "data:image/webp;base64,%s" % base64.b64encode(buf.getvalue()).decode()
     return '<img class="%s" src="%s" style="%s" alt="">' % (cls, _cache[rel], style)
 
 
