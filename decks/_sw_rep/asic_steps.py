@@ -15,7 +15,7 @@ CSS = """<style>
   font-family:Oswald,sans-serif;font-weight:500;font-size:21px;color:#fff;box-shadow:0 0 8px rgba(42,212,255,.7)}
 .as-n.y{border-color:#ffc53d;box-shadow:0 0 10px #ffc53d}
 .as-h{position:absolute;font-family:Oswald,sans-serif;font-weight:500;font-size:17px;line-height:20px;color:#fff;white-space:nowrap}
-.as-t{position:absolute;color:#e6f1ff;font-size:15px;line-height:19.5px;white-space:nowrap}
+.as-t{position:absolute;color:#e6f1ff;font-size:14.5px;line-height:19.5px;white-space:nowrap}
 .as-mini{position:absolute;border-collapse:collapse;white-space:nowrap;font-size:11.5px;color:#fff;background:rgba(2,10,28,.9)}
 .as-mini td{border:1px solid rgba(220,235,255,.75);padding:0 6px;height:25px}
 .as-fr{position:absolute;border-radius:6px;border:2.5px solid;background:rgba(14,14,20,.9)}

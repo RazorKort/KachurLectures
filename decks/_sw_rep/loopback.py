@@ -39,8 +39,8 @@ HTML = CSS + f"""
 {_items()}
 
 <div class="step">
-  {img("rep/loopback_scene.png", "left:455px;top:262px;width:637px", "ab")}
-  {img("rep/loopback_inf.png", "left:470px;top:190px;width:590px", "ab lbk-spin")}
+  {img("rep/loopback_scene.png", "left:455px;top:262px;width:637px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)", "ab")}
+  {img("rep/loopback_inf.png", "left:470px;top:190px;width:590px;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%)", "ab lbk-spin")}
   <div class="ab" style="left:670px;top:144px;width:232px;height:118px;border:2px solid #2ad4ff;border-radius:10px;background:rgba(6,24,64,.92);box-shadow:0 0 16px rgba(42,212,255,.7);
     text-align:center;font-family:Oswald,sans-serif;font-weight:500;line-height:1.2;color:#fff">
     <div style="font-size:23px;margin-top:8px">LOOPBACK 1</div><div style="font-size:33px;color:#c89bff">8.8.8.8/32</div><div style="font-size:30px;color:#2ad4ff">UP/UP</div></div>
@@ -58,7 +58,7 @@ HTML = CSS + f"""
   <div class="lbk-term" style="left:1108px;top:234px;font-size:21px;color:#fff">switch# <b style="color:#2ad4ff;font-weight:600">show ip interfaces</b></div>
   <pre class="lbk-term" style="left:1108px;top:290px;font-size:15.5px;line-height:24px">{TBL}</pre>
   <div class="lbk-hl" style="left:1098px;top:342px;width:548px;height:36px;background:rgba(40,20,100,.55)"></div>
-  <pre class="lbk-term" style="left:1108px;top:350px;font-size:15.5px;line-height:40px"><span style="color:#c89bff">8.8.8.8/32         loopback 1</span>  <span style="color:#9ff0ff">UP/UP</span>       Static   <span style="color:#ffc53d">Valid</span>
+  <pre class="lbk-term" style="left:1108px;top:340px;font-size:15.5px;line-height:39px"><span style="color:#c89bff">8.8.8.8/32         loopback 1</span>  <span style="color:#9ff0ff">UP/UP</span>       Static   <span style="color:#ffc53d">Valid</span>
 10.10.1.1/24       vlan 1      UP/UP       Static   Valid
 192.168.20.254/24  gi1/0/1     UP/UP       Static   Valid</pre>
 </div>
@@ -69,7 +69,7 @@ HTML = CSS + f"""
   </svg>
   {img("rep/loopback_db.png", "left:1116px;top:618px;width:72px", "ab")}
   {img("rep/loopback_ci.png", "left:1310px;top:542px;width:106px", "ab")}
-  {img("rep/loopback_l3.png", "left:1292px;top:642px;width:142px", "ab")}
+  {img("rep/loopback_sw3.png", "left:1292px;top:642px;width:142px", "ab")}
   {img("rep/loopback_srv.png", "left:1538px;top:634px;width:68px", "ab")}
   <div class="lbk-lab" style="left:1100px;top:694px;width:104px">VLAN<br>(SVI)</div>
   <div class="lbk-lab" style="left:1290px;top:716px;width:146px">L3 SWITCH</div>
