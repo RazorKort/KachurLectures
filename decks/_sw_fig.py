@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Картинки из pptx 2.2, которых не было в деке: вставляются слайдами сразу после своей темы (порядок pptx)."""
-from _sw_lib import SL, sc, head, grow, b64, _esc
+from _sw_lib import SL, sc, head, grow, b64, _esc, pic
 
 def _figs(names, cap):
     imgs = "".join('<div class="pfig"><img src="%s" alt=""></div>' % b64("fig_" + n) for n in names)
@@ -12,7 +12,7 @@ def _slide(label, title, names, cap):
 
 def _info(label, title, name):
     return ('<section class="slide" data-label="%s">%s</section>'
-            % (_esc(label), sc(head(title), grow("g", '<div class="pic"><img src="%s" alt=""></div>' % b64(name)))))
+            % (_esc(label), sc(head(title), grow("g", pic(name)))))
 
 # после какого слайда старой деки (номер 1..151) вставить; слайды pptx в скобках
 INSERT = [
@@ -55,6 +55,21 @@ CSS = """
 .pfig img{max-width:100%;max-height:62vh;object-fit:contain;display:block}
 .pfigs.n3 .pfig img,.pfigs.n4 .pfig img{max-height:29vh}
 @keyframes pfin{to{opacity:1;transform:none}}
+.rep{flex:1 1 auto;min-height:0;position:relative;overflow:visible}
+.repc{position:absolute;left:0;top:0;transform-origin:0 0;font-family:"Golos Text",sans-serif;color:var(--ink)}
+.repc *{box-sizing:border-box}
+.repc .ab{position:absolute}
+"""
+JS = """
+(function(){
+  function fit(){document.querySelectorAll('.slide.on .rep').forEach(function(r){
+    var c=r.firstElementChild,W=c.offsetWidth,H=c.offsetHeight,rw=r.clientWidth,rh=r.clientHeight;
+    if(!rw||!rh)return;var s=Math.min(rw/W,rh/H);
+    c.style.transform='translate('+((rw-W*s)/2)+'px,'+((rh-H*s)/2)+'px) scale('+s+')';});}
+  window.addEventListener('resize',fit);
+  new MutationObserver(fit).observe(document.getElementById('stage'),{subtree:true,attributes:true,attributeFilter:['class']});
+  setTimeout(fit,50);
+})();
 """
 
 def apply():

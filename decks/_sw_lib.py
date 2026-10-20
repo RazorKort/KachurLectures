@@ -202,8 +202,42 @@ def cli(lines, title="SWITCH (CLI)"):
     return "%s<pre class=\"cli\">%s</pre>" % (t, body)
 
 
+def rep_html(name):
+    """Вёрстка 1:1 инфографики из _sw_rep/<name>.py (W, H, HTML) или None."""
+    import importlib.util
+    f = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_sw_rep", name + ".py")
+    if not os.path.exists(f):
+        return None
+    spec = importlib.util.spec_from_file_location("rep_" + name, f)
+    m = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(m)
+        m.W, m.H, m.HTML
+    except Exception as e:  # вёрстка в процессе правки не должна валить сборку
+        print("ОШИБКА вёрстки", name, e)
+        return None
+    top = getattr(m, "TOP", 0)  # срезать полосу заголовка оригинала сверху (заголовок даёт head слайда)
+    return ('<div class="rep" data-rep="%s"><div class="repc" style="width:%dpx;height:%dpx;overflow:hidden">'
+            '<div style="position:relative;width:%dpx;height:%dpx;margin-top:-%dpx">%s</div></div></div>'
+            % (name, m.W, m.H - top, m.W, m.H, top, m.HTML))
+
+
+def img(rel, style="", cls=""):
+    """Картинка из _sw_assets (rel = 'rep/имя.png'), инлайн base64."""
+    import mimetypes
+    p = os.path.join(ASSETS, rel)
+    if rel not in _cache:
+        mt = mimetypes.guess_type(p)[0] or "image/png"
+        with open(p, "rb") as fh:
+            _cache[rel] = "data:%s;base64,%s" % (mt, base64.b64encode(fh.read()).decode())
+    return '<img class="%s" src="%s" style="%s" alt="">' % (cls, _cache[rel], style)
+
+
 def pic(name, cap=""):
-    """Инфографика-иллюстрация из комплекта лекции."""
+    """Инфографика-иллюстрация из комплекта лекции (если есть вёрстка 1:1 — она)."""
+    r = rep_html(name)
+    if r:
+        return r
     c = '<div class="piccap">%s</div>' % cap if cap else ""
     return '<div class="pic"><img src="%s" alt="%s" loading="lazy"></div>%s' % (b64(name), _esc(cap), c)
 

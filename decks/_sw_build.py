@@ -10,7 +10,7 @@ from _sw_style import CSS
 from _sw_engine import JS
 from _sw_lib import SL, background
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kommutaciya.html")
+OUT = os.environ.get("SW_OUT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "kommutaciya.html")
 
 HUD = """
 <div id="prog" style="width:0"></div>
@@ -59,7 +59,7 @@ def main():
         + background()
         + '\n<div id="stage">\n' + "\n".join(SL) + "\n</div>\n"
         + HUD
-        + "\n<script>%s</script>\n</body>\n</html>\n" % JS
+        + "\n<script>%s</script>\n</body>\n</html>\n" % (JS + __import__("_sw_fig").JS)
     )
     with io.open(OUT, "w", encoding="utf-8") as fh:
         fh.write(html)
