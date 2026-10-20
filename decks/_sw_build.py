@@ -46,6 +46,8 @@ def main():
                 continue
             raise
         mod.build()
+    import _sw_fig
+    _sw_fig.apply()
 
     html = (
         '<!doctype html>\n<html lang="ru">\n<head>\n'
@@ -53,7 +55,7 @@ def main():
         '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         "<title>Коммутаторы и коммутация — лекция</title>\n"
         + FONTS + "\n"
-        "<style>%s</style>\n</head>\n<body>\n" % CSS
+        "<style>%s</style>\n</head>\n<body>\n" % (CSS + __import__("_sw_fig").CSS)
         + background()
         + '\n<div id="stage">\n' + "\n".join(SL) + "\n</div>\n"
         + HUD
