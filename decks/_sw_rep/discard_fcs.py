@@ -23,7 +23,7 @@ def F(k, x0, x1, t, y=242, h=50, s=15):
 
 def C(x, n, ic, ix, iw, t, s, tx0, d, tcol=""):
     return ('<div class="step" style="transition-delay:%dms">' % d + pan(x, 392, {25: 397, 437: 391, 842: 393, 1250: 397}[x], 108)
-            + num(x + 38, 437, n) + pic(N + ic, ix, 408, iw) + tt(tx0, 410, t, 22, tcol) + tx(tx0, 442, s, 18) + '</div>')
+            + num(x + 38, 437, n) + pic(N + ic, ix, 408, iw) + tt(tx0, 410, t, 22, tcol) + tx(tx0, 442, s, 17) + '</div>')
 
 
 HTML = CSS + DCSS + tx(50, 120, "Повреждённый Ethernet-кадр не перрсылается дальше", 29, "color:#5fd0ff;white-space:nowrap") + f"""
@@ -95,8 +95,8 @@ HTML = CSS + DCSS + tx(50, 120, "Повреждённый Ethernet-кадр не
 <div class="step">
   {pan(1293, 667, 354, 193)}{pic(N + "nb.png", 1306, 671, 41)}{tt(1365, 678, "БЕЗ УВЕДОМЛЕНИЯ", 23)}
   {pan(1300, 718, 340, 132, "", "fw-sub")}{pic(N + "bell.png", 1308, 733, 86)}
-  {tx(1407, 738, "Ethernet не подтверждает<br>доставку", 17, "line-height:1.25")}
-  {tx(1407, 790, "ПК-1 не получает сообщение<br>об ошибке", 17, "line-height:1.25")}
+  {tx(1407, 738, "Ethernet не подтверждает<br>доставку", 16, "line-height:1.25")}
+  {tx(1407, 790, "ПК-1 не получает сообщение<br>об ошибке", 16, "line-height:1.25")}
 </div>
 {info(25, 872, 1622, 50, N + "info.png", 368, 45, "Кадр с неверным FCS отбрасывается молча и не попадает ни на один выходной порт.", 436, 20)}
 """

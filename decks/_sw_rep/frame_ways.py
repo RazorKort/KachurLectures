@@ -20,7 +20,7 @@ FCSS = """<style>
 def P(x, w, c, n, title, text, delay):
     return ('<div class="step" style="--c:%s;transition-delay:%dms"><div class="fwy-p" style="left:%dpx;top:310px;width:%dpx;height:490px"></div>'
             '<div class="fwy-n" style="left:%dpx;top:322px">%d</div>' % (c, delay, x, w, x + 22, n)
-            + tt(x + 118, 333, title, 33, "color:%s;font-weight:600;text-shadow:0 0 10px %s" % (c, c))
+            + tt(x + 118, 330, title, 36, "color:%s;font-weight:600;text-shadow:0 0 10px %s" % (c, c))
             + tx(x + 118, 380, text, 21, "line-height:1.2") + '</div>')
 
 

@@ -14,10 +14,10 @@ CSS = """<style>
 .as-n{position:absolute;width:30px;height:30px;border-radius:50%;border:2.5px solid #cfefff;display:flex;align-items:center;justify-content:center;
   font-family:Oswald,sans-serif;font-weight:500;font-size:21px;color:#fff;box-shadow:0 0 8px rgba(42,212,255,.7)}
 .as-n.y{border-color:#ffc53d;box-shadow:0 0 10px #ffc53d}
-.as-h{position:absolute;font-family:Oswald,sans-serif;font-weight:600;font-size:19px;line-height:21px;color:#fff;letter-spacing:.3px}
-.as-t{position:absolute;color:#e6f1ff;font-size:16.5px;line-height:19.5px}
-.as-mini{position:absolute;border-collapse:collapse;font-size:12.5px;color:#fff;background:rgba(2,10,28,.9)}
-.as-mini td{border:1px solid rgba(220,235,255,.75);padding:0 8px;height:25px}
+.as-h{position:absolute;font-family:Oswald,sans-serif;font-weight:500;font-size:17px;line-height:20px;color:#fff;white-space:nowrap}
+.as-t{position:absolute;color:#e6f1ff;font-size:15px;line-height:19.5px;white-space:nowrap}
+.as-mini{position:absolute;border-collapse:collapse;white-space:nowrap;font-size:11.5px;color:#fff;background:rgba(2,10,28,.9)}
+.as-mini td{border:1px solid rgba(220,235,255,.75);padding:0 6px;height:25px}
 .as-fr{position:absolute;border-radius:6px;border:2.5px solid;background:rgba(14,14,20,.9)}
 .as-cells{position:absolute;display:flex}
 .as-cells span{height:34px;line-height:34px;font-family:Oswald,sans-serif;font-size:16px;color:#fff;text-align:center;border:1.5px solid;margin-right:-1.5px}
@@ -115,7 +115,7 @@ HTML = CSS + f"""
 <div class="step">
   <div class="as-s y" style="left:20px;width:302px"></div>
   <div class="as-big" style="left:48px;top:806px;border-color:#ffc53d;box-shadow:0 0 10px #ffc53d">1</div>
-  <div class="as-h" style="left:113px;top:807px;font-size:19px">КАДР ПОСТУПАЕТ<br>НА ПОРТ</div>
+  <div class="as-h" style="left:113px;top:807px">КАДР ПОСТУПАЕТ<br>НА ПОРТ</div>
   {img(P + "b1.png", "left:106px;top:848px;width:142px", "ab")}
   <div class="as-arr" style="left:300px;color:#ffc53d;text-shadow:0 0 8px #ffb02e">&#10140;</div>
 </div>
