@@ -203,7 +203,7 @@ def p030():
         out.append(f'<img data-s="{s}" src="assets/{doc}" alt="" style="{A(l + 66, 250, 184, None, FADE)}">')
         out.append(txt(l + 290, 232, w - 300, name, 52, 800, TITLE_C, s))
         for k, b in enumerate(bullets):
-            out.append(f'<div data-s="{s + 1}" style="{A(l + 290, 330 + k * 52, w - 300, None, f"display:flex;gap:18px;align-items:flex-start;font-size:26px;line-height:1.2;--dl:{k * 80}ms")}">'
+            out.append(f'<div data-s="{s + 1}" style="{A(l + 270, 330 + k * 52, w - 286, None, f"display:flex;gap:14px;align-items:flex-start;font-size:24px;line-height:1.2;letter-spacing:-.3px;--dl:{k * 80}ms")}">'
                        f'<i style="width:17px;height:17px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none;width:22px;height:22px;background:radial-gradient(circle at 35% 35%,#8fb0ff,#2f5fe0)"></i><span>{b}</span></div>')
         out.append(f'<div class="mono" data-s="{s + 1}" style="{A(l + 90, 572, w - 180, 78, "background:rgba(255,255,255,.9);border:1.5px solid var(--line);border-radius:16px;padding:0 34px;display:flex;align-items:center;font-size:28px;font-weight:500;color:" + NAVY + ";--dl:300ms")}">{cmd}</div>')
         return "".join(out)

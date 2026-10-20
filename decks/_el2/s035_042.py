@@ -159,16 +159,16 @@ def p036():
                 f'background:{"rgba(255,255,255,.25)" if dark else "rgba(150,185,250,.4)"};color:{"#fff" if dark else NAVY}">{t}</div>')
 
     sc = lambda k, d=False, z=.8, l=10, t=110: (f'<div style="{ab(l, t, 200)}transform:scale({z});transform-origin:left top">{shield(k, d)}</div>')
-    b1 = (sc(1) + f'<div style="{ab(190, 140, 340)}"><div style="font-size:32px;font-weight:800;color:{NAVY}">Мониторинг</div>'
+    b1 = (f'<img src="assets/p036_sh1.png" alt="" style="{ab(30, 120, 160, 187)}mix-blend-mode:multiply">' + f'<div style="{ab(190, 140, 340)}"><div style="font-size:32px;font-weight:800;color:{NAVY}">Мониторинг</div>'
           f'<p class="b" style="margin-top:8px;font-size:23px;color:{NAVY}">Доступен только мониторинг устройства</p></div>'
           + pill("Минимальные права", 54, 320, 440))
     o.append(lvl(81, 316, 553, 400, 1, 1, False, b1))
-    b10 = (sc(10, l=10, t=100) + f'<div style="{ab(190, 120, 340)}"><div style="font-size:32px;font-weight:800;color:{NAVY}">Конфигурирование</div>'
+    b10 = (f'<img src="assets/p036_sh10.png" alt="" style="{ab(14, 110, 164, 203)}mix-blend-mode:multiply">' + f'<div style="{ab(190, 120, 340)}"><div style="font-size:32px;font-weight:800;color:{NAVY}">Конфигурирование</div>'
            f'<p class="b" style="margin-top:6px;font-size:22px;color:{NAVY}">Доступна настройка устройства</p></div>'
            f'<div style="{ab(24, 280, 500)}background:rgba(255,255,255,.7);border:1.5px solid var(--line);border-radius:16px;padding:12px 18px;font-size:19px;line-height:1.35;color:{NAVY}">'
            f'<b>Недоступно:</b><ul style="margin:4px 0 0 20px"><li>создание пользователей</li><li>перезагрузка устройства</li><li>загрузка программного обеспечения</li></ul></div>')
-    o.append(lvl(683, 252, 554, 463, 10, 2, False, b10))
-    b15 = (sc(15, True, .85) + f'<div style="{ab(220, 130, 300)}"><div style="font-size:34px;font-weight:800;color:#fff">Полный доступ</div>'
+    o.append(lvl(683, 252, 554, 470, 10, 2, False, b10))
+    b15 = (f'<img src="assets/p036_sh15.jpg" alt="" style="{ab(16, 120, 204, 219)}border-radius:20px;mix-blend-mode:screen">' + f'<div style="{ab(220, 130, 300)}"><div style="font-size:34px;font-weight:800;color:#fff">Полный доступ</div>'
            f'<p class="b" style="margin-top:8px;font-size:22px;color:#fff">Нет ограничений</p></div>' + pill("Максимальные права", 80, 400, 380, True))
     o.append(lvl(1283, 192, 520, 500, 15, 3, True, b15))
     o.append("".join(sv))
@@ -180,7 +180,7 @@ def p036():
         d = "M35 4L4 42h20v54h22V42h20z" if up else "M35 96L4 58h20V4h22v54h20z"
         return (f'<div data-s="{s}" style="{ab(0, 0)}">'
                 f'<div class="card solid" style="{ab(l - 30, 836, 840, 175)}padding:0;border-radius:20px"></div>'
-                f'<svg style="{ab(l, 880, 70, 100)}" viewBox="0 0 70 100"><path d="{d}" fill="var(--blue)"/></svg>'
+                f'<img src="assets/{"p036_up.png" if up else "p036_dn.png"}" alt="" style="{ab(l - 10, 868, 90, 117)}mix-blend-mode:multiply">'
                 f'<div style="{ab(l + 90, 848, 700)}white-space:nowrap;font-size:26px;font-weight:700;color:{NAVY}">{title}</div>'
                 f'<div class="mono" style="{ab(l + 90, 892, 610)}background:#16254f;color:#eaf2ff;border-radius:14px;padding:14px 26px;font-size:27px;line-height:1.35">{cmd}</div></div>')
 
@@ -262,30 +262,29 @@ def err_slide(title, cols, steps_title, note):
         l = 36 + i * 622
         box = (f'border:1.5px solid var(--line);border-radius:16px;background:rgba(255,255,255,.75);display:flex;gap:16px;align-items:center;padding:0 18px')
         o.append(
-            f'<div class="card" data-s="{i + 1}" style="{ab(l, 154, 604, 640)}padding:0;border-radius:28px;background:{bg};border:2px solid {bd}">'
-            f'<div style="{ab(26, 30, 110, 110)}border-radius:50%;background:{wcols[i]};display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.18)">'
-            f'<svg viewBox="0 0 24 24" style="width:66px;height:66px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round">{WARN}</svg></div>'
+            f'<div class="card" data-s="{i + 1}" style="{ab(l, 128, 604, 660)}padding:0;border-radius:28px;background:{bg};border:2px solid {bd}">'
+            f'<img src="assets/p041_w{i + 1}.png" alt="" style="{ab(14, 14, 150, 147)}mix-blend-mode:multiply">'
             f'<div style="{ab(160, 44, 440)}white-space:nowrap;letter-spacing:-.5px;font-size:31px;font-weight:800;color:{NAVY};text-transform:uppercase;line-height:1">{hd}</div>'
             f'<div style="{ab(160, 90, 440)}white-space:nowrap;font-size:25px;font-weight:700;color:#7a90c4">{sub}</div>'
-            f'<div style="{ab(18, 162, 568, 128)}{box}">{cico(mids[i])}<div><div style="font-size:24px;font-weight:800;color:{NAVY}">Причина:</div>'
+            f'<div style="{ab(18, 162, 568, 128)}{box}"><img src="assets/p041_c{i + 1}.png" alt="" style="width:80px;height:85px;flex:none;mix-blend-mode:multiply"><div><div style="font-size:24px;font-weight:800;color:{NAVY}">Причина:</div>'
             f'<p class="b sm" style="font-size:20px;line-height:1.3">{cause}</p></div></div>'
             f'<div style="{ab(18, 306)}font-size:23px;font-weight:800;color:{NAVY}">Пример в командной строке:</div>'
-            f'<div class="mono" style="{ab(18, 346, 568, 124)}background:#16254f;color:#eaf2ff;border-radius:14px;padding:14px 20px;font-size:21px;line-height:1.35;white-space:pre">{ex}</div>'
-            f'<div style="{ab(18, 486, 568, 138)}{box}">{cico(WRENCH)}<div><div style="font-size:24px;font-weight:800;color:{NAVY}">Что исправить:</div>'
+            f'<div class="mono" style="{ab(18, 344, 568, 142)}background:#16254f;color:#eaf2ff;border-radius:14px;padding:12px 20px;font-size:21px;line-height:1.25;white-space:pre">{ex}</div>'
+            f'<div style="{ab(18, 500, 568, 144)}{box}"><img src="assets/p041_fix.png" alt="" style="width:80px;height:83px;flex:none;mix-blend-mode:multiply"><div><div style="font-size:24px;font-weight:800;color:{NAVY}">Что исправить:</div>'
             f'<p class="b sm" style="font-size:20px;line-height:1.3">{fix}</p></div></div></div>')
-    o.append(f'<div class="card" data-s="4" style="{ab(36, 812, 1848, 250)}padding:0;border-radius:28px"></div>')
-    o.append(f'<div data-s="4" style="{ab(96, 830)}font-size:40px;font-weight:800;color:{NAVY};text-transform:uppercase">{steps_title}</div>')
+    o.append(f'<div class="card" data-s="4" style="{ab(36, 800, 1848, 272)}padding:0;border-radius:28px"></div>')
+    o.append(f'<div data-s="4" style="{ab(96, 808)}font-size:40px;font-weight:800;color:{NAVY};text-transform:uppercase">{steps_title}</div>')
     icons = [(DOC, "Ввод команды"), (ENTER, "Нажатие Enter"), ('<circle cx="11" cy="11" r="6"/><path d="M15.5 15.5L20 20"/>', "Анализ слева направо"),
              (ic("gear"), "Проверка синтаксиса"), (ic("check"), "Выполнение или сообщение об ошибке")]
-    xs = [239, 608, 960, 1295, 1660]
+    xs = [250, 588, 960, 1302, 1662]
     for k, ((p, tx), cx) in enumerate(zip(icons, xs)):
-        o.append(f'<div data-s="5" style="--dl:{k * 140}ms;{ab(cx - 130, 880, 260)}text-align:center">'
-                 f'<div style="display:inline-block">{cico(p, "hex")}</div>'
-                 f'<div style="font-size:21px;font-weight:600;color:{NAVY};margin-top:8px;line-height:1.15"><b>{k + 1}.</b> {tx}</div></div>')
-    sv = [SVG0] + [f'<g data-s="5" style="--dl:{k * 140 + 100}ms"><path d="M{a} 918H{a + 60}M{a + 50} 910l10 8-10 8" stroke="var(--blue)" stroke-width="3" fill="none"/></g>'
-                   for k, a in enumerate([365, 722, 1090, 1430])] + ['</svg>']
+        o.append(f'<div data-s="5" style="--dl:{k * 140}ms;{ab(cx - 170, 852, 340)}text-align:center">'
+                 f'<img src="assets/p041_s{k + 1}.png" alt="" style="width:104px;height:103px;mix-blend-mode:multiply">'
+                 f'<div style="font-size:21px;font-weight:600;color:{NAVY};margin-top:2px;line-height:1.1"><b>{k + 1}.</b> {tx}</div></div>')
+    sv = [SVG0] + [f'<g data-s="5" style="--dl:{k * 140 + 100}ms"><path d="M{a} 904H{a + 60}M{a + 50} 896l10 8-10 8" stroke="var(--blue)" stroke-width="3" fill="none"/></g>'
+                   for k, a in enumerate([390, 740, 1100, 1450])] + ['</svg>']
     o.append("".join(sv))
-    o.append(f'<div class="note" data-s="6" style="{ab(380, 1008, 1160, 50)}align-items:center;padding:0 20px;font-size:19px;gap:14px">'
+    o.append(f'<div class="note" data-s="6" style="{ab(330, 1012, 1260, 50)}align-items:center;padding:0 20px;font-size:19px;gap:14px">'
              f'<span style="color:var(--blue);display:flex">{sv24(ic("info"))}</span>{note}</div>')
     return "".join(o)
 

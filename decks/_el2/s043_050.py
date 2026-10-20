@@ -250,19 +250,24 @@ SLIDES.append(("p045", "Режимы командной строки", p045()))
 
 # ======================================================= p046 Точки доступа: INDOOR
 def p046():
-    o = ['<h1 class="t ab" style="left:56px;top:86px;font-size:64px;text-align:left;white-space:nowrap">'
-         'Точки доступа: <span class="lt">INDOOR</span></h1>']
-    o.append('<img class="ab" data-s="2" src="assets/p046_office_l.jpg" alt="" style="left:58px;top:324px;width:594px;'+feather(40,"lt")+'">')
-    o.append('<img class="ab" data-s="3" src="assets/p046_office_m.jpg" alt="" style="left:653px;top:184px;width:365px;'+feather(40,"t")+'">')
-    o.append('<img class="ab" data-s="3" src="assets/p046_office_r.jpg" alt="Схема помещения с точками доступа" style="left:1018px;top:32px;width:891px;'+feather(40,"t")+'">')
-    o.append(card(T(28, 85, 300, 148),
-                  '<p class="b" style="font-size:25px;line-height:1.4">Точки доступа делятся на модели для помещений — '
-                  '<b>INDOOR</b> — и модели для уличной установки — <b>OUTDOOR</b>.</p>', 1, "card solid", pad="14px 24px"))
-    cards = [(8, 298, "house", "Внутри помещений", "Установка в офисах, учебных корпусах, гостиницах и общественных зданиях."),
-             (303, 578, "wifi", "Единая сеть", "Несколько точек доступа обеспечивают общую зону Wi-Fi."),
-             (583, 885, "server", "Централизованные сервисы", "DHCP выдаёт IP-адреса, RADIUS выполняет аутентификацию.")]
-    for i, (x0, x1, ic, ti, tx) in enumerate(cards):
-        o.append(icard(T(x0, 400, x1, 493), ic, ti, tx, 4 + i, "card", 26, 20, ics="hex", gap=20, pad="16px 24px"))
+    D = lambda v: round(v * 1920 / 1497)   # координаты верхней половины compare (1497x842)
+    o = [f'<img class="ab" data-s="2" src="assets/p068_scene.jpg" alt="Схема офиса с точками доступа WEP-30L" '
+         f'style="left:{D(40)}px;top:{D(135)}px;width:{D(1452)}px;{feather(40)}">',
+         f'<img class="ab" data-s="2" src="assets/p068_top.jpg" alt="" style="left:{D(800)}px;top:{D(22)}px;width:{D(540)}px;{feather(30, "ltr")}">',
+         f'<h1 class="t ab" style="left:{D(48)}px;top:{D(58)}px;font-size:88px;line-height:1;text-align:left;white-space:nowrap">'
+         'Точки доступа: <span class="lt">INDOOR</span></h1>',
+         f'<div class="ab" data-s="1" style="left:{D(45)}px;top:{D(143)}px;width:{D(452)}px;height:{D(104)}px;padding:14px 26px;'
+         'background:#f7f9ff;border:1.5px solid #c9d4f2;border-radius:10px;font-size:22px;line-height:1.35;color:var(--ink)">'
+         'Точки доступа делятся на модели для помещений — INDOOR — и модели для уличной установки — OUTDOOR.</div>']
+    cards = [(20, 494, "p068_i1.png", 48, "Внутри помещений", "Установка в офисах, учебных корпусах, гостиницах и общественных зданиях."),
+             (503, 958, "p068_i2.png", 528, "Единая сеть", "Несколько точек доступа обеспечивают общую зону Wi-Fi."),
+             (968, 1475, "p068_i3.png", 993, "Централизованные сервисы", "DHCP выдаёт IP-адреса, RADIUS выполняет аутентификацию.")]
+    for i, (x0, x1, im, ix, ti, tx) in enumerate(cards):
+        s = f' data-s="{3 + i}"'
+        o.append(f'<div class="card ab"{s} style="left:{D(x0)}px;top:{D(667)}px;width:{D(x1 - x0)}px;height:{D(141)}px"></div>')
+        o.append(f'<img class="ab"{s} src="assets/{im}" alt="" style="left:{D(ix)}px;top:{D(688)}px;width:{D(92)}px">')
+        o.append(f'<div class="ab"{s} style="left:{D(ix + 110)}px;top:{D(695)}px;width:{D(x1 - ix - 122)}px">' + H(ti, 29)
+                 + f'<p style="font-size:20px;line-height:1.3;color:var(--ink);margin-top:10px">{tx}</p></div>')
     return "".join(o)
 
 
@@ -271,13 +276,13 @@ SLIDES.append(("p046", "Точки доступа: INDOOR", p046()))
 
 # ======================================================= p047 Индикаторы интерфейсов
 def p047():
-    o = ['<div class="ab" style="left:76px;top:28px;width:760px"><h1 class="t" style="font-size:100px;text-align:left;line-height:.98">Индикаторы</h1>'
-         '<h1 class="t" style="font-size:100px;text-align:left;line-height:.98;color:#4a76e8">интерфейсов</h1></div>',
+    o = ['<div class="ab" style="left:76px;top:28px;width:760px"><h1 class="t" style="font-size:86px;text-align:left;line-height:.98">Индикаторы</h1>'
+         '<h1 class="t" style="font-size:86px;text-align:left;line-height:.98;color:#4a76e8">интерфейсов</h1></div>',
          '<img class="ab" src="assets/dev/mes2424.webp" alt="Коммутатор MES2424" style="left:814px;top:4px;width:1084px;'
          'filter:drop-shadow(0 16px 24px rgba(60,80,160,.3))">',
-         '<p class="b ab" data-s="1" style="left:80px;top:240px;width:740px;font-size:23px;line-height:1.3">'
+         '<p class="b ab" data-s="1" style="left:80px;top:206px;width:760px;font-size:22px;line-height:1.3">'
          'Индикаторы показывают состояние и активность соответствующего интерфейса.</p>',
-         '<p class="b ab" data-s="1" style="left:80px;top:300px;width:740px;font-size:23px;line-height:1.3">'
+         '<p class="b ab" data-s="1" style="left:80px;top:264px;width:760px;font-size:22px;line-height:1.3">'
          'Медные интерфейсы Gigabit Ethernet имеют два светодиода: <b style="color:#2f9d3a">LINK/ACT</b> — зелёный, '
          '<b style="color:#e8891a">SPEED</b> — янтарный.</p>']
     # RJ-45
@@ -498,7 +503,7 @@ def p050():
         o.append(f'<div class="card ab"{s} style="left:{x}px;top:610px;width:930px;height:300px"></div>')
         o.append(f'<div class="ab"{s} style="left:{x + 24}px;top:626px">' + H(title, 27) + '</div>')
         o.append(f'<div class="ab"{s} style="left:0;top:0;width:1920px;height:1080px;pointer-events:none">{pic}</div>')
-        o.append(f'<div class="ab"{s} style="left:{x + 330}px;top:668px;width:585px;white-space:nowrap">{_rows(rows, 17)}</div>')
+        o.append(f'<div class="ab"{s} style="left:{x + 330}px;top:668px;width:585px;{"white-space:nowrap" if i == 0 else ""}">{_rows(rows, 17)}</div>')
     o.append(icard("position:absolute;left:20px;top:926px;width:840px;height:136px;", "layers3", "Плотность портов",
                    "Количество портов в ограниченном пространстве. Высокая плотность экономит место и энергоресурсы.",
                    9, "card", 25, 18, gap=18, pad="10px 20px"))

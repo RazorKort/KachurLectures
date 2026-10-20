@@ -247,7 +247,7 @@ def cli_modes():
         if prm:
             h_ += prompt(1050, top + 60, 290, prm, 17, s)
         if items:
-            h_ += (f'<div data-s="{s}">' + lst(1440, top + (14 if len(items) > 6 else 30), items, 16, 21) +
+            h_ += (f'<div data-s="{s}">' + lst(1440, top + (14 if len(items) > 6 else 42), items, 16, 21) +
                    f'<div class="ab" style="left:1645px;top:{top + 30}px;width:165px;font-size:13px;letter-spacing:0;color:var(--dim);'
                    f'text-transform:uppercase;line-height:1.3;border-left:2px solid var(--line);padding-left:12px">{side_t}</div></div>')
         return h_
