@@ -99,3 +99,49 @@ HTML = CSS + f"""
   <div class="ab" style="left:1256px;top:738px;font-family:'Golos Text',sans-serif;font-weight:600;font-size:22px;line-height:1.3;color:#fff">Передача только в порты<br>разрешённой VLAN</div>
 </div>
 """
+
+# ---- анимация тегирования: кадр летит от ПК, в порту получает тег 802.1Q, FCS пересчитывается,
+#      копии с тегом уходят только в порты красной VLAN, в чужие VLAN — нет
+_ANIM_CSS = """<style>
+.tga-fr{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;gap:2px;height:38px;font:600 15px/38px 'Golos Text',sans-serif;color:#fff;
+  filter:drop-shadow(0 0 8px rgba(42,212,255,.6));will-change:transform,opacity}
+.tga-fr i{font-style:normal;flex:none;display:block;text-align:center;border-radius:4px;overflow:hidden;white-space:nowrap}
+.tga-fr .a{background:#1d5fd8;width:56px}.tga-fr .e{background:#c9a21a;width:84px}.tga-fr .d{background:#a83a78;width:72px}
+.tga-fr .f{background:#6a7ba0;width:48px;animation:tga-fcs 9s infinite}
+.tga-fr .q{background:#e0263c;width:0;animation:tga-tag 9s infinite}
+.tga-main{animation:tga-main 9s infinite}
+.tga-c1{animation:tga-c1 9s infinite}.tga-c2{animation:tga-c2 9s infinite}
+.tga-fr.tga-c1 .q,.tga-fr.tga-c2 .q{width:66px;animation:none}.tga-fr.tga-c1 .f,.tga-fr.tga-c2 .f{background:#2a9d5a;animation:none}
+.tga-lbl{position:absolute;font:700 20px 'Oswald',sans-serif;letter-spacing:.5px;opacity:0;white-space:nowrap}
+.tga-l1{color:#7df3ff;animation:tga-l1 9s infinite}.tga-l2{color:#ff5a6e;animation:tga-l2 9s infinite}.tga-l3{color:#9dfc5a;animation:tga-l3 9s infinite}
+.tga-x{position:absolute;font:700 40px 'Oswald',sans-serif;color:#2ad4ff;opacity:0;animation:tga-x 9s infinite}
+.tga-port{position:absolute;width:44px;height:40px;border-radius:6px;box-shadow:0 0 0 3px #ff4d5e,0 0 26px #ff4d5e;opacity:0;animation:tga-port 9s infinite}
+@keyframes tga-main{0%{transform:translate(240px,494px) scale(.78);opacity:0}4%{opacity:1}28%{transform:translate(372px,494px) scale(.78);opacity:1}55%{transform:translate(372px,494px) scale(.78);opacity:1}60%,100%{transform:translate(372px,494px) scale(.78);opacity:0}}
+@keyframes tga-tag{0%,30%{width:0}40%,100%{width:66px}}
+@keyframes tga-fcs{0%,43%{background:#6a7ba0}46%{background:#fff}52%,100%{background:#2a9d5a}}
+@keyframes tga-port{0%,26%{opacity:0}30%,52%{opacity:1}58%,100%{opacity:0}}
+@keyframes tga-c1{0%,56%{transform:translate(1080px,402px) scale(.55);opacity:0}60%{opacity:1}84%{transform:translate(1185px,348px) scale(.55);opacity:1}92%,100%{transform:translate(1185px,348px) scale(.55);opacity:0}}
+@keyframes tga-c2{0%,56%{transform:translate(1080px,480px) scale(.55);opacity:0}60%{opacity:1}84%{transform:translate(1185px,446px) scale(.55);opacity:1}92%,100%{transform:translate(1185px,446px) scale(.55);opacity:0}}
+@keyframes tga-l1{0%,3%{opacity:0}6%,27%{opacity:1}30%,100%{opacity:0}}
+@keyframes tga-l2{0%,31%{opacity:0}34%,54%{opacity:1}58%,100%{opacity:0}}
+@keyframes tga-l3{0%,59%{opacity:0}63%,88%{opacity:1}92%,100%{opacity:0}}
+@keyframes tga-x{0%,64%{opacity:0;transform:scale(.4)}70%,88%{opacity:1;transform:scale(1.15)}94%,100%{opacity:0}}
+</style>"""
+
+
+def _fr(cls):
+    return ('<div class="tga-fr %s"><i class="a">DMAC</i><i class="a">SMAC</i><i class="q">802.1Q</i>'
+            '<i class="e">EtherType</i><i class="d">Данные</i><i class="f">FCS</i></div>' % cls)
+
+
+HTML += _ANIM_CSS + f"""
+<div class="step">
+  <div class="tga-port" style="left:688px;top:462px"></div>
+  {_fr("tga-main")}
+  <div class="tga-lbl tga-l1" style="left:290px;top:580px">Кадр без тега →</div>
+  <div class="tga-lbl tga-l2" style="left:290px;top:580px">+ тег 802.1Q, новый FCS</div>
+  {_fr("tga-c1")}{_fr("tga-c2")}
+    <div class="tga-x" style="left:1311px;top:548px">✕</div>
+  <div class="tga-x" style="left:1311px;top:626px">✕</div>
+</div>
+"""
