@@ -2,8 +2,16 @@
 """Картинки из pptx 2.2, которых не было в деке: вставляются слайдами сразу после своей темы (порядок pptx)."""
 from _sw_lib import SL, sc, head, grow, b64, _esc, pic
 
+def _one(n):
+    from _sw_lib import rep_html
+    r = rep_html("fig_" + n)  # перерисовка в SVG/вёрстку, если есть
+    if r:
+        return '<div class="pfig pr">%s</div>' % r
+    return '<div class="pfig"><img src="%s" alt=""></div>' % b64("fig_" + n)
+
+
 def _figs(names, cap):
-    imgs = "".join('<div class="pfig"><img src="%s" alt=""></div>' % b64("fig_" + n) for n in names)
+    imgs = "".join(_one(n) for n in names)
     return '<div class="pfigs n%d">%s</div><div class="piccap">%s</div>' % (len(names), imgs, cap)
 
 def _slide(label, title, names, cap):
@@ -60,6 +68,8 @@ CSS = """
 .pfig img{max-width:100%;max-height:62vh;object-fit:contain;display:block}
 .pfigs.n3 .pfig img,.pfigs.n4 .pfig img{max-height:29vh}
 @keyframes pfin{to{opacity:1;transform:none}}
+.pfig.pr{background:none;box-shadow:none;padding:0;width:100%;height:100%;min-height:26vh}
+.pfig.pr .rep{width:100%;height:100%}
 .rep{flex:1 1 auto;min-height:0;position:relative;overflow:visible}
 .repc{position:absolute;left:0;top:0;transform-origin:0 0;border-radius:18px;background:radial-gradient(120% 120% at 50% 40%,#0b1d4a 0%,#06122f 60%,#030a1e 100%);box-shadow:0 0 0 1px rgba(42,212,255,.25),0 0 40px rgba(0,0,0,.45);font-family:"Golos Text",sans-serif;color:var(--ink)}
 .repc *{box-sizing:border-box}

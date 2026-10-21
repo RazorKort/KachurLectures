@@ -23,9 +23,9 @@ with sync_playwright() as pw:
         pg.wait_for_timeout(1500)
         shot = OUT / f"_{name}.png"
         pg.locator(f'.slide.on [data-rep="{name}"] .repc').screenshot(path=str(shot))
-        a = Image.open(D / "_sw_assets" / f"{name}.webp").convert("RGB").resize((1672, 941))
+        a = Image.open(D / "_sw_assets" / f"{name}.webp").convert("RGB"); a = a.resize((1672, round(a.height * 1672 / a.width)))
         c2 = Image.open(shot).convert("RGB"); c2 = c2.resize((1672, round(c2.height * 1672 / c2.width)))
-        c = Image.new("RGB", (1672, 941 + 16 + c2.height), "red"); c.paste(a, (0, 0)); c.paste(c2, (0, 957))
+        c = Image.new("RGB", (1672, a.height + 16 + c2.height), "red"); c.paste(a, (0, 0)); c.paste(c2, (0, a.height + 16))
         c.thumbnail((1500, 1800)); c.save(OUT / f"{name}.jpg", quality=85); shot.unlink()
         print("ok", name, "слайд", k + 1)
     b.close()

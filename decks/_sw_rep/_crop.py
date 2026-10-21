@@ -7,6 +7,6 @@ D = pathlib.Path(__file__).resolve().parent.parent
 n, x0, y0, x1, y1, out = sys.argv[1], *map(int, sys.argv[2:6]), sys.argv[6]
 import json
 src = json.load(open(D / "_sw_rep" / "_src.json"))
-im = (Image.open(D / "_swref" / "media" / src[n]) if n in src else Image.open(D / "_sw_assets" / f"{n}.webp").resize((1672, 941))).convert("RGBA")
+im = (Image.open(D / "_swref" / "media" / src[n]) if n in src else (Image.open(D / "_sw_assets" / f"{n}.webp") if n.startswith("fig_") else Image.open(D / "_sw_assets" / f"{n}.webp").resize((1672, 941)))).convert("RGBA")
 c = im.crop((x0, y0, x1, y1)); c.save(D / "_sw_assets" / "rep" / out)
 print(out, c.size)
