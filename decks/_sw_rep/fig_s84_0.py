@@ -2,7 +2,7 @@
 """fig_s84_0 — вывод CLI из pptx 2.2, перерисован неоновой консолью (строки печатаются, команды набираются)."""
 W, H, TOP = 956, 326, 0
 BOX = (12, 10, 898, 310)  # рамка консоли: left, top, width, height
-FS, FW = 31, 700  # кегль и жирность моноширинного
+FS, FW = 32, 700  # кегль и жирность моноширинного
 CAP = None  # подпись «Рисунок …»: текст, y-центр, кегль
 # строки: (y-центр, шаг, [(x, [(вид, текст)])]); вид: p-приглашение, c-команда, o/h/y/r/d-вывод, cur-курсор
 LINES = [(64, 0, [(24, [('p', 'User Name:'), ('c', 'admin1')])]),
@@ -19,7 +19,7 @@ def _seg(kind, text):
     from html import escape
     if kind == "c":  # команда/ввод: печатается посимвольно
         n = max(len(text), 1)
-        return '<span class="%s-c" style="--n:%d;animation-duration:%dms">%s</span>' % (P, n, 150 + n * 30, escape(text))
+        return '<span class="%s-c" style="--n:%d;animation-duration:%dms">%s</span>' % (P, n, 120 + n * 22, escape(text))
     if kind == "cur":
         return '<span class="%s-cur">&nbsp;</span>' % P
     return '<span class="%s-%s">%s</span>' % (P, kind, escape(text))

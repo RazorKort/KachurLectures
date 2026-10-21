@@ -31,8 +31,8 @@ def _pcs():
 HTML = K.css(P) + K.defs(P) + "".join([
     K.layer(W, H, P, K.use(P, "rt", 132, 618, 130, 100, 'filter="url(#s42-glow)"')),
     K.layer(W, H, P, _links() + "".join(K.sw(P, *s, label="SW L2") for s in SW)),
-    K.layer(W, H, P, _pcs() + K.label(P, 808, 142, "10.10.1.6") + K.label(P, 1015, 122, "10.10.1.5")),
-    K.layer(W, H, P, f'<circle cx="975" cy="110" r="44" fill="none" stroke="{K.O}" stroke-width="3" class="{P}-blink"/>'
+    K.layer(W, H, P, _pcs() + K.label(P, 808, 142, "10.10.1.6") + K.label(P, 1022, 122, "10.10.1.5")),
+    K.layer(W, H, P, f'<circle cx="968" cy="112" r="42" fill="none" stroke="{K.O}" stroke-width="3" class="{P}-blink"/>'
             + K.arp(P, 842, 0, 172, 98, True, 18, P + "-pop")),
     f'<div class="{P}-cap step" style="left:215px;top:766px;font-size:21px">Рисунок 2.4.1.3. — Разделение сети на широковещательные домены</div>',
 ])

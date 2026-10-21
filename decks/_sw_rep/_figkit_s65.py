@@ -66,10 +66,10 @@ def switch(x, y, w, h, label="", col=C):
     s += '<polygon points="%s %s %s %s" fill="rgba(30,120,210,.9)" stroke="%s" stroke-width="3" stroke-linejoin="round"/>' % (
         P(0, .2), P(.72, 0), P(1, .44), P(.25, .66), col)
     cx, cy = x + w * .5, y + h * .33
-    s += '<g transform="rotate(-17 %.1f %.1f)">%s</g>' % (cx, cy, _arrows(cx, cy, min(w, h * 1.3) * .2))
+    s += '<g transform="rotate(-12 %.1f %.1f)">%s</g>' % (cx, cy, _arrows(cx, cy, min(w, h * 1.3) * .2))
     if label:
-        s += ('<text x="%.1f" y="%.1f" font-family="Golos Text,sans-serif" font-weight="700" font-size="%.0f" fill="#fff" text-anchor="middle" transform="rotate(-16 %.1f %.1f)">%s</text>'
-              % (x + w * .62, y + h * .9, h * .19, x + w * .62, y + h * .86, label))
+        s += ('<text x="%.1f" y="%.1f" font-family="Golos Text,sans-serif" font-weight="700" font-size="%.0f" fill="#fff" text-anchor="middle" transform="rotate(-12 %.1f %.1f)">%s</text>'
+              % (x + w * .63, y + h * .92, h * .16, x + w * .63, y + h * .88, label))
     return s
 
 

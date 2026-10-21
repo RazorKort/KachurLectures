@@ -28,7 +28,7 @@ def _seg(kind, text):
     from html import escape
     if kind == "c":  # команда/ввод: печатается посимвольно
         n = max(len(text), 1)
-        return '<span class="%s-c" style="--n:%d;animation-duration:%dms">%s</span>' % (P, n, 150 + n * 30, escape(text))
+        return '<span class="%s-c" style="--n:%d;animation-duration:%dms">%s</span>' % (P, n, 120 + n * 22, escape(text))
     if kind == "cur":
         return '<span class="%s-cur">&nbsp;</span>' % P
     return '<span class="%s-%s">%s</span>' % (P, kind, escape(text))
