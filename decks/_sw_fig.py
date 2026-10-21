@@ -10,6 +10,12 @@ def _slide(label, title, names, cap):
     return ('<section class="slide" data-label="%s">%s</section>'
             % (_esc(label), sc(head(title), grow("g", _figs(names, cap)))))
 
+def _tagscene():
+    import _sw_tagscene
+    return ('<section class="slide" data-label="Тегирование: схема по шагам">%s</section>'
+            % sc(head("Процесс <em>тегирования</em> кадров", "Рисунки 2.4.2.2–2.4.2.4 — по шагам"), grow("g", _sw_tagscene.html())))
+
+
 def _info(label, title, name):
     return ('<section class="slide" data-label="%s">%s</section>'
             % (_esc(label), sc(head(title), grow("g", pic(name)))))
@@ -28,8 +34,7 @@ INSERT = [
     (92, [_slide("ARP без VLAN", "Без VLAN: <em>ARP-запрос</em> всем", ["s40_0", "s41_0"], "Рис. 2.4.1.1–2.4.1.2 — запрос PC и рассылка на все порты коммутаторов"),
           _slide("ARP с VLAN", "С VLAN: домены <em>разделены</em>", ["s42_0", "s43_0"], "Рис. 2.4.1.3–2.4.1.4 — разделение на домены, рассылка только в своём сегменте")]),  # 40-43
     (96, [_slide("Таблица с VLAN", "Таблица коммутации <em>с VLAN</em>", ["s51_1"], "Рис. 2.4.3.1 — пример таблицы коммутации")]),          # 51
-    (99, [_slide("Тегирование: кадр", "Тегирование кадра <em>на порту</em>", ["s47_0", "s48_0"], "Рис. 2.4.2.2 — к кадру добавляется тег 802.1Q"),
-          _slide("Растегирование", "Копирование и <em>растегирование</em>", ["s49_0", "s50_0"], "Рис. 2.4.2.3–2.4.2.4 — копии кадра и снятие тега на выходе")]),  # 47-50
+    (99, [_tagscene()]),  # 47-50: схемы тегирования из pptx — пошаговой сценой
     (102, [_slide("show vlan", "Создание и удаление VLAN: <em>show vlan</em>", ["s52_0", "s52_1"], "Результат создания и удаления VLAN на коммутаторе")]),  # 52
     (106, [_slide("Классификация VLAN", "Классификация <em>VLAN</em>", ["s54_1"], "Рис. 2.4.6.1 — по методу создания, тегирования и виду трафика")]),  # 54
     (111, [_slide("Порт доступа в CLI", "Порт доступа: <em>проверка</em>", ["s58_0", "s58_1"], "switch# show interfaces switchport · show vlan"),

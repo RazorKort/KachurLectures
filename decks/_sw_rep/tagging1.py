@@ -163,3 +163,33 @@ HTML = CSS + f"""
     ТЕГ VLAN ОГРАНИЧИВАЕТ ШИРОКОВЕЩАТЕЛЬНУЮ РАССЫЛКУ В ПРЕДЕЛАХ ОДНОГО ДОМЕНА</div>
 </div>
 """
+
+# ---- анимация тегирования поверх схемы: кадр от ПК входит в порт 1, получает тег 802.1Q,
+#      копии с тегом спускаются из красных портов 3, 6, 8 к ноутбукам, синие порты мигают запретом
+_A1 = """<style>
+.t1a-fr{position:absolute;left:0;top:0;display:flex;gap:2px;height:30px;font:700 12px/30px 'Golos Text',sans-serif;color:#fff;
+  transform-origin:0 0;filter:drop-shadow(0 0 8px rgba(255,77,94,.7));animation:t1a-main 8s infinite}
+.t1a-fr i{font-style:normal;flex:none;text-align:center;border-radius:4px;overflow:hidden;white-space:nowrap}
+.t1a-fr .a{background:#1d5fd8;width:46px}.t1a-fr .e{background:#c9a21a;width:62px}.t1a-fr .d{background:#a83a78;width:54px}
+.t1a-fr .f{background:#6a7ba0;width:42px;animation:t1a-fcs 8s infinite}.t1a-fr .q{background:#e0263c;width:0;animation:t1a-tag 8s infinite}
+.t1a-pk{position:absolute;width:74px;height:26px;border-radius:6px;background:#e0263c;color:#fff;font:700 13px/26px 'Oswald',sans-serif;text-align:center;
+  box-shadow:0 0 14px #ff4d5e;opacity:0;animation:t1a-down 8s infinite}
+.t1a-no{position:absolute;width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 3px #2ad4ff,0 0 18px #2ad4ff;opacity:0;animation:t1a-no 8s infinite}
+.t1a-lbl{position:absolute;font:700 20px 'Oswald',sans-serif;color:#ff6b7c;opacity:0;animation:t1a-lbl 8s infinite;white-space:nowrap}
+@keyframes t1a-main{0%{transform:translate(190px,282px) scale(.62);opacity:0}5%{opacity:1}30%{transform:translate(300px,282px) scale(.62);opacity:1}
+  52%{transform:translate(300px,282px) scale(.62);opacity:1}58%,100%{transform:translate(300px,282px) scale(.62);opacity:0}}
+@keyframes t1a-tag{0%,32%{width:0}42%,100%{width:58px}}
+@keyframes t1a-fcs{0%,44%{background:#6a7ba0}47%{background:#fff}52%,100%{background:#2a9d5a}}
+@keyframes t1a-down{0%,56%{transform:translateY(0);opacity:0}60%{opacity:1}82%{transform:translateY(78px);opacity:1}90%,100%{transform:translateY(78px);opacity:0}}
+@keyframes t1a-no{0%,58%{opacity:0}64%,70%{opacity:1}74%{opacity:.2}78%,86%{opacity:1}92%,100%{opacity:0}}
+@keyframes t1a-lbl{0%,33%{opacity:0}37%,54%{opacity:1}58%,100%{opacity:0}}
+</style>"""
+
+HTML += _A1 + """
+<div class="step">
+  <div class="t1a-fr"><i class="a">DMAC</i><i class="a">SMAC</i><i class="q">802.1Q</i><i class="e">EtherType</i><i class="d">Payload</i><i class="f">FCS</i></div>
+  <div class="t1a-lbl" style="left:70px;top:322px">+ тег 802.1Q (VLAN 10), новый FCS</div>
+""" + "".join('<div class="t1a-pk" style="left:%dpx;top:300px">802.1Q · 10</div>' % (x - 37) for x in (717, 961, 1123)) + \
+    "".join('<div class="t1a-no" style="left:%dpx;top:343px"></div>' % (x - 20) for x in (637, 797, 880, 1041)) + """
+</div>
+"""
