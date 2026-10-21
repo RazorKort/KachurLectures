@@ -69,7 +69,7 @@ def switch(x, y, w, h, label="", col=C):
     s += '<g transform="rotate(-12 %.1f %.1f)">%s</g>' % (cx, cy, _arrows(cx, cy, min(w, h * 1.3) * .2))
     if label:
         s += ('<text x="%.1f" y="%.1f" font-family="Golos Text,sans-serif" font-weight="700" font-size="%.0f" fill="#fff" text-anchor="middle" transform="rotate(-12 %.1f %.1f)">%s</text>'
-              % (x + w * .63, y + h * .92, h * .16, x + w * .63, y + h * .88, label))
+              % (x + w * .63, y + h * .87, h * .16, x + w * .63, y + h * .83, label))
     return s
 
 

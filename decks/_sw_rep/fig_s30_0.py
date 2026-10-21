@@ -39,7 +39,7 @@ def _arc():
 
 
 def _storm():
-    return "".join(f'<g class="{P}-pop" style="animation-delay:{i * 90}ms">' + K.env(P, x, y, a, 74, P + "-jig") + '</g>'
+    return "".join(f'<g class="{P}-pop" style="animation-delay:{i * 40}ms">' + K.env(P, x, y, a, 74, P + "-jig") + '</g>'
                    for i, (x, y, a) in enumerate(ENV))
 
 
