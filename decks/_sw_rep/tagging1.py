@@ -188,7 +188,7 @@ _A1 = """<style>
 HTML += _A1 + """
 <div class="step">
   <div class="t1a-fr"><i class="a">DMAC</i><i class="a">SMAC</i><i class="q">802.1Q</i><i class="e">EtherType</i><i class="d">Payload</i><i class="f">FCS</i></div>
-  <div class="t1a-lbl" style="left:70px;top:322px">+ тег 802.1Q (VLAN 10), новый FCS</div>
+  <div class="t1a-lbl" style="left:296px;top:306px;font-size:17px">+ тег 802.1Q, новый FCS</div>
 """ + "".join('<div class="t1a-pk" style="left:%dpx;top:300px">802.1Q · 10</div>' % (x - 37) for x in (717, 961, 1123)) + \
     "".join('<div class="t1a-no" style="left:%dpx;top:343px"></div>' % (x - 20) for x in (637, 797, 880, 1041)) + """
 </div>
