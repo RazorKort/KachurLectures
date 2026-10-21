@@ -280,9 +280,11 @@ svg .pulse{animation:pls 1.4s ease-in-out infinite}
 .pfigs.n3 .pfig img,.pfigs.n4 .pfig img{max-height:29vh}
 @keyframes pfin{to{opacity:1;transform:none}}
 .rep{flex:1 1 auto;min-height:0;position:relative;overflow:visible}
-.repc{position:absolute;left:0;top:0;transform-origin:0 0;font-family:"Golos Text",sans-serif;color:var(--ink)}
+.repc{position:absolute;left:0;top:0;transform-origin:0 0;border-radius:18px;background:radial-gradient(120% 120% at 50% 40%,#0b1d4a 0%,#06122f 60%,#030a1e 100%);box-shadow:0 0 0 1px rgba(42,212,255,.25),0 0 40px rgba(0,0,0,.45);font-family:"Golos Text",sans-serif;color:var(--ink)}
 .repc *{box-sizing:border-box}
 .repc .ab{position:absolute}
+.repc img{-webkit-mask:linear-gradient(90deg,transparent,#000 9px,#000 calc(100% - 9px),transparent),linear-gradient(180deg,transparent,#000 9px,#000 calc(100% - 9px),transparent);
+  -webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 9px,#000 calc(100% - 9px),transparent),linear-gradient(180deg,transparent,#000 9px,#000 calc(100% - 9px),transparent);mask-composite:intersect}
 </style>
 </head>
 <body>
@@ -3409,7 +3411,6 @@ switch# show bridge address-table count
 </style>
 <div class="step">
   <div class="il2-pan" style="left:34px;top:44px;width:560px;height:290px;border-radius:18px;background:rgba(6,22,60,.6)"></div>
-  <div class="ab" style="left:68px;top:76px;font-family:Oswald,sans-serif;font-weight:700;font-size:86px;line-height:.95;color:#fff">ИНТЕРФЕЙСЫ<br><span style="color:#2ad4ff">УРОВНЯ L2</span></div>
   <div class="il2-ul" style="left:76px;top:254px;width:190px"></div>
   <div class="ab" style="left:74px;top:270px;font-family:Oswald,sans-serif;font-size:19px;letter-spacing:4px;line-height:1.1;color:#cfe0ff">РАБОТАЕМ С КАДРАМИ<br>НА КАНАЛЬНОМ УРОВНЕ</div>
   <div class="il2-pan s" style="left:62px;top:346px;width:282px;height:178px"></div>

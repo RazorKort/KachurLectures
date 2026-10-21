@@ -46,7 +46,6 @@ def _card(x, w, title, ic, icst, text, d):
 HTML = CSS + f"""
 <div class="step">
   <div class="il2-pan" style="left:34px;top:44px;width:560px;height:290px;border-radius:18px;background:rgba(6,22,60,.6)"></div>
-  <div class="ab" style="left:68px;top:76px;font-family:Oswald,sans-serif;font-weight:700;font-size:86px;line-height:.95;color:#fff">ИНТЕРФЕЙСЫ<br><span style="color:#2ad4ff">УРОВНЯ L2</span></div>
   <div class="il2-ul" style="left:76px;top:254px;width:190px"></div>
   <div class="ab" style="left:74px;top:270px;font-family:Oswald,sans-serif;font-size:19px;letter-spacing:4px;line-height:1.1;color:#cfe0ff">РАБОТАЕМ С КАДРАМИ<br>НА КАНАЛЬНОМ УРОВНЕ</div>
   <div class="il2-pan s" style="left:62px;top:346px;width:282px;height:178px"></div>

@@ -56,9 +56,11 @@ CSS = """
 .pfigs.n3 .pfig img,.pfigs.n4 .pfig img{max-height:29vh}
 @keyframes pfin{to{opacity:1;transform:none}}
 .rep{flex:1 1 auto;min-height:0;position:relative;overflow:visible}
-.repc{position:absolute;left:0;top:0;transform-origin:0 0;font-family:"Golos Text",sans-serif;color:var(--ink)}
+.repc{position:absolute;left:0;top:0;transform-origin:0 0;border-radius:18px;background:radial-gradient(120% 120% at 50% 40%,#0b1d4a 0%,#06122f 60%,#030a1e 100%);box-shadow:0 0 0 1px rgba(42,212,255,.25),0 0 40px rgba(0,0,0,.45);font-family:"Golos Text",sans-serif;color:var(--ink)}
 .repc *{box-sizing:border-box}
 .repc .ab{position:absolute}
+.repc img{-webkit-mask:linear-gradient(90deg,transparent,#000 9px,#000 calc(100% - 9px),transparent),linear-gradient(180deg,transparent,#000 9px,#000 calc(100% - 9px),transparent);
+  -webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 9px,#000 calc(100% - 9px),transparent),linear-gradient(180deg,transparent,#000 9px,#000 calc(100% - 9px),transparent);mask-composite:intersect}
 """
 JS = """
 (function(){
